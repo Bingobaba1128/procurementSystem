@@ -51,44 +51,46 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '供应商档案', icon: 'dashboard' }
+      meta: { title: '工作台', icon: 'dashboard' }
     }]
   },
 
-  // {
-  //   path: '/example',
-  //   component: Layout,
-  //   redirect: '/example/table',
-  //   name: 'Example',
-  //   meta: { title: 'Example', icon: 'example' },
-  //   children: [
-  //     {
-  //       path: 'table',
-  //       name: 'Table',
-  //       component: () => import('@/views/table/index'),
-  //       meta: { title: 'Table', icon: 'table' }
-  //     },
-  //     {
-  //       path: 'tree',
-  //       name: 'Tree',
-  //       component: () => import('@/views/tree/index'),
-  //       meta: { title: 'Tree', icon: 'tree' }
-  //     }
-  //   ]
-  // },
-
-  // {
-  //   path: '/form',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       name: 'Form',
-  //       component: () => import('@/views/form/index'),
-  //       meta: { title: 'Form', icon: 'form' }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/sqr',
+    component: Layout,
+    children: [
+    {
+      path: '/jsqr',
+      name: 'jsqr',
+      component: () => import('@/views/jsqr'),
+      meta: { title: '经纱确认', icon: 'tree' }
+    },
+    ]
+  },
+  {
+    path: '/sqr',
+    component: Layout,
+    children: [
+      {
+        path: 'wsqr',
+        name: 'wsqr',
+        component: () => import('@/views/wsqr'),
+        meta: { title: '纬纱确认', icon: 'tree' }
+      },
+    ]
+  },
+  {
+    path: '/form',
+    component: Layout,
+    children: [  
+      {
+        path: 'scjhdsb',
+        name: 'scjhdsb',
+        component: () => import('@/views/scjhdsb'),
+        meta: { title: '生产计划定纱表', icon: 'tree' }
+      },
+    ]
+  },
 
   // {
   //   path: '/nested',
