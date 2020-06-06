@@ -1,15 +1,19 @@
 import request from '@/utils/request'
-
-// const data = {
-// 	"clothId":"123",
-// 	"time":"1qa",
-// 	"no":"sss"
-// }
+import axios from 'axios'
 
 export function getTestResult() {
   return request({
-    baseURL: '192.168.41.102:8088',
+    baseURL: 'http://192.168.10.222:8088',
     url: '/addJingWei1',
     method: 'post'
   })
 }
+
+// export function getTestResult() {
+//   return axios({
+//     baseURL: 'http://192.168.10.222:8088',
+//     url: '/addJingWei1',
+//     method: 'post'
+//   })
+// }
+

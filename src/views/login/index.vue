@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">北江纺织销售系统</h3>
       </div>
 
       <el-form-item prop="username">
@@ -180,16 +180,18 @@ $light_gray:#eee;
 .login-container {
   min-height: 100%;
   width: 100%;
-  background-color: $bg;
+  background-image: url('../../assets/bg2.png');
   overflow: hidden;
 
   .login-form {
-    position: relative;
+    position: absolute;
     width: 520px;
     max-width: 100%;
-    padding: 160px 35px 0;
-    margin: 0 auto;
+    // padding: 160px 35px 0;
     overflow: hidden;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
   }
 
   .tips {

@@ -1,13 +1,13 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+// import { getToken } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
   // baseURL: '192.168.41.102:8088', // url = base url + request url
-  // withCredentials: true, // send cookies when cross-domain requests
+  withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
 
@@ -16,12 +16,12 @@ service.interceptors.request.use(
   config => {
     // do something before request is sent
 
-    if (store.getters.token) {
-      // let each request carry token
-      // ['X-Token'] is a custom headers key
-      // please modify it according to the actual situation
-      config.headers['X-Token'] = getToken()
-    }
+    // if (store.getters.token) {
+    //   // let each request carry token
+    //   // ['X-Token'] is a custom headers key
+    //   // please modify it according to the actual situation
+    //   config.headers['X-Token'] = getToken()
+    // }
     return config
   },
   error => {
@@ -32,6 +32,17 @@ service.interceptors.request.use(
 )
 
 // response interceptor
+// service.interceptors.response.use(response => {
+//   const res = response.data
+//   // 如果返回的状态不是200 就主动报错
+//   if (res.state !== 200) {
+//     return Promise.reject(res.message || 'error')
+//   }
+//   return response
+// }, error => {
+//   return Promise.reject(error.response.data) // 返回接口返回的错误信息
+// })
+
 service.interceptors.response.use(
   /**
    * If you want to get http information such as headers or status
@@ -46,6 +57,9 @@ service.interceptors.response.use(
   response => {
     const res = response.data
 
+    if (response.status === 200) {
+      return Promise.resolve(response)
+    }
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 20000) {
       Message({

@@ -55,23 +55,23 @@ export const constantRoutes = [
   },
 
   {
-    path: '/sqr',
-    component: Layout,
-    children: [
-    {
-      path: '/jsqr',
-      name: 'jsqr',
-      component: () => import('@/views/jsqr'),
-      meta: { title: '经纱确认', icon: 'tree' }
-    }
-    ]
-  },
-  {
-    path: '/sqr',
+    path: '/',
     component: Layout,
     children: [
       {
-        path: 'wsqr',
+        path: '/经纱确认',
+        name: 'jsqr',
+        component: () => import('@/views/jsqr'),
+        meta: { title: '经纱确认', icon: 'tree' }
+      }
+    ]
+  },
+  {
+    path: '/',
+    component: Layout,
+    children: [
+      {
+        path: '/纬纱确认',
         name: 'wsqr',
         component: () => import('@/views/wsqr'),
         meta: { title: '纬纱确认', icon: 'tree' }
@@ -79,11 +79,11 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/form',
+    path: '/',
     component: Layout,
-    children: [  
+    children: [
       {
-        path: 'scjhdsb',
+        path: '/生产计划定纱表',
         name: 'scjhdsb',
         component: () => import('@/views/scjhdsb'),
         meta: { title: '生产计划定纱表', icon: 'tree' }
@@ -162,7 +162,7 @@ export const constantRoutes = [
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
-  
+
 ]
 
 const createRouter = () => new Router({
