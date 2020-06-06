@@ -86,8 +86,12 @@ import { getTestResult } from '@/api/jsqrApi'
         
         statusOptions: [
         {
-          value: 'status1',
+          value: 'status0',
           label: '已确认已审批'
+        }, 
+        {
+          value: 'status1',
+          label: '已确认未审批'
         }, 
         {
           value: 'status2',

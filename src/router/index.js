@@ -42,7 +42,6 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
-
   {
     path: '/',
     component: Layout,
@@ -64,7 +63,7 @@ export const constantRoutes = [
       name: 'jsqr',
       component: () => import('@/views/jsqr'),
       meta: { title: '经纱确认', icon: 'tree' }
-    },
+    }
     ]
   },
   {
@@ -76,7 +75,7 @@ export const constantRoutes = [
         name: 'wsqr',
         component: () => import('@/views/wsqr'),
         meta: { title: '纬纱确认', icon: 'tree' }
-      },
+      }
     ]
   },
   {
@@ -88,7 +87,7 @@ export const constantRoutes = [
         name: 'scjhdsb',
         component: () => import('@/views/scjhdsb'),
         meta: { title: '生产计划定纱表', icon: 'tree' }
-      },
+      }
     ]
   },
 
