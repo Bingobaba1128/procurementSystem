@@ -1,19 +1,25 @@
 import request from '@/utils/request'
-import axios from 'axios'
 
-export function getTestResult() {
+export function loadJSData(data) {
   return request({
-    baseURL: 'http://192.168.10.222:8088',
-    url: '/addJingWei1',
-    method: 'post'
+    baseURL: '',
+    url: data,
+    method: 'get'
   })
 }
 
-// export function getTestResult() {
-//   return axios({
-//     baseURL: 'http://192.168.10.222:8088',
-//     url: '/addJingWei1',
-//     method: 'post'
-//   })
-// }
+export function searchJSData(data) {
+  return request({
+    baseURL: '',
+    url: data,
+    method: 'get'
+  })
+}
 
+export function insteadOfJing(data) {
+  return request({
+    baseURL: '',
+    url: data,
+    method: 'get'
+  })
+}

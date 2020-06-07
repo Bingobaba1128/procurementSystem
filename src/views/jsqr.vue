@@ -6,7 +6,7 @@
       <!-- 日期选择 -->
       <el-col :span="5">
         <el-date-picker
-          v-model="queryInfo.selectedDate"
+          v-model="queryInfo.doTime"
           type="date"
           placeholder="选择日期"
           value-format="yyyy-MM-dd"
@@ -15,21 +15,21 @@
 
       <!-- 布编选择 -->
       <el-col :span="5">
-        <el-input v-model="queryInfo.bbNo" placeholder="请输入布编号" clearable>
+        <el-input v-model="queryInfo.clothId" placeholder="请输入布编号" clearable>
           <template slot="prepend">布编</template>
         </el-input>
       </el-col>
 
       <!-- 生产单号 -->
       <el-col :span="6">
-        <el-input v-model="queryInfo.scNo" placeholder="请输入生产单号" clearable>
+        <el-input v-model="queryInfo.productionNo" placeholder="请输入生产单号" clearable>
           <template slot="prepend">生产单号</template>
         </el-input>
       </el-col>
 
       <!-- 确认订单状态 -->
       <el-col :span="5">
-        <el-select v-model="queryInfo.value" placeholder="确认状态">
+        <el-select v-model="queryInfo.status" placeholder="确认状态">
           <!-- <template slot="prefix">确认状态</template> -->
           <el-option
             v-for="item in statusOptions"
@@ -40,9 +40,9 @@
         </el-select>
       </el-col>
 
-      <!-- 按钮筛选 http://192.168.41.102/8088-->
+      <!-- 按钮筛选 -->
       <el-col :span="3">
-        <el-button type="success" @click="print">筛选</el-button>
+        <el-button type="success" @click="searchData">筛选</el-button>
       </el-col>
     </el-row>
 
@@ -50,21 +50,27 @@
     <el-row>
       <el-table :data="jsData" border stripe>
         <el-table-column type="index" label="序号" />
-        <el-table-column label="下单日期" />
-        <el-table-column label="生产单号" />
-        <el-table-column label="布编" />
-        <el-table-column label="浆长" />
-        <el-table-column label="经纱">
+        <el-table-column label="下单日期" prop="doTime" />
+        <el-table-column label="生产单号" prop="productionNo" />
+        <el-table-column label="布编" prop="clothId" />
+        <el-table-column label="浆长" prop="jiaoZhouLength" />
+        <el-table-column label="经纱" prop="jingSha" />
+        <el-table-column label="需用量" prop="xuYaoLiang" />
+        <el-table-column label="生产安排单备注" prop="remarks" />
+        <el-table-column label="计划轴期" prop="jiaoZhouDate">
           <template slot-scope="scope">
-            <el-dropdown split-button type="primary" @click="handleClick">
-              A产品
-            </el-dropdown>
+            <p v-for="(item) in scope.row.jiaoZhouDate" v-bind:key="item" style="margin:0px">
+              {{item}}
+            </p>
           </template>
         </el-table-column>
-        <el-table-column label="需用量" />
-        <el-table-column label="生产安排单备注" />
-        <el-table-column label="计划轴期" />
-        <el-table-column label="计划坯期" />
+        <el-table-column label="计划坯期" prop="huiPiDate">
+          <template slot-scope="scope">
+            <p v-for="(item) in scope.row.huiPiDate" v-bind:key="item" style="margin:0px">
+              {{item}}
+            </p>
+          </template>
+        </el-table-column>
         <el-table-column label="备注" />
         <el-table-column label="操作" />
         <el-table-column label="工艺变更申请" />
@@ -76,42 +82,54 @@
 </template>
 
 <script>
-import { getTestResult } from '@/api/jsqrApi'
+import { loadJSData, searchJSData, insteadOfJing } from '@/api/jsqrApi'
+import { toUrlParam } from '@/utils/toUrlParam'
 
 export default {
   data() {
     return {
       dialogVisible: false,
-
-      queryInfo: {
-        selectedDate: '',
-        bbNo: '',
-        scNo: '',
-        value: ''
+      pageSetting: {
+        pageNumber: 1,
+        pageSize: 10
       },
+      queryInfo: {
+        pageNumber: 1,
+        pageSize: 10,
+        doTime: '',
+        clothId: '',
+        productionNo: '',
+        status: ''
+      },
+      jsData: '',
 
       statusOptions: [
         {
-          value: 'status0',
-          label: '已确认已审批'
+          value: '1',
+          label: '已审批'
         },
         {
-          value: 'status1',
-          label: '已确认未审批'
-        },
-        {
-          value: 'status2',
+          value: '0',
           label: '未确认'
         }]
 
     }
   },
+  created() {
+    var url = 'http://192.168.41.102:8088/LoadData1?'
+    var urlParam = toUrlParam(url, this.pageSetting)
+    loadJSData(urlParam).then(res => {
+      this.jsData = res.data.data
+    })
+  },
   methods: {
-    print() {
-      window.console.log(this.queryInfo.selectedDate)
-
-      getTestResult().then(response => {
-        window.console.log(response)
+    searchData() {
+      var url = 'http://192.168.41.102:8088/LoadData?'
+      var urlParam = toUrlParam(url, this.queryInfo)
+      window.console.log(urlParam)
+      searchJSData(urlParam).then(res => {
+        window.console.log(res)
+        this.jsData = res.data.data
       })
     }
   }

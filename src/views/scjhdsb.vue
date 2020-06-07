@@ -4,7 +4,7 @@
     <el-row :gutter="15">
 
       <!-- 下单日期 -->
-      <el-col :xl="{span:6}" :lg="{span:5}" class="searchCombo">
+      <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">下单日期</div>
         <el-date-picker
           v-model="orderDate"
@@ -16,13 +16,13 @@
       </el-col>
 
       <!-- 布编选择 -->
-      <el-col :xl="{span:6}" :lg="{span:3}" class="searchCombo">
+      <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">布编</div>
         <el-input v-model="queryInfo.bbNo" placeholder="请输入布编号" clearable />
       </el-col>
 
       <!-- 经纬选择 -->
-      <el-col :xl="{span:6}" :lg="{span:2}" class="searchCombo">
+      <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">经纬</div>
         <el-dropdown split-button class="dropdownBox" @click="handleClick">
           全部
@@ -30,7 +30,7 @@
         </el-dropdown>
       </el-col>
       <!-- 购纱计划 -->
-      <el-col :xl="{span:6}" :lg="{span:3}" class="searchCombo">
+      <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">购纱计划</div>
         <el-dropdown split-button class="dropdownBox" @click="handleClick">
           选择
@@ -42,7 +42,7 @@
     <el-row :gutter="15" style="margin-top:20px">
 
       <!-- 排序 -->
-      <el-col :xl="{span:6}" :lg="{span:3}" class="searchCombo">
+      <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">排序</div>
         <el-dropdown split-button class="dropdownBox" @click="handleClick">
           生产单排序
@@ -50,7 +50,7 @@
         </el-dropdown>
       </el-col>
       <!-- 需求量 -->
-      <el-col :xl="{span:6}" :lg="{span:3}" class="searchCombo">
+      <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">需求量</div>
         <el-dropdown split-button class="dropdownBox" @click="handleClick">
           全部
@@ -59,7 +59,7 @@
       </el-col>
 
       <!-- 订购量-->
-      <el-col :xl="{span:6}" :lg="{span:3}" class="searchCombo">
+      <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">订购量</div>
         <el-form ref="form" style="display:flex" :model="form" :rules="rules">
           <el-form-item style="margin-bottom:0">
@@ -74,7 +74,7 @@
         </el-form>
       </el-col>
       <!-- 检索按钮 -->
-      <el-col :xl="{span:6}" :lg="{span:1}" class="searchCombo">
+      <el-col :lg="{span:6}" class="searchCombo">
         <el-button type="success" @click="print">检索</el-button>
       </el-col>
     </el-row>
