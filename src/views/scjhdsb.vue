@@ -88,7 +88,7 @@
         <el-table-column label="布编" />
         <el-table-column label="浆长" />
         <el-table-column label="经纱">
-          <template slot-scope="scope">
+          <template>
             <el-dropdown split-button type="primary" @click="handleClick">
               A产品
             </el-dropdown>
