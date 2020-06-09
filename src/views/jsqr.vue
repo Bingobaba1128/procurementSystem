@@ -149,7 +149,6 @@ export default {
         0: true,
         1: false
       }
-      // window.console.log(statusMap[status])
       return statusMap[status]
     }
   },
@@ -214,7 +213,6 @@ export default {
     // 打开pdf
     showPdf(id) {
       var url = baseUrl + '/searchPDF?' + 'id=' + id
-      window.console.log(url)
       searchPdf(url).then(res => {
         var pdfUrl = res.data
         var pdfFullPath = baseUrl + pdfUrl
@@ -238,7 +236,6 @@ export default {
         this.jsData = res.data.data
         this.passParam.jingSha = this.jsData.jingSha
         this.passParam.shaZhi = this.jsData.shaZhi
-        window.console.log(this.jsData)
       })
     },
 
@@ -314,11 +311,12 @@ export default {
     // 更新编辑信息(传参格式特殊)
     updateData(param1) {
       updateJSData(param1).then(res => {
-        if (res.status !== 200) {
-          this.$message.error('上传失败，请重新编辑')
+        window.console.log(res.data)
+        if (res.data.code !== 200) {
+          this.$message.error(res.data.data)
         } else {
           this.$message({
-            message: '提交成功',
+            message: res.data.data,
             type: 'success'
           })
         }
@@ -330,7 +328,7 @@ export default {
     updateInfo(id) {
       for (var i = 0; i < this.jsData.length; i++) {
         if (this.jsData[i].id === id) {
-          this.updateData(this.jsData[i])
+          // this.updateData(this.jsData[i])
           this.updateParams = Object.assign({}, this.updateParams, this.jsData[i])
           this.$delete(this.updateParams, 'clothNo')
           this.$delete(this.updateParams, 'dangAnId')
@@ -347,7 +345,6 @@ export default {
           if (this.updateParams.state == 0) {
             this.$set(this.updateParams, 'id', null)
           }
-          window.console.log(this.updateParams)
           this.updateData(this.updateParams)
         }
       }
