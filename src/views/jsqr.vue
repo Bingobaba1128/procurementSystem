@@ -29,7 +29,7 @@
 
       <!-- 确认订单状态 -->
       <el-col :span="5">
-        <el-select v-model="queryInfo.status" placeholder="确认状态">
+        <el-select v-model="queryInfo.state" placeholder="确认状态">
           <!-- <template slot="prefix">确认状态</template> -->
           <el-option
             v-for="item in statusOptions"
@@ -68,6 +68,7 @@
                       :key="item.id"
                       :label="item.name"
                       :value="item.name"
+                      @click.native="onChange(item.gongYingShang)"
                     />
                   </el-select>
                 </el-form-item>
@@ -97,29 +98,38 @@
         </el-table-column>
         <el-table-column label="备注">
           <template slot-scope="scope">
-            <el-button type="text" @click="editNote(scope.row.id)"> 编辑备注 </el-button>
+            <el-button type="text" @click="editNote(scope.row.id)"> 备注 </el-button>
             <el-dialog title="编辑您的备注" :visible.sync="dialogNoteVisible">
+              已提交备注： {{ showCurrentNote }}
               <el-input
-                v-model="textarea"
+                v-model="note"
                 type="textarea"
                 :rows="2"
-                placeholder="请输入内容"
+                placeholder="请输入新备注"
               />
 
               <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogNoteVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveNote(selectedID,textarea)">确 定</el-button>
+                <el-button type="primary" @click="saveNote(selectedID,note)">确 定</el-button>
               </div>
             </el-dialog>
           </template>
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="success" @click="updateInfo(scope.row.id)">确认提交</el-button>
+            <el-button type="success" @click="updateInfo(scope.row.id)">{{ formateUpload(scope.row.state) }}</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="工艺变更申请" />
-        <el-table-column label="状态" />
+        <el-table-column label="工艺变更申请">
+          <template slot-scope="scope">
+            <el-button type="text" if-v="" :disabled="scope.row.state | statusFilter" @click="showPdf(scope.row.id)"> Excel </el-button>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态">
+          <template slot-scope="scope">
+            <span>{{ formatStatus(scope.row.state) }}</span>
+          </template>
+        </el-table-column>
 
       </el-table>
     </el-row>
@@ -128,14 +138,24 @@
 </template>
 
 <script>
-import { loadJSData, searchJSData, insteadOfJing } from '@/api/jsqrApi'
+import { loadJSData, searchJSData, insteadOfJing, updateJSData, searchPdf } from '@/api/jsqrApi'
 import { baseUrl } from '@/api/apiUrl'
 import { toUrlParam } from '@/utils/toUrlParam'
 
 export default {
+  filters: {
+    statusFilter(status) {
+      const statusMap = {
+        0: true,
+        1: false
+      }
+      // window.console.log(statusMap[status])
+      return statusMap[status]
+    }
+  },
   data() {
     return {
-      textarea: '',
+      note: '',
       form: {
         name: '',
         region: '',
@@ -158,14 +178,14 @@ export default {
         doTime: '',
         clothId: '',
         productionNo: '',
-        status: ''
+        state: ''
       },
       jsData: '',
 
       statusOptions: [
         {
           value: '1',
-          label: '已审批'
+          label: '已确认'
         },
         {
           value: '0',
@@ -179,19 +199,49 @@ export default {
       dialogNoteVisible: false,
       jingshaList: '',
       selectedJS: '',
-      selectedID: ''
+      selectedID: '',
+      updateParam: '',
+      showCurrentNote: '',
+      pdfLink: ''
     }
   },
+
   created() {
-    var url = baseUrl + '/LoadData?'
-    var urlParam = toUrlParam(url, this.pageSetting)
-    loadJSData(urlParam).then(res => {
-      this.jsData = res.data.data
-      this.passParam.jingSha = this.jsData.jingSha
-      this.passParam.shaZhi = this.jsData.shaZhi
-    })
+    this.initData()
   },
+
   methods: {
+    // 打开pdf
+    showPdf(id) {
+      var url = baseUrl + '/searchPDF?' + 'id=' + id
+      window.console.log(url)
+      searchPdf(url).then(res => {
+        var pdfUrl = res.data
+        var pdfFullPath = baseUrl + pdfUrl
+        this.pdfLink = pdfFullPath
+        window.open(this.pdfLink, '_blank')
+      })
+    },
+    // 状态过滤
+    formatStatus(val) {
+      return val == 0 ? '未确认' : val == 1 ? '已确认' : ''
+    },
+    // 操作状态
+    formateUpload(val) {
+      return val == 0 ? '确认提交' : val == 1 ? '提交修改' : ''
+    },
+    // 数据初始化
+    initData() {
+      var url = baseUrl + '/LoadData?'
+      var urlParam = toUrlParam(url, this.pageSetting)
+      loadJSData(urlParam).then(res => {
+        this.jsData = res.data.data
+        this.passParam.jingSha = this.jsData.jingSha
+        this.passParam.shaZhi = this.jsData.shaZhi
+        window.console.log(this.jsData)
+      })
+    },
+
     // 查询数据
     searchData() {
       var url = baseUrl + '/LoadData?'
@@ -200,8 +250,15 @@ export default {
         this.jsData = res.data.data
       })
     },
+
     // 替代经纱查询
     showReplaceJS(jingsha, shaZhiNo, id) {
+      // 储存原始数据
+      for (var i = 0; i < this.jsData.length; i++) {
+        if (this.jsData[i].id === id) {
+          this.$set(this.jsData[i], 'jingOrWei', this.jsData[i].jingSha)
+        }
+      }
       var url = baseUrl + '/loadChangeYuanSha?'
       var data = {
         shaZhi: parseInt(shaZhiNo),
@@ -218,9 +275,18 @@ export default {
       for (var i = 0; i < this.jsData.length; i++) {
         if (this.jsData[i].id === id) {
           this.$set(this.jsData[i], 'jingSha', JSvalue)
+          this.$set(this.jsData[i], 'jingShaD', JSvalue)
         }
       }
       this.dialogReplaceJSVisible = false
+    },
+    //
+    onChange(val) {
+      for (var i = 0; i < this.jsData.length; i++) {
+        if (this.jsData[i].id === this.selectedID) {
+          this.$set(this.jsData[i], 'jingShaDangAnD', val)
+        }
+      }
     },
     // 存储备注
     saveNote(id, textarea) {
@@ -229,16 +295,64 @@ export default {
           this.$set(this.jsData[i], 'note', textarea)
         }
       }
+      this.note = ''
+      this.showCurrentNote = ''
       this.dialogNoteVisible = false
     },
     editNote(id) {
+      for (var i = 0; i < this.jsData.length; i++) {
+        if (this.jsData[i].id === id) {
+          // window.console.log(id, this.jsData[i].note)
+          this.showCurrentNote = this.jsData[i].note
+          // this.$set(this.jsData[i], 'note', textarea)
+        }
+      }
       this.selectedID = id
       this.dialogNoteVisible = true
     },
+
+    // 更新编辑信息(传参格式特殊)
+    updateData(param1) {
+      updateJSData(param1).then(res => {
+        if (res.status !== 200) {
+          this.$message.error('上传失败，请重新编辑')
+        } else {
+          this.$message({
+            message: '提交成功',
+            type: 'success'
+          })
+        }
+        this.jsData = res.data.data
+        this.initData()
+      })
+    },
     // 上传变更后信息
     updateInfo(id) {
-      window.console.log(this.jsData[0])
+      for (var i = 0; i < this.jsData.length; i++) {
+        if (this.jsData[i].id === id) {
+          this.updateData(this.jsData[i])
+          this.updateParams = Object.assign({}, this.updateParams, this.jsData[i])
+          this.$delete(this.updateParams, 'clothNo')
+          this.$delete(this.updateParams, 'dangAnId')
+          this.$delete(this.updateParams, 'doTime')
+          this.$delete(this.updateParams, 'huiPiDate')
+          this.$delete(this.updateParams, 'jiaoZhouDate')
+          this.$delete(this.updateParams, 'jiaoZhouLength')
+          this.$delete(this.updateParams, 'xuYaoLiang')
+          this.$delete(this.updateParams, 'applyTime')
+          this.$delete(this.updateParams, 'shaZhi')
+
+          this.$set(this.updateParams, 'personId', '10001')
+          this.$set(this.updateParams, 'personName', '邓科')
+          if (this.updateParams.state == 0) {
+            this.$set(this.updateParams, 'id', null)
+          }
+          window.console.log(this.updateParams)
+          this.updateData(this.updateParams)
+        }
+      }
     }
+
   }
 }
 </script>
