@@ -122,7 +122,7 @@
         </el-table-column>
         <el-table-column label="工艺变更申请">
           <template slot-scope="scope">
-            <el-button type="text" if-v="" :disabled="scope.row.state | statusFilter" @click="showPdf(scope.row.id)"> Excel </el-button>
+            <el-button type="text" if-v="" :disabled="scope.row.state | statusFilter" @click="showPdf(scope.row.id)"> PDF </el-button>
           </template>
         </el-table-column>
         <el-table-column label="状态">
@@ -212,12 +212,18 @@ export default {
   methods: {
     // 打开pdf
     showPdf(id) {
+      window.console.log('pdffffffffffffff')
       var url = baseUrl + '/searchPDF?' + 'id=' + id
+      window.console.log(url)
       searchPdf(url).then(res => {
-        var pdfUrl = res.data
-        var pdfFullPath = baseUrl + pdfUrl
-        this.pdfLink = pdfFullPath
-        window.open(this.pdfLink, '_blank')
+        // window.console.log(res)
+        if (res.data.code !== 200) {
+          this.$message.error(res.data.msg)
+        } else {
+          this.pdfLink = baseUrl + res.data.data
+          // window.console.log(this.pdfLink)
+          window.open(this.pdfLink, '_blank')
+        }
       })
     },
     // 状态过滤
@@ -253,7 +259,8 @@ export default {
       // 储存原始数据
       for (var i = 0; i < this.jsData.length; i++) {
         if (this.jsData[i].id === id) {
-          this.$set(this.jsData[i], 'jingOrWei', this.jsData[i].jingSha)
+          this.$set(this.jsData[i], 'zhongJian', this.jsData[i].jingSha)
+          this.$set(this.jsData[i], 'original', this.jsData[i].jingShaDangAn)
         }
       }
       var url = baseUrl + '/loadChangeYuanSha?'
@@ -311,9 +318,12 @@ export default {
     // 更新编辑信息(传参格式特殊)
     updateData(param1) {
       updateJSData(param1).then(res => {
-        window.console.log(res.data)
+        // 点击提交后，后端传回数据
+        window.console.log(param1)
+        window.console.log('点击提交后，后端传回数据')
+        window.console.log(res)
         if (res.data.code !== 200) {
-          this.$message.error(res.data.data)
+          this.$message.error(res.data.msg)
         } else {
           this.$message({
             message: res.data.data,
@@ -339,12 +349,15 @@ export default {
           this.$delete(this.updateParams, 'xuYaoLiang')
           this.$delete(this.updateParams, 'applyTime')
           this.$delete(this.updateParams, 'shaZhi')
+          this.$delete(this.updateParams, 'jingSha')
+          this.$delete(this.updateParams, 'jingShaDangAn')
 
           this.$set(this.updateParams, 'personId', '10001')
           this.$set(this.updateParams, 'personName', '邓科')
           if (this.updateParams.state == 0) {
             this.$set(this.updateParams, 'id', null)
           }
+          // window.console.log(this.updateParams)
           this.updateData(this.updateParams)
         }
       }
