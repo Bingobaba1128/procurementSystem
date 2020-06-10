@@ -25,7 +25,7 @@
       <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">经纬</div>
         <el-dropdown split-button class="dropdownBox" @click="handleClick">
-          全部
+          选择
           <el-dropdown-menu slot="dropdown" />
         </el-dropdown>
       </el-col>
@@ -49,11 +49,12 @@
           <el-dropdown-menu slot="dropdown" />
         </el-dropdown>
       </el-col>
+
       <!-- 需求量 -->
       <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">需求量</div>
         <el-dropdown split-button class="dropdownBox" @click="handleClick">
-          全部
+          选择
           <el-dropdown-menu slot="dropdown" />
         </el-dropdown>
       </el-col>
@@ -72,6 +73,55 @@
             <el-input v-model="form.max" />
           </el-form-item>
         </el-form>
+      </el-col>
+
+      <!-- 生产安排单 -->
+      <el-col :lg="{span:6}" class="searchCombo">
+        <div class="searchHeader">生产安排单</div>
+        <el-input v-model="queryInfo.bbNo" placeholder="" clearable />
+      </el-col>
+    </el-row>
+    <el-row :gutter="15" style="margin-top:20px">
+
+      <!-- 浆染单号 -->
+      <el-col :lg="{span:6}" class="searchCombo">
+        <div class="searchHeader">浆纱单号</div>
+        <el-input v-model="queryInfo.bbNo" placeholder="" clearable />
+      </el-col>
+
+      <!-- 原纱 -->
+      <el-col :lg="{span:6}" class="searchCombo">
+        <div class="searchHeader">原纱</div>
+        <el-input v-model="queryInfo.bbNo" placeholder="" clearable />
+      </el-col>
+
+      <!-- 型号 -->
+      <el-col :lg="{span:6}" class="searchCombo">
+        <div class="searchHeader">型号</div>
+        <el-input v-model="queryInfo.bbNo" placeholder="" clearable />
+      </el-col>
+
+      <!-- 模糊原纱 -->
+      <el-col :lg="{span:6}" class="searchCombo">
+        <div class="searchHeader">模糊原纱</div>
+        <el-input v-model="queryInfo.bbNo" placeholder="" clearable />
+      </el-col>
+    </el-row>
+    <el-row :gutter="15" style="margin-top:20px">
+
+      <!-- 型号 -->
+      <el-col :lg="{span:6}" class="searchCombo">
+        <div class="searchHeader">型号</div>
+        <el-input v-model="queryInfo.bbNo" placeholder="" clearable />
+      </el-col>
+
+      <!-- 新单 -->
+      <el-col :lg="{span:6}" class="searchCombo">
+        <div class="searchHeader">新单</div>
+        <el-dropdown split-button class="dropdownBox" @click="handleClick">
+          全部
+          <el-dropdown-menu slot="dropdown" />
+        </el-dropdown>
       </el-col>
       <!-- 检索按钮 -->
       <el-col :lg="{span:6}" class="searchCombo">

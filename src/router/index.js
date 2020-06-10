@@ -90,6 +90,18 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/ycdddsb',
+    component: Layout,
+    children: [
+      {
+        path: '/预测订单订纱表',
+        name: 'ycdddsb',
+        component: () => import('@/views/ycdddsb'),
+        meta: { title: '预测订单订纱表', icon: 'tree' }
+      }
+    ]
+  },
 
   // {
   //   path: '/nested',
