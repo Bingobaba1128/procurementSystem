@@ -16,39 +16,82 @@
       <!-- 状态 -->
       <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">状态</div>
-        <el-input v-model="queryInfo.bbNo" placeholder="" clearable />
+        <el-input placeholder="" clearable />
       </el-col>
     </el-row>
 
     <!-- 列表区 -->
     <el-row>
-      <el-table :data="jsData" border stripe>
+      <el-table border stripe>
         <el-table-column type="index" label="序号" />
-        <el-table-column label="下单日期" />
-        <el-table-column label="布编" />
-        <el-table-column label="浆纱单号" />
-        <el-table-column label="浆长(米)" />
-        <el-table-column label="坯布长(米)" />
-        <el-table-column label="生产安排单" />
-        <el-table-column label="浆染厂" />
-        <el-table-column label="织造厂" />
-        <el-table-column label="交轴日期" />
-        <el-table-column label="坯布交期" />
-        <el-table-column label="经纬" />
-        <el-table-column label="经/纬纱" />
-        <el-table-column label="需用量(KG)" />
-        <el-table-column label="库存(KG)" />
-        <el-table-column label="最低周转量" />
-        <el-table-column label="消化量(KG)" />
-        <el-table-column label="总需量" />
-        <el-table-column label="订购量(KG)" />
-        <el-table-column label="预购数量" />
-        <el-table-column label="确认完成" />
-        <el-table-column label="计划交期" />
-        <!-- <el-table-column label="到纱日" />
-        <el-table-column label="到纱量" /> -->
-        <!-- <el-table-column label="布编" /> -->
+        <!-- 预测订单带出 -->
+        <el-table-column style="text-align:center" label="预测订单信息">
+          <el-table-column
+            prop=""
+            label="备纱单日期"
+            width="120"
+          />
+          <el-table-column
+            prop=""
+            label="业务组"
+            width="120"
+          />
+          <el-table-column
+            prop=""
+            label="预测订单号"
+            width="300"
+          />
+          <el-table-column
+            prop=""
+            label="预测下单日期"
+            width="120"
+          />
+          <el-table-column
+            prop=""
+            label="品种"
+            width="120"
+          />
+          <el-table-column
+            prop=""
+            label="预测数量(码长)"
+            width="120"
+          />
+        </el-table-column>
+        <el-table-column style="text-align:center" label="备纱信息">
+          <el-table-column
+            prop=""
+            label="经纱/纬纱"
+            width="120"
+          />
+          <el-table-column
+            prop=""
+            label="纱名"
+            width="120"
+          />
+          <el-table-column
+            prop=""
+            label="长度"
+            width="120"
+          />
+          <el-table-column
+            prop=""
+            label="百米用量"
+            width="120"
+          />
+          <el-table-column
+            prop=""
+            label="预计备纱量(Kg)"
+            width="120"
+          />
+          <el-table-column
+            prop=""
+            label="备纱明细"
+            width="120"
+          />
+        </el-table-column>
         <el-table-column label="备注" />
+        <el-table-column label="状态" />
+        <el-table-column label="操作" />
       </el-table>
     </el-row>
   </el-card>
@@ -58,31 +101,6 @@
 export default {
   data() {
     return {
-      orderDate: '',
-      queryInfo: {
-        selectedDate: '',
-        bbNo: '',
-        scNo: '',
-        value: ''
-      },
-
-      statusOptions: [
-        {
-          value: 'status0',
-          label: '已确认已审批'
-        },
-        {
-          value: 'status1',
-          label: '已确认未审批'
-        },
-        {
-          value: 'status2',
-          label: '未确认'
-        }],
-      form: {
-        min: '',
-        max: ''
-      }
     }
   },
   methods: {}
@@ -90,6 +108,7 @@ export default {
 </script>
 
 <style scrope>
+
 .el-date-editor.el-input, .el-date-editor.el-input__inner {
     width: auto;
 }
@@ -120,5 +139,9 @@ export default {
 
 .dropdownBox .el-button-group .el-dropdown__caret-button {
   width: 20%;
+}
+
+.el-table_1_column_2, .el-table_1_column_9 {
+    text-align: center !important
 }
 </style>
