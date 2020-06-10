@@ -55,14 +55,19 @@
         <el-table-column label="下单日期" prop="doTime" />
         <el-table-column label="生产单号" prop="productionNo" />
         <el-table-column label="布编" prop="clothId" />
-        <el-table-column label="浆长" prop="jiaoZhouLength" />
-        <el-table-column label="经纱" class="jingsha">
+        <el-table-column label="织长" prop="huiPiLength" />
+        <el-table-column label="织缩率" prop="zhiBuZhiChengLv">
+          <template slot-scope="scope">
+            {{ scope.row.zhiBuZhiChengLv }}%
+          </template>
+        </el-table-column>
+        <el-table-column label="纬纱">
           <template slot-scope="scope">
             <el-button type="text" @click="showReplaceJS(scope.row.jingSha,scope.row.shaZhi,scope.row.id)"> {{ scope.row.jingSha }} <i class="el-icon-arrow-down el-icon--right" /> </el-button>
-            <el-dialog title="选择替换的经纱" :visible.sync="dialogReplaceJSVisible">
+            <el-dialog title="选择替换的纬纱" :visible.sync="dialogReplaceJSVisible">
               <el-form>
-                <el-form-item label="经纱" prop="jingsha">
-                  <el-select v-model="JSvalue" filterable placeholder="请选择您所需要的经纱">
+                <el-form-item label="纬纱" prop="jingsha">
+                  <el-select v-model="JSvalue" filterable placeholder="请选择您所需要的纬纱">
                     <el-option
                       v-for="item in jingshaList"
                       :key="item.id"
@@ -96,6 +101,7 @@
             </p>
           </template>
         </el-table-column>
+        <el-table-column label="参考百米用纬" prop="weiShaBmysl" />
         <el-table-column label="备注">
           <template slot-scope="scope">
             <el-button type="text" @click="editNote(scope.row.id)"> 备注 </el-button>
@@ -122,7 +128,7 @@
         </el-table-column>
         <el-table-column label="工艺变更申请">
           <template slot-scope="scope">
-            <el-button type="text" if-v="" :disabled="scope.row.state | statusFilter" @click="showPdf(scope.row.id)"> PDF </el-button>
+            <el-button type="text" :disabled="scope.row.state | statusFilter" @click="showPdf(scope.row.id)"> PDF </el-button>
           </template>
         </el-table-column>
         <el-table-column label="状态">
@@ -138,7 +144,8 @@
 </template>
 
 <script>
-import { loadJSData, searchJSData, insteadOfJing, updateJSData, searchPdf } from '@/api/jsqrApi'
+import { loadWSData, updateWSData } from '@/api/wsqrApi'
+import { searchJSData, insteadOfJing, searchPdf } from '@/api/jsqrApi'
 import { baseUrl } from '@/api/apiUrl'
 import { toUrlParam } from '@/utils/toUrlParam'
 
@@ -212,9 +219,8 @@ export default {
   methods: {
     // 打开pdf
     showPdf(id) {
-      window.console.log('pdffffffffffffff')
       var url = baseUrl + '/searchPDF?' + 'id=' + id
-      window.console.log(url)
+      //   window.console.log(url)
       searchPdf(url).then(res => {
         // window.console.log(res)
         if (res.data.code !== 200) {
@@ -236,10 +242,12 @@ export default {
     },
     // 数据初始化
     initData() {
-      var url = baseUrl + '/LoadData?'
+      var url = baseUrl + '/LoadWeiShaData?'
       var urlParam = toUrlParam(url, this.pageSetting)
-      loadJSData(urlParam).then(res => {
+      loadWSData(urlParam).then(res => {
+        window.console.log(res)
         this.jsData = res.data.data
+
         this.passParam.jingSha = this.jsData.jingSha
         this.passParam.shaZhi = this.jsData.shaZhi
       })
@@ -247,7 +255,7 @@ export default {
 
     // 查询数据
     searchData() {
-      var url = baseUrl + '/LoadData?'
+      var url = baseUrl + '/LoadWeiShaData?'
       var urlParam = toUrlParam(url, this.queryInfo)
       searchJSData(urlParam).then(res => {
         this.jsData = res.data.data
@@ -317,7 +325,7 @@ export default {
 
     // 更新编辑信息(传参格式特殊)
     updateData(param1) {
-      updateJSData(param1).then(res => {
+      updateWSData(param1).then(res => {
         // 点击提交后，后端传回数据
         window.console.log(param1)
         window.console.log('点击提交后，后端传回数据')
@@ -349,8 +357,8 @@ export default {
           this.$delete(this.updateParams, 'xuYaoLiang')
           this.$delete(this.updateParams, 'applyTime')
           this.$delete(this.updateParams, 'shaZhi')
-          // this.$delete(this.updateParams, 'jingSha')
-          // this.$delete(this.updateParams, 'jingShaDangAn')
+          //   this.$delete(this.updateParams, 'jingSha')
+          //   this.$delete(this.updateParams, 'jingShaDangAn')
 
           this.$set(this.updateParams, 'personId', '10001')
           this.$set(this.updateParams, 'personName', '邓科')
@@ -370,9 +378,5 @@ export default {
 <style scrope>
 .el-date-editor.el-input, .el-date-editor.el-input__inner {
     width: auto;
-}
-
-.jingsha .el-dialog {
-  width: 20%;
 }
 </style>

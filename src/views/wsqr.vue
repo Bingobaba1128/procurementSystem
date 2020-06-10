@@ -9,7 +9,7 @@
           v-model="queryInfo.selectedDate"
           type="date"
           placeholder="选择日期"
-          format="yyyy 年 MM 月 dd 日"
+          format="yyyy-MM-dd"
         />
       </el-col>
 

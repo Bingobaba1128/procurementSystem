@@ -55,7 +55,7 @@ export const constantRoutes = [
   },
 
   {
-    path: '/',
+    path: '/jsqr',
     component: Layout,
     children: [
       {
@@ -67,19 +67,19 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/',
+    path: '/wsqr',
     component: Layout,
     children: [
       {
         path: '/纬纱确认',
         name: 'wsqr',
-        component: () => import('@/views/wsqr'),
+        component: () => import('@/views/wsqr_new'),
         meta: { title: '纬纱确认', icon: 'tree' }
       }
     ]
   },
   {
-    path: '/',
+    path: '/scjhdsb',
     component: Layout,
     children: [
       {
