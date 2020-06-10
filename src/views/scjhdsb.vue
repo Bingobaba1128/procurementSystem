@@ -84,25 +84,30 @@
       <el-table :data="jsData" border stripe>
         <el-table-column type="index" label="序号" />
         <el-table-column label="下单日期" />
-        <el-table-column label="生产单号" />
         <el-table-column label="布编" />
-        <el-table-column label="浆长" />
-        <el-table-column label="经纱">
-          <template>
-            <el-dropdown split-button type="primary" @click="handleClick">
-              A产品
-            </el-dropdown>
-          </template>
-        </el-table-column>
-        <el-table-column label="需用量" />
-        <el-table-column label="生产安排单备注" />
-        <el-table-column label="计划轴期" />
-        <el-table-column label="计划坯期" />
+        <el-table-column label="浆纱单号" />
+        <el-table-column label="浆长(米)" />
+        <el-table-column label="坯布长(米)" />
+        <el-table-column label="生产安排单" />
+        <el-table-column label="浆染厂" />
+        <el-table-column label="织造厂" />
+        <el-table-column label="交轴日期" />
+        <el-table-column label="坯布交期" />
+        <el-table-column label="经纬" />
+        <el-table-column label="经/纬纱" />
+        <el-table-column label="需用量(KG)" />
+        <el-table-column label="库存(KG)" />
+        <el-table-column label="最低周转量" />
+        <el-table-column label="消化量(KG)" />
+        <el-table-column label="总需量" />
+        <el-table-column label="订购量(KG)" />
+        <el-table-column label="预购数量" />
+        <el-table-column label="确认完成" />
+        <el-table-column label="计划交期" />
+        <!-- <el-table-column label="到纱日" />
+        <el-table-column label="到纱量" /> -->
+        <!-- <el-table-column label="布编" /> -->
         <el-table-column label="备注" />
-        <el-table-column label="操作" />
-        <el-table-column label="工艺变更申请" />
-        <el-table-column label="状态" />
-
       </el-table>
     </el-row>
   </el-card>

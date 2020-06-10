@@ -29,7 +29,7 @@
 
       <!-- 确认订单状态 -->
       <el-col :span="5">
-        <el-select v-model="queryInfo.state" placeholder="确认状态">
+        <el-select v-model="queryInfo.state" clearable placeholder="确认状态">
           <!-- <template slot="prefix">确认状态</template> -->
           <el-option
             v-for="item in statusOptions"
@@ -80,6 +80,8 @@
             </el-dialog>
           </template>
         </el-table-column>
+        <el-table-column label="根数" prop="touFen" />
+
         <el-table-column label="需用量" prop="xuYaoLiang" />
         <el-table-column label="生产安排单备注" prop="remarks" />
         <el-table-column label="计划轴期" prop="jiaoZhouDate">
@@ -96,6 +98,9 @@
             </p>
           </template>
         </el-table-column>
+
+        <el-table-column label="客户" prop="clientName" />
+        <el-table-column label="业务员" prop="saleManName" />
         <el-table-column label="备注">
           <template slot-scope="scope">
             <el-button type="text" @click="editNote(scope.row.id)"> 备注 </el-button>
@@ -154,6 +159,7 @@ export default {
   },
   data() {
     return {
+      isLoading: true,
       note: '',
       form: {
         name: '',
@@ -212,10 +218,18 @@ export default {
   methods: {
     // 打开pdf
     showPdf(id) {
-      window.console.log('pdffffffffffffff')
+      const loading = this.$loading({
+        lock: true, // lock的修改符--默认是false
+        text: 'Loading', // 显示在加载图标下方的加载文案
+        spinner: 'el-icon-loading', // 自定义加载图标类名
+        background: 'rgba(0, 0, 0, 0.7)', // 遮罩层颜色
+        target: document.querySelector('#table')// loadin覆盖的dom元素节点
+      })
+
       var url = baseUrl + '/searchPDF?' + 'id=' + id
-      window.console.log(url)
+      // window.console.log(url)
       searchPdf(url).then(res => {
+        loading.close()
         // window.console.log(res)
         if (res.data.code !== 200) {
           this.$message.error(res.data.msg)
@@ -249,6 +263,7 @@ export default {
     searchData() {
       var url = baseUrl + '/LoadData?'
       var urlParam = toUrlParam(url, this.queryInfo)
+      window.console.log(urlParam)
       searchJSData(urlParam).then(res => {
         this.jsData = res.data.data
       })

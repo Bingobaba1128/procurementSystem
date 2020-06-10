@@ -102,6 +102,9 @@
           </template>
         </el-table-column>
         <el-table-column label="参考百米用纬" prop="weiShaBmysl" />
+
+        <el-table-column label="客户" prop="clientName" />
+        <el-table-column label="业务员" prop="saleManName" />
         <el-table-column label="备注">
           <template slot-scope="scope">
             <el-button type="text" @click="editNote(scope.row.id)"> 备注 </el-button>
@@ -219,10 +222,19 @@ export default {
   methods: {
     // 打开pdf
     showPdf(id) {
-      var url = baseUrl + '/searchPDF?' + 'id=' + id
+      const loading = this.$loading({
+        lock: true, // lock的修改符--默认是false
+        text: 'Loading', // 显示在加载图标下方的加载文案
+        spinner: 'el-icon-loading', // 自定义加载图标类名
+        background: 'rgba(0, 0, 0, 0.7)', // 遮罩层颜色
+        target: document.querySelector('#table')// loadin覆盖的dom元素节点
+      })
+      var url = baseUrl + '/searchWeiShaPDF?' + 'id=' + id
       //   window.console.log(url)
       searchPdf(url).then(res => {
         // window.console.log(res)
+        loading.close()
+
         if (res.data.code !== 200) {
           this.$message.error(res.data.msg)
         } else {
