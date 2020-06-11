@@ -25,7 +25,7 @@
       <el-table border stripe>
         <el-table-column type="index" label="序号" />
         <!-- 预测订单带出 -->
-        <el-table-column style="text-align:center" label="预测订单信息">
+        <el-table-column class="alignCenter" label="预测订单信息">
           <el-table-column
             prop=""
             label="备纱单日期"
@@ -141,7 +141,7 @@ export default {
   width: 20%;
 }
 
-.el-table_1_column_2, .el-table_1_column_9 {
+.cell {
     text-align: center !important
 }
 </style>
