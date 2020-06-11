@@ -364,8 +364,6 @@ export default {
           this.$delete(this.updateParams, 'xuYaoLiang')
           this.$delete(this.updateParams, 'applyTime')
           this.$delete(this.updateParams, 'shaZhi')
-          // this.$delete(this.updateParams, 'jingSha')
-          // this.$delete(this.updateParams, 'jingShaDangAn')
 
           this.$set(this.updateParams, 'personId', '10001')
           this.$set(this.updateParams, 'personName', '邓科')

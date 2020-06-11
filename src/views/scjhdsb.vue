@@ -51,16 +51,16 @@
       </el-col>
 
       <!-- 需求量 -->
-      <el-col :lg="{span:6}" class="searchCombo">
+      <!-- <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">需求量</div>
         <el-dropdown split-button class="dropdownBox" @click="handleClick">
           选择
           <el-dropdown-menu slot="dropdown" />
         </el-dropdown>
-      </el-col>
+      </el-col> -->
 
       <!-- 订购量-->
-      <el-col :lg="{span:6}" class="searchCombo">
+      <!-- <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">订购量</div>
         <el-form ref="form" style="display:flex" :model="form" :rules="rules">
           <el-form-item style="margin-bottom:0">
@@ -73,7 +73,7 @@
             <el-input v-model="form.max" />
           </el-form-item>
         </el-form>
-      </el-col>
+      </el-col> -->
 
       <!-- 生产安排单 -->
       <el-col :lg="{span:6}" class="searchCombo">
@@ -131,42 +131,87 @@
 
     <!-- 列表区 -->
     <el-row>
-      <el-table :data="jsData" border stripe>
+      <el-table ref="multipleTable" :data="getInitData" border stripe tooltip-effect="dark" @selection-change="handleSelectionChange">
+        <el-table-column
+          type="selection"
+          width="55"
+        />
         <el-table-column type="index" label="序号" />
-        <el-table-column label="下单日期" />
-        <el-table-column label="布编" />
-        <el-table-column label="浆纱单号" />
-        <el-table-column label="浆长(米)" />
-        <el-table-column label="坯布长(米)" />
-        <el-table-column label="生产安排单" />
-        <el-table-column label="浆染厂" />
-        <el-table-column label="织造厂" />
-        <el-table-column label="交轴日期" />
-        <el-table-column label="坯布交期" />
-        <el-table-column label="经纬" />
-        <el-table-column label="经/纬纱" />
-        <el-table-column label="需用量(KG)" />
-        <el-table-column label="库存(KG)" />
-        <el-table-column label="最低周转量" />
-        <el-table-column label="消化量(KG)" />
-        <el-table-column label="总需量" />
-        <el-table-column label="订购量(KG)" />
-        <el-table-column label="预购数量" />
-        <el-table-column label="确认完成" />
-        <el-table-column label="计划交期" />
-        <!-- <el-table-column label="到纱日" />
-        <el-table-column label="到纱量" /> -->
-        <!-- <el-table-column label="布编" /> -->
-        <el-table-column label="备注" />
+
+        <el-table-column label="下单日期" prop="doTime" />
+        <el-table-column label="布编" prop="clothId" />
+        <el-table-column label="浆纱单号" prop="productionNo" />
+        <el-table-column label="浆长(米)" prop="jiaoZhouLength" />
+        <el-table-column label="坯布长(米)" prop="huiPiLength" />
+        <el-table-column label="生产安排单" prop="produceRequestNo" />
+        <el-table-column label="浆染厂" prop="jiangRanChang" />
+        <el-table-column label="织造厂" prop="zhiZaoChang" />
+        <el-table-column label="交轴日期" prop="jiaoZhouDate">
+          <template slot-scope="scope">
+            <p v-for="(item) in scope.row.jiaoZhouDate" :key="item" style="margin:0px">
+              {{ item }}
+            </p>
+          </template>
+        </el-table-column>
+        <el-table-column label="坯布交期" prop="huiPiDate">
+          <template slot-scope="scope">
+            <p v-for="(item) in scope.row.huiPiDate" :key="item" style="margin:0px">
+              {{ item }}
+            </p>
+          </template>
+        </el-table-column>
+        <el-table-column label="经/纬纱">
+          <template slot-scope="scope">
+            <span>{{ formatStatus(scope.row.jingOrWei) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="经纬" prop="jingSha" />
+
+        <el-table-column label="需用量(KG)" prop="" width="150">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.xuYaoLiang" placeholder="scope.row.xuYaoLiang" />
+          </template>
+        </el-table-column>
+        <el-table-column label="备纱情况" prop="beiShaQingKuang" />
+        <el-table-column label="证书情况" prop="zhengShuQingKuang" />
+        <el-table-column label="库存(KG)" prop="kuCun" />
+        <el-table-column label="最低周转量" prop="zhouZhuanLiang" />
+        <el-table-column label="消化量(KG)" prop="xiaoHuaLiang" />
+        <el-table-column label="总需量" prop="totalXuYaoLiang" />
+        <el-table-column label="订购量(KG)" prop="">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.dingGouLiang" placeholder="0" />
+          </template>
+        </el-table-column>
+        <el-table-column label="纱期" prop="shaQi" />
+
+        <el-table-column label="成品交期" prop="chengPinDate" />
+        <el-table-column label="备注" prop="remarks" width="350">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.remarks"
+              type="textarea"
+              placeholder="请输入内容"
+            />
+          </template>
+        </el-table-column>
       </el-table>
     </el-row>
+    <el-button type="success" @click="clickToShow()">确定上传</el-button>
   </el-card>
 </template>
 
 <script>
+import { loadSJDSBData, updatePlanData } from '@/api/scjhdsb'
+import { baseUrl } from '@/api/apiUrl'
+import { toUrlParam } from '@/utils/toUrlParam'
+
 export default {
   data() {
     return {
+      multipleSelection: [],
+      checked: false,
+      bookingAmount: 0,
       orderDate: '',
       queryInfo: {
         selectedDate: '',
@@ -174,7 +219,6 @@ export default {
         scNo: '',
         value: ''
       },
-
       statusOptions: [
         {
           value: 'status0',
@@ -191,10 +235,59 @@ export default {
       form: {
         min: '',
         max: ''
-      }
+      },
+      pageSetting: {
+        pageNumber: 1,
+        pageSize: 10
+      },
+      getInitData: '',
+      checkedBox: []
     }
   },
-  methods: {}
+  created() {
+    this.initData()
+  },
+  methods: {
+    initData() {
+      var url = baseUrl + '/LoadPlanList?'
+      var urlParam = toUrlParam(url, this.pageSetting)
+      loadSJDSBData(urlParam).then(res => {
+        this.getInitData = res.data.data
+        window.console.log(this.getInitData)
+      })
+    },
+
+    formatStatus(val) {
+      return val == 0 ? '纬' : val == 1 ? '经' : ''
+    },
+    // 勾选表单
+    toggleSelection(rows) {
+      if (rows) {
+        rows.forEach(row => {
+          this.$refs.multipleTable.toggleRowSelection(row)
+        })
+      } else {
+        this.$refs.multipleTable.clearSelection()
+      }
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+    },
+    // changeStatus(id) {
+    //   // for (var i = 0; i < this.getInitData.length; i++) {
+    //   //   if (this.getInitData[i].id === id) {
+    //   //     this.$set(this.getInitData[i], 'queRenComplete', '1')
+    //   //   }
+    //   // }
+    // },
+    clickToShow() {
+      // window.console.log(this.getInitData)
+      // window.console.log(this.multipleSelection)
+      updatePlanData(this.multipleSelection).then(res => {
+        window.console.log(res)
+      })
+    }
+  }
 }
 </script>
 
