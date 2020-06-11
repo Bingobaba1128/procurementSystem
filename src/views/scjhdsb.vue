@@ -24,18 +24,26 @@
       <!-- 经纬选择 -->
       <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">经纬</div>
-        <el-dropdown split-button class="dropdownBox" @click="handleClick">
-          选择
-          <el-dropdown-menu slot="dropdown" />
-        </el-dropdown>
+        <el-select v-model="queryInfo.jingOrWei" placeholder="请选择">
+            <el-option
+              v-for="item in jingOrWeiSelect"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
       </el-col>
       <!-- 购纱计划 -->
       <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">购纱计划</div>
-        <el-dropdown split-button class="dropdownBox" @click="handleClick">
-          选择
-          <el-dropdown-menu slot="dropdown" style="width:20%" />
-        </el-dropdown>
+        <el-select v-model="queryInfo.gsPlan" placeholder="请选择">
+            <el-option
+              v-for="item in gsPlanSelect"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
       </el-col>
     </el-row>
 
@@ -44,90 +52,32 @@
       <!-- 排序 -->
       <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">排序</div>
-        <el-dropdown split-button class="dropdownBox" @click="handleClick">
+        <el-select v-model="queryInfo.orderStandard" placeholder="请选择">
+            <el-option
+              v-for="item in orderList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        <!-- <el-dropdown split-button class="dropdownBox" @click="handleClick">
           生产单排序
           <el-dropdown-menu slot="dropdown" />
-        </el-dropdown>
+        </el-dropdown> -->
       </el-col>
 
-      <!-- 需求量 -->
-      <!-- <el-col :lg="{span:6}" class="searchCombo">
-        <div class="searchHeader">需求量</div>
-        <el-dropdown split-button class="dropdownBox" @click="handleClick">
-          选择
-          <el-dropdown-menu slot="dropdown" />
-        </el-dropdown>
-      </el-col> -->
-
-      <!-- 订购量-->
-      <!-- <el-col :lg="{span:6}" class="searchCombo">
-        <div class="searchHeader">订购量</div>
-        <el-form ref="form" style="display:flex" :model="form" :rules="rules">
-          <el-form-item style="margin-bottom:0">
-            <el-input v-model="form.min" />
-          </el-form-item>
-          <div style="font-size:30px">
-            ~
-          </div>
-          <el-form-item style="margin-bottom:0">
-            <el-input v-model="form.max" />
-          </el-form-item>
-        </el-form>
-      </el-col> -->
 
       <!-- 生产安排单 -->
       <el-col :lg="{span:6}" class="searchCombo">
-        <div class="searchHeader">生产安排单</div>
+        <div class="searchHeader">{{queryInfo.orderStandard}}</div>
         <el-input v-model="queryInfo.bbNo" placeholder="" clearable />
       </el-col>
-    </el-row>
-    <el-row :gutter="15" style="margin-top:20px">
-
-      <!-- 浆染单号 -->
-      <el-col :lg="{span:6}" class="searchCombo">
-        <div class="searchHeader">浆纱单号</div>
-        <el-input v-model="queryInfo.bbNo" placeholder="" clearable />
-      </el-col>
-
-      <!-- 原纱 -->
-      <el-col :lg="{span:6}" class="searchCombo">
-        <div class="searchHeader">原纱</div>
-        <el-input v-model="queryInfo.bbNo" placeholder="" clearable />
-      </el-col>
-
-      <!-- 型号 -->
-      <el-col :lg="{span:6}" class="searchCombo">
-        <div class="searchHeader">型号</div>
-        <el-input v-model="queryInfo.bbNo" placeholder="" clearable />
-      </el-col>
-
-      <!-- 模糊原纱 -->
-      <el-col :lg="{span:6}" class="searchCombo">
-        <div class="searchHeader">模糊原纱</div>
-        <el-input v-model="queryInfo.bbNo" placeholder="" clearable />
-      </el-col>
-    </el-row>
-    <el-row :gutter="15" style="margin-top:20px">
-
-      <!-- 型号 -->
-      <el-col :lg="{span:6}" class="searchCombo">
-        <div class="searchHeader">型号</div>
-        <el-input v-model="queryInfo.bbNo" placeholder="" clearable />
-      </el-col>
-
-      <!-- 新单 -->
-      <el-col :lg="{span:6}" class="searchCombo">
-        <div class="searchHeader">新单</div>
-        <el-dropdown split-button class="dropdownBox" @click="handleClick">
-          全部
-          <el-dropdown-menu slot="dropdown" />
-        </el-dropdown>
-      </el-col>
-      <!-- 检索按钮 -->
+            <!-- 检索按钮 -->
       <el-col :lg="{span:6}" class="searchCombo">
         <el-button type="success" @click="print">检索</el-button>
       </el-col>
     </el-row>
+
 
     <!-- 列表区 -->
     <el-row>
@@ -165,7 +115,7 @@
             <span>{{ formatStatus(scope.row.jingOrWei) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="经纬" prop="jingSha" />
+        <el-table-column label="经纬纱名称" prop="jingSha" />
 
         <el-table-column label="需用量(KG)" prop="" width="150">
           <template slot-scope="scope">
@@ -210,26 +160,51 @@ export default {
   data() {
     return {
       multipleSelection: [],
-      checked: false,
-      bookingAmount: 0,
       orderDate: '',
       queryInfo: {
         selectedDate: '',
-        bbNo: '',
-        scNo: '',
-        value: ''
+        jingOrWei: '全部',
+        gsPlan: '全部',
+        orderStandard: ''
+
       },
-      statusOptions: [
+      orderList: [
         {
-          value: 'status0',
-          label: '已确认已审批'
+          value: '生产安排单',
+          label: '生产安排单'
         },
         {
-          value: 'status1',
-          label: '已确认未审批'
+          value: '经纬纱名称',
+          label: '经纬纱名称'
         },
         {
-          value: 'status2',
+          value: '浆纱单号',
+          label: '浆纱单号'
+        }],
+      jingOrWeiSelect: [
+        {
+          value: '2',
+          label: '全部'
+        },
+        {
+          value: '1',
+          label: '经纱'
+        },
+        {
+          value: '0',
+          label: '纬纱'
+        }],
+        gsPlanSelect: [
+        {
+          value: '2',
+          label: '全部'
+        },
+        {
+          value: '1',
+          label: '已确认'
+        },
+        {
+          value: '0',
           label: '未确认'
         }],
       form: {
@@ -273,13 +248,9 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val
     },
-    // changeStatus(id) {
-    //   // for (var i = 0; i < this.getInitData.length; i++) {
-    //   //   if (this.getInitData[i].id === id) {
-    //   //     this.$set(this.getInitData[i], 'queRenComplete', '1')
-    //   //   }
-    //   // }
-    // },
+    print() {
+      window.console.log(this.queryInfo)
+    },
     clickToShow() {
       // window.console.log(this.getInitData)
       // window.console.log(this.multipleSelection)
