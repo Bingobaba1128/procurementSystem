@@ -109,11 +109,46 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="parts" label="subItems">
+        <el-table-column prop="parts" label="经纬纱信息" width="1500">
           <template slot-scope="scope">
-            <p v-for="(item) in scope.row.parts" :key="item" style="margin:0px">
-              {{ item }}
-            </p>
+            <el-table :data="scope.row.parts" border stripe>
+              <el-table-column label="经/纬纱">
+                <template slot-scope="scope">
+                  <span>{{ formatStatus(scope.row.jingOrWei) }}</span>
+                </template>
+
+              </el-table-column>
+              <el-table-column label="经纬纱名称" prop="jingSha" />
+
+              <el-table-column label="需用量(KG)" prop="" width="150">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.xuYaoLiang" placeholder="scope.row.xuYaoLiang" />
+                </template>
+              </el-table-column>
+              <el-table-column label="备纱情况" prop="beiShaQingKuang" />
+              <el-table-column label="证书情况" prop="zhengShuQingKuang" />
+              <el-table-column label="库存(KG)" prop="kuCun" />
+              <el-table-column label="最低周转量" prop="zhouZhuanLiang" />
+              <el-table-column label="消化量(KG)" prop="xiaoHuaLiang" />
+              <el-table-column label="总需量" prop="totalXuYaoLiang" />
+              <el-table-column label="订购量(KG)" prop="">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.dingGouLiang" placeholder="0" />
+                </template>
+              </el-table-column>
+              <el-table-column label="纱期" prop="shaQi" />
+
+              <el-table-column label="成品交期" prop="chengPinDate" />
+              <el-table-column label="备注" prop="remarks" width="350">
+                <template slot-scope="scope">
+                  <el-input
+                    v-model="scope.row.remarks"
+                    type="textarea"
+                    placeholder="请输入内容"
+                  />
+                </template>
+              </el-table-column>
+            </el-table>
           </template>
         </el-table-column>
       </el-table>
