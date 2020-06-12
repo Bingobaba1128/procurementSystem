@@ -79,11 +79,8 @@
 
     <!-- 列表区 -->
     <el-row>
-      <el-table ref="multipleTable" :data="getInitData" border stripe tooltip-effect="dark" @selection-change="handleSelectionChange">
-        <el-table-column
-          type="selection"
-          width="55"
-        />
+      <el-table :data="getInitData" border stripe tooltip-effect="dark">
+
         <el-table-column type="index" label="序号" />
 
         <el-table-column label="下单日期" prop="doTime" />
@@ -109,9 +106,9 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="parts" label="经纬纱信息" width="1500">
+        <el-table-column prop="parts" label="经纬纱信息" width="1900" >
           <template slot-scope="scope">
-            <el-table :data="scope.row.parts" border stripe>
+            <el-table :data="scope.row.parts" border stripe ref="multipleTable" @selection-change="handleSelectionChange">
               <el-table-column label="经/纬纱">
                 <template slot-scope="scope">
                   <span>{{ formatStatus(scope.row.jingOrWei) }}</span>
@@ -120,7 +117,7 @@
               </el-table-column>
               <el-table-column label="经纬纱名称" prop="jingSha" />
 
-              <el-table-column label="需用量(KG)" prop="" width="150">
+              <el-table-column label="需用量(KG)" prop="" width="160">
                 <template slot-scope="scope">
                   <el-input v-model="scope.row.xuYaoLiang" placeholder="scope.row.xuYaoLiang" />
                 </template>
@@ -148,6 +145,17 @@
                   />
                 </template>
               </el-table-column>
+
+              <el-table-column label="购纱计划状态" prop="queRenComplete" width="350">
+                <template slot-scope="scope">
+                  <span>{{ formatConfirmStatus(scope.row.queRenComplete) }}</span>
+                </template>
+              </el-table-column>
+
+              <el-table-column
+                type="selection"
+                width="55"
+              />
             </el-table>
           </template>
         </el-table-column>
@@ -235,12 +243,15 @@ export default {
       var urlParam = toUrlParam(url, this.pageSetting)
       loadSJDSBData(urlParam).then(res => {
         this.getInitData = res.data.data
-        window.console.log(this.getInitData)
+        // window.console.log(this.getInitData)
       })
     },
 
     formatStatus(val) {
       return val == 0 ? '纬' : val == 1 ? '经' : ''
+    },
+    formatConfirmStatus(val) {
+      return val == 0 ? '未确认' : val == 1 ? '已确认' : ''
     },
     // 勾选表单
     toggleSelection(rows) {
@@ -259,8 +270,7 @@ export default {
       window.console.log(this.queryInfo)
     },
     clickToShow() {
-      // window.console.log(this.getInitData)
-      // window.console.log(this.multipleSelection)
+      window.console.log(this.multipleSelection)
       updatePlanData(this.multipleSelection).then(res => {
         window.console.log(res)
       })
