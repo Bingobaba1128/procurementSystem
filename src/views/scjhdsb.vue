@@ -25,25 +25,25 @@
       <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">经纬</div>
         <el-select v-model="queryInfo.jingOrWei" placeholder="请选择">
-            <el-option
-              v-for="item in jingOrWeiSelect"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
+          <el-option
+            v-for="item in jingOrWeiSelect"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-col>
       <!-- 购纱计划 -->
       <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">购纱计划</div>
         <el-select v-model="queryInfo.gsPlan" placeholder="请选择">
-            <el-option
-              v-for="item in gsPlanSelect"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
+          <el-option
+            v-for="item in gsPlanSelect"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-col>
     </el-row>
 
@@ -53,31 +53,29 @@
       <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">排序</div>
         <el-select v-model="queryInfo.orderStandard" placeholder="请选择">
-            <el-option
-              v-for="item in orderList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
+          <el-option
+            v-for="item in orderList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
         <!-- <el-dropdown split-button class="dropdownBox" @click="handleClick">
           生产单排序
           <el-dropdown-menu slot="dropdown" />
         </el-dropdown> -->
       </el-col>
 
-
       <!-- 生产安排单 -->
       <el-col :lg="{span:6}" class="searchCombo">
-        <div class="searchHeader">{{queryInfo.orderStandard}}</div>
+        <div class="searchHeader">{{ queryInfo.orderStandard }}</div>
         <el-input v-model="queryInfo.bbNo" placeholder="" clearable />
       </el-col>
-            <!-- 检索按钮 -->
+      <!-- 检索按钮 -->
       <el-col :lg="{span:6}" class="searchCombo">
         <el-button type="success" @click="print">检索</el-button>
       </el-col>
     </el-row>
-
 
     <!-- 列表区 -->
     <el-row>
@@ -110,42 +108,16 @@
             </p>
           </template>
         </el-table-column>
-        <el-table-column label="经/纬纱">
-          <template slot-scope="scope">
-            <span>{{ formatStatus(scope.row.jingOrWei) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="经纬纱名称" prop="jingSha" />
 
-        <el-table-column label="需用量(KG)" prop="" width="150">
+        <el-table-column prop="parts" label="subItems">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.xuYaoLiang" placeholder="scope.row.xuYaoLiang" />
-          </template>
-        </el-table-column>
-        <el-table-column label="备纱情况" prop="beiShaQingKuang" />
-        <el-table-column label="证书情况" prop="zhengShuQingKuang" />
-        <el-table-column label="库存(KG)" prop="kuCun" />
-        <el-table-column label="最低周转量" prop="zhouZhuanLiang" />
-        <el-table-column label="消化量(KG)" prop="xiaoHuaLiang" />
-        <el-table-column label="总需量" prop="totalXuYaoLiang" />
-        <el-table-column label="订购量(KG)" prop="">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.dingGouLiang" placeholder="0" />
-          </template>
-        </el-table-column>
-        <el-table-column label="纱期" prop="shaQi" />
-
-        <el-table-column label="成品交期" prop="chengPinDate" />
-        <el-table-column label="备注" prop="remarks" width="350">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.remarks"
-              type="textarea"
-              placeholder="请输入内容"
-            />
+            <p v-for="(item) in scope.row.parts" :key="item" style="margin:0px">
+              {{ item }}
+            </p>
           </template>
         </el-table-column>
       </el-table>
+
     </el-row>
     <el-button type="success" @click="clickToShow()">确定上传</el-button>
   </el-card>
@@ -194,7 +166,7 @@ export default {
           value: '0',
           label: '纬纱'
         }],
-        gsPlanSelect: [
+      gsPlanSelect: [
         {
           value: '2',
           label: '全部'
