@@ -104,7 +104,7 @@
 
     <!-- 列表区 -->
     <el-row>
-      <el-table :data="getInitData" border stripe tooltip-effect="dark" id="out-table">
+      <el-table id="out-table" :data="getInitData" border stripe tooltip-effect="dark">
 
         <el-table-column type="index" label="序号" />
 
@@ -131,7 +131,8 @@
           </template>
         </el-table-column>
         <el-table-column label="成品交期" prop="chengPinDate" />
-
+        
+        <!--二级表头 -->
         <el-table-column prop="parts" label="经纬纱信息" width="1900">
           <template slot-scope="scope">
             <el-table ref="multipleTable" :data="scope.row.parts" border stripe @selection-change="handleSelectionChange">
@@ -185,6 +186,7 @@
             </el-table>
           </template>
         </el-table-column>
+
       </el-table>
 
     </el-row>

@@ -103,6 +103,30 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/ysdhd',
+    component: Layout,
+    children: [
+      {
+        path: '/原纱订货单',
+        name: 'ysdhd',
+        component: () => import('@/views/ysdhd'),
+        meta: { title: '原纱订货单', icon: 'tree' }
+      }
+    ]
+  },
+  {
+    path: '/yshtjfpgl',
+    component: Layout,
+    children: [
+      {
+        path: '/原纱合同及发票管理',
+        name: 'yshtfp',
+        component: () => import('@/views/yshtfp'),
+        meta: { title: '原纱合同及发票管理', icon: 'tree' }
+      }
+    ]
+  },
+  {
     path: '/ysda',
     component: Layout,
     children: [
