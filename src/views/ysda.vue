@@ -1,0 +1,304 @@
+<template>
+  <el-card>
+    <!-- 列表区 -->
+    <el-row>
+      <el-table :data="jsData" border stripe>
+        <el-table-column type="index" label="序号" />
+        <el-table-column label="产地" prop="" />
+        <el-table-column label="原纱名称" prop="" />
+        <el-table-column label="型号" prop="" />
+        <el-table-column label="属性" prop="" />
+        <el-table-column label="折算纱织" prop="" />
+        <el-table-column label="核算价格" prop="" />
+        <el-table-column label="工艺标志" prop="" />
+        <el-table-column label="成分" prop="" />
+        <el-table-column label="备注">
+          <template slot-scope="scope">
+            <el-button type="text" @click="editNote(scope.row.id)"> 备注 </el-button>
+            <el-dialog title="编辑您的备注" :visible.sync="dialogNoteVisible">
+              已提交备注： {{ showCurrentNote }}
+              <el-input
+                v-model="note"
+                type="textarea"
+                :rows="2"
+                placeholder="请输入新备注"
+              />
+
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogNoteVisible = false">取 消</el-button>
+                <el-button type="primary" @click="saveNote(selectedID,note)">确 定</el-button>
+              </div>
+            </el-dialog>
+          </template>
+        </el-table-column>
+        <el-table-column label="停用" prop="" />
+        <el-table-column label="单纱强力" prop="" />
+        <el-table-column label="最低单纱强力" prop="" />
+        <el-table-column label="强力CV" prop="" />
+        <el-table-column label="织偏上限" prop="" />
+        <el-table-column label="织偏下限" prop="" />
+
+        <el-table-column label="捻度" prop="" />
+        <el-table-column label="捻系数" prop="" />
+        <el-table-column label="断裂伸长度" prop="" />
+        <el-table-column label="条干" prop="" />
+        <el-table-column label="原ERP导入" prop="" />
+
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button type="success" @click="updateInfo(scope.row.id)">{{ formateUpload(scope.row.state) }}</el-button>
+          </template>
+        </el-table-column>
+
+      </el-table>
+    </el-row>
+
+  </el-card>
+</template>
+
+<script>
+import { loadJSData, searchJSData, insteadOfJing, updateJSData, searchPdf } from '@/api/jsqrApi'
+import { baseUrl } from '@/api/apiUrl'
+import { toUrlParam } from '@/utils/toUrlParam'
+
+export default {
+  filters: {
+    statusFilter(status) {
+      const statusMap = {
+        0: true,
+        1: false
+      }
+      return statusMap[status]
+    }
+  },
+  data() {
+    return {
+      isLoading: true,
+      note: '',
+      form: {
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
+        delivery: false,
+        type: [],
+        resource: '',
+        desc: ''
+      },
+      JSvalue: '',
+      dialogVisible: false,
+      pageSetting: {
+        pageNumber: 1,
+        pageSize: 10
+      },
+      queryInfo: {
+        pageNumber: 1,
+        pageSize: 10,
+        doTime: '',
+        clothId: '',
+        productionNo: '',
+        state: ''
+      },
+      jsData: '',
+
+      statusOptions: [
+        {
+          value: '1',
+          label: '已确认'
+        },
+        {
+          value: '0',
+          label: '未确认'
+        }],
+      passParam: {
+        shaZhi: '',
+        jingSha: ''
+      },
+      dialogReplaceJSVisible: false,
+      dialogNoteVisible: false,
+      jingshaList: '',
+      selectedJS: '',
+      selectedID: '',
+      updateParam: '',
+      showCurrentNote: '',
+      pdfLink: ''
+    }
+  },
+
+  created() {
+    this.initData()
+  },
+
+  methods: {
+    // 打开pdf
+    showPdf(id) {
+      const loading = this.$loading({
+        lock: true, // lock的修改符--默认是false
+        text: 'Loading', // 显示在加载图标下方的加载文案
+        spinner: 'el-icon-loading', // 自定义加载图标类名
+        background: 'rgba(0, 0, 0, 0.7)', // 遮罩层颜色
+        target: document.querySelector('#table')// loadin覆盖的dom元素节点
+      })
+
+      var url = baseUrl + '/searchPDF?' + 'id=' + id
+      // window.console.log(url)
+      searchPdf(url).then(res => {
+        loading.close()
+        // window.console.log(res)
+        if (res.data.code !== 200) {
+          this.$message.error(res.data.msg)
+        } else {
+          this.pdfLink = baseUrl + res.data.data
+          // window.console.log(this.pdfLink)
+          window.open(this.pdfLink, '_blank')
+        }
+      })
+    },
+    // 状态过滤
+    formatStatus(val) {
+      return val == 0 ? '未确认' : val == 1 ? '已确认' : ''
+    },
+    // 操作状态
+    formateUpload(val) {
+      return val == 0 ? '确认提交' : val == 1 ? '提交修改' : ''
+    },
+    // 数据初始化
+    initData() {
+      var url = baseUrl + '/LoadData?'
+      var urlParam = toUrlParam(url, this.pageSetting)
+      loadJSData(urlParam).then(res => {
+        this.jsData = res.data.data
+        this.passParam.jingSha = this.jsData.jingSha
+        this.passParam.shaZhi = this.jsData.shaZhi
+      })
+    },
+
+    // 查询数据
+    searchData() {
+      var url = baseUrl + '/LoadData?'
+      var urlParam = toUrlParam(url, this.queryInfo)
+      window.console.log(urlParam)
+      searchJSData(urlParam).then(res => {
+        this.jsData = res.data.data
+      })
+    },
+
+    // 替代经纱查询
+    showReplaceJS(jingsha, shaZhiNo, id) {
+      // 储存原始数据
+      for (var i = 0; i < this.jsData.length; i++) {
+        if (this.jsData[i].id === id) {
+          this.$set(this.jsData[i], 'zhongJian', this.jsData[i].jingSha)
+          this.$set(this.jsData[i], 'original', this.jsData[i].jingShaDangAn)
+        }
+      }
+      var url = baseUrl + '/loadChangeYuanSha?'
+      var data = {
+        shaZhi: parseInt(shaZhiNo),
+        jingSha: jingsha
+      }
+      var urlParam = toUrlParam(url, data)
+      insteadOfJing(urlParam).then(res => {
+        this.jingshaList = Object.assign({}, this.jingshaList, res.data.data)
+      })
+      this.selectedID = id
+      this.dialogReplaceJSVisible = true
+    },
+    switchJSType(JSvalue, id) {
+      for (var i = 0; i < this.jsData.length; i++) {
+        if (this.jsData[i].id === id) {
+          this.$set(this.jsData[i], 'jingSha', JSvalue)
+          this.$set(this.jsData[i], 'jingShaD', JSvalue)
+        }
+      }
+      this.dialogReplaceJSVisible = false
+    },
+    //
+    onChange(val) {
+      for (var i = 0; i < this.jsData.length; i++) {
+        if (this.jsData[i].id === this.selectedID) {
+          this.$set(this.jsData[i], 'jingShaDangAnD', val)
+        }
+      }
+    },
+    // 存储备注
+    saveNote(id, textarea) {
+      for (var i = 0; i < this.jsData.length; i++) {
+        if (this.jsData[i].id === id) {
+          this.$set(this.jsData[i], 'note', textarea)
+        }
+      }
+      this.note = ''
+      this.showCurrentNote = ''
+      this.dialogNoteVisible = false
+    },
+    editNote(id) {
+      for (var i = 0; i < this.jsData.length; i++) {
+        if (this.jsData[i].id === id) {
+          // window.console.log(id, this.jsData[i].note)
+          this.showCurrentNote = this.jsData[i].note
+          // this.$set(this.jsData[i], 'note', textarea)
+        }
+      }
+      this.selectedID = id
+      this.dialogNoteVisible = true
+    },
+
+    // 更新编辑信息(传参格式特殊)
+    updateData(param1) {
+      updateJSData(param1).then(res => {
+        // 点击提交后，后端传回数据
+        window.console.log(param1)
+        window.console.log('点击提交后，后端传回数据')
+        window.console.log(res)
+        if (res.data.code !== 200) {
+          this.$message.error(res.data.msg)
+        } else {
+          this.$message({
+            message: res.data.data,
+            type: 'success'
+          })
+        }
+        this.jsData = res.data.data
+        this.initData()
+      })
+    },
+    // 上传变更后信息
+    updateInfo(id) {
+      for (var i = 0; i < this.jsData.length; i++) {
+        if (this.jsData[i].id === id) {
+          this.updateParams = Object.assign({}, this.updateParams, this.jsData[i])
+          this.$delete(this.updateParams, 'clothNo')
+          this.$delete(this.updateParams, 'dangAnId')
+          this.$delete(this.updateParams, 'doTime')
+          this.$delete(this.updateParams, 'huiPiDate')
+          this.$delete(this.updateParams, 'jiaoZhouDate')
+          this.$delete(this.updateParams, 'jiaoZhouLength')
+          this.$delete(this.updateParams, 'xuYaoLiang')
+          this.$delete(this.updateParams, 'applyTime')
+          this.$delete(this.updateParams, 'shaZhi')
+
+          this.$set(this.updateParams, 'personId', '10001')
+          this.$set(this.updateParams, 'personName', '邓科')
+          if (this.updateParams.state == 0) {
+            this.$set(this.updateParams, 'id', null)
+          }
+          window.console.log(this.updateParams)
+          this.updateData(this.updateParams)
+        }
+      }
+    }
+
+  }
+}
+</script>
+
+<style scrope>
+.el-date-editor.el-input, .el-date-editor.el-input__inner {
+    width: auto;
+}
+
+.jingsha .el-dialog {
+  width: 20%;
+}
+</style>

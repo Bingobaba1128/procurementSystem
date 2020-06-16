@@ -26,7 +26,7 @@ export function loadWSData(data) {
 
 export function updateWSData(data) {
   return request({
-    baseURL: 'http://192.168.10.222:8088/addWeiSha',
+    baseURL: 'http://192.168.5.103:8088/addWeiSha',
     method: 'post',
     data
   })

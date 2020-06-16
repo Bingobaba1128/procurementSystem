@@ -10,9 +10,16 @@ export function loadSJDSBData(data) {
 
 export function updatePlanData(data) {
   return request({
-    baseURL: 'http://192.168.10.222:8088/addPlanBuChong',
+    baseURL: 'http://192.168.5.103:8088/addPlanBuChong',
     method: 'post',
     data
   })
 }
 
+export function searchTotalAmount() {
+  return request({
+    baseURL: 'http://192.168.5.103:8088',
+    url: '/searchTotal',
+    method: 'get'
+  })
+}

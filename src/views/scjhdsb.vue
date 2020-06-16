@@ -3,24 +3,44 @@
     <!--筛选区域 -->
     <el-row :gutter="15">
 
-      <!-- 下单日期 -->
+      <!-- 生产安排单 -->
       <el-col :lg="{span:6}" class="searchCombo">
-        <div class="searchHeader">下单日期</div>
-        <el-date-picker
-          v-model="orderDate"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        />
+        <div class="searchHeader">生产安排单</div>
+        <el-input v-model="queryInfo.produceRequestNo" placeholder="请输入生产安排单" clearable />
       </el-col>
 
       <!-- 布编选择 -->
       <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">布编</div>
-        <el-input v-model="queryInfo.bbNo" placeholder="请输入布编号" clearable />
+        <el-input v-model="queryInfo.clothId" placeholder="请输入布编号" clearable />
+      </el-col>
+      <!-- 经纬纱名称 -->
+      <el-col :lg="{span:6}" class="searchCombo">
+        <div class="searchHeader">经纬纱名称</div>
+        <el-input v-model="queryInfo.jingSha" placeholder="请输入经纬纱名称" clearable />
+      </el-col>
+      <!-- 浆纱单号 -->
+      <el-col :lg="{span:6}" class="searchCombo">
+        <div class="searchHeader">浆纱单号</div>
+        <el-input v-model="queryInfo.productionNo" placeholder="请输入浆纱单号" clearable />
       </el-col>
 
+    </el-row>
+
+    <el-row :gutter="15" style="margin-top:20px">
+
+      <!-- 下单日期 -->
+      <el-col :lg="{span:6}" class="searchCombo">
+        <div class="searchHeader">下单日期</div>
+        <el-date-picker
+          v-model="queryInfo.orderDate"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd"
+        />
+      </el-col>
       <!-- 经纬选择 -->
       <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">经纬</div>
@@ -34,9 +54,9 @@
         </el-select>
       </el-col>
       <!-- 购纱计划 -->
-      <el-col :lg="{span:6}" class="searchCombo">
+      <el-col :lg="{span:4}" class="searchCombo">
         <div class="searchHeader">购纱计划</div>
-        <el-select v-model="queryInfo.gsPlan" placeholder="请选择">
+        <el-select v-model="queryInfo.queRenComplete" placeholder="请选择">
           <el-option
             v-for="item in gsPlanSelect"
             :key="item.value"
@@ -45,12 +65,8 @@
           />
         </el-select>
       </el-col>
-    </el-row>
-
-    <el-row :gutter="15" style="margin-top:20px">
-
       <!-- 排序 -->
-      <el-col :lg="{span:6}" class="searchCombo">
+      <!-- <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">排序</div>
         <el-select v-model="queryInfo.orderStandard" placeholder="请选择">
           <el-option
@@ -59,21 +75,27 @@
             :label="item.label"
             :value="item.value"
           />
-        </el-select>
-        <!-- <el-dropdown split-button class="dropdownBox" @click="handleClick">
+        </el-select> -->
+      <!-- <el-dropdown split-button class="dropdownBox" @click="handleClick">
           生产单排序
           <el-dropdown-menu slot="dropdown" />
         </el-dropdown> -->
-      </el-col>
+      <!-- </el-col> -->
 
       <!-- 生产安排单 -->
-      <el-col :lg="{span:6}" class="searchCombo">
+      <!-- <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">{{ queryInfo.orderStandard }}</div>
         <el-input v-model="queryInfo.bbNo" placeholder="" clearable />
-      </el-col>
+      </el-col> -->
       <!-- 检索按钮 -->
-      <el-col :lg="{span:6}" class="searchCombo">
+      <el-col :lg="{span:2}" class="searchCombo">
         <el-button type="success" @click="print">检索</el-button>
+      </el-col>
+      <el-col :lg="{span:4}" class="searchCombo">
+        <div style="display:flex; flex-direction:column; width:100%">
+          <div class="searchHeader">需用量合计：{{ totalNeeded }}</div>
+          <div class="searchHeader">订购量合计：{{ totalOrderAmount }}</div>
+        </div>
       </el-col>
     </el-row>
 
@@ -105,10 +127,11 @@
             </p>
           </template>
         </el-table-column>
+        <el-table-column label="成品交期" prop="chengPinDate" />
 
-        <el-table-column prop="parts" label="经纬纱信息" width="1900" >
+        <el-table-column prop="parts" label="经纬纱信息" width="1900">
           <template slot-scope="scope">
-            <el-table :data="scope.row.parts" border stripe ref="multipleTable" @selection-change="handleSelectionChange">
+            <el-table ref="multipleTable" :data="scope.row.parts" border stripe @selection-change="handleSelectionChange">
               <el-table-column label="经/纬纱">
                 <template slot-scope="scope">
                   <span>{{ formatStatus(scope.row.jingOrWei) }}</span>
@@ -119,23 +142,23 @@
 
               <el-table-column label="需用量(KG)" prop="" width="160">
                 <template slot-scope="scope">
-                  <el-input v-model="scope.row.xuYaoLiang" placeholder="scope.row.xuYaoLiang" />
+                  <input v-model="scope.row.xuYaoLiang" placeholder="scope.row.xuYaoLiang">
                 </template>
               </el-table-column>
-              <el-table-column label="备纱情况" prop="beiShaQingKuang" />
-              <el-table-column label="证书情况" prop="zhengShuQingKuang" />
+
               <el-table-column label="库存(KG)" prop="kuCun" />
               <el-table-column label="最低周转量" prop="zhouZhuanLiang" />
               <el-table-column label="消化量(KG)" prop="xiaoHuaLiang" />
               <el-table-column label="总需量" prop="totalXuYaoLiang" />
               <el-table-column label="订购量(KG)" prop="">
                 <template slot-scope="scope">
-                  <el-input v-model="scope.row.dingGouLiang" placeholder="0" />
+                  <input v-model="scope.row.dingGouLiang" placeholder="0">
                 </template>
               </el-table-column>
+              <el-table-column label="备纱情况" prop="beiShaQingKuang" />
+              <el-table-column label="证书情况" prop="zhengShuQingKuang" />
               <el-table-column label="纱期" prop="shaQi" />
 
-              <el-table-column label="成品交期" prop="chengPinDate" />
               <el-table-column label="备注" prop="remarks" width="350">
                 <template slot-scope="scope">
                   <el-input
@@ -162,12 +185,12 @@
       </el-table>
 
     </el-row>
-    <el-button type="success" @click="clickToShow()">确定上传</el-button>
+    <el-button type="success" @click="clickToShow()">确定保存</el-button>
   </el-card>
 </template>
 
 <script>
-import { loadSJDSBData, updatePlanData } from '@/api/scjhdsb'
+import { loadSJDSBData, updatePlanData, searchTotalAmount } from '@/api/scjhdsb'
 import { baseUrl } from '@/api/apiUrl'
 import { toUrlParam } from '@/utils/toUrlParam'
 
@@ -175,13 +198,18 @@ export default {
   data() {
     return {
       multipleSelection: [],
-      orderDate: '',
+      totalNeeded: '',
+      totalOrderAmount: '',
       queryInfo: {
-        selectedDate: '',
-        jingOrWei: '全部',
-        gsPlan: '全部',
-        orderStandard: ''
-
+        produceRequestNo: '',
+        clothId: '',
+        jingSha: '',
+        productionNo: '',
+        orderDate: '',
+        jingOrWei: '2',
+        queRenComplete: '2',
+        pageNumber: 1,
+        pageSize: 10
       },
       orderList: [
         {
@@ -227,23 +255,28 @@ export default {
         max: ''
       },
       pageSetting: {
+        // orderDate: this.systemDate + ',' + this.systemDate,
         pageNumber: 1,
         pageSize: 10
       },
       getInitData: '',
-      checkedBox: []
+      checkedBox: [],
+      systemDate: ''
     }
   },
   created() {
-    this.initData()
+    this.DateFormat()
+    this.initData(this.pageSetting)
   },
   methods: {
-    initData() {
+    initData(setting) {
       var url = baseUrl + '/LoadPlanList?'
-      var urlParam = toUrlParam(url, this.pageSetting)
+      var urlParam = toUrlParam(url, setting)
       loadSJDSBData(urlParam).then(res => {
         this.getInitData = res.data.data
-        // window.console.log(this.getInitData)
+        window.console.log('dengke pass to me')
+
+        window.console.log(this.getInitData)
       })
     },
 
@@ -267,13 +300,36 @@ export default {
       this.multipleSelection = val
     },
     print() {
-      window.console.log(this.queryInfo)
+      this.initData(this.queryInfo)
+      searchTotalAmount()
+      searchTotalAmount().then(res => {
+        this.totalNeeded = res.data.data.totalXuYaoLiang
+        this.totalOrderAmount = res.data.data.totalDingGouLiang
+        window.console.log(this.totalNeeded)
+        window.console.log(res.data.data)
+      })
     },
     clickToShow() {
+      window.console.log('dengkeeeeeeeeeeee')
+
       window.console.log(this.multipleSelection)
       updatePlanData(this.multipleSelection).then(res => {
-        window.console.log(res)
+        if (res.data.code !== 200) {
+          this.$message.error(res.data.msg)
+        } else {
+          this.initData(this.pageSetting)
+        }
       })
+    },
+    DateFormat() {
+      var date = new Date()
+      var year = date.getFullYear()
+      var month = (date.getMonth() + 1).toString().padStart(2, '0')
+      var day = date.getDate().toString().padStart(2, '0')
+      var formatedDate = year + '-' + month + '-' + day
+      this.systemDate = formatedDate
+      // this.$set(this.queryInfo, 'orderDate', this.systemDate + ',' + this.systemDate)
+      // this.$set(this.pageSetting, 'orderDate', this.systemDate + ',' + this.systemDate)
     }
   }
 }

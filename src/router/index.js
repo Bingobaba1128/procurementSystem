@@ -102,6 +102,18 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/ysda',
+    component: Layout,
+    children: [
+      {
+        path: '/原纱档案',
+        name: 'ysda',
+        component: () => import('@/views/ysda'),
+        meta: { title: '原纱档案', icon: 'tree' }
+      }
+    ]
+  },
 
   // {
   //   path: '/nested',
