@@ -42,7 +42,7 @@
         />
       </el-col>
       <!-- 经纬选择 -->
-      <el-col :lg="{span:6}" class="searchCombo">
+      <el-col :lg="{span:4}" class="searchCombo">
         <div class="searchHeader">经纬</div>
         <el-select v-model="queryInfo.jingOrWei" placeholder="请选择">
           <el-option
@@ -91,6 +91,9 @@
       <el-col :lg="{span:2}" class="searchCombo">
         <el-button type="success" @click="print">检索</el-button>
       </el-col>
+      <el-col :lg="{span:2}" class="searchCombo">
+        <el-button type="success" @click="exportExcel">导出</el-button>
+      </el-col>
       <el-col :lg="{span:4}" class="searchCombo">
         <div style="display:flex; flex-direction:column; width:100%">
           <div class="searchHeader">需用量合计：{{ totalNeeded }}</div>
@@ -101,7 +104,7 @@
 
     <!-- 列表区 -->
     <el-row>
-      <el-table :data="getInitData" border stripe tooltip-effect="dark">
+      <el-table :data="getInitData" border stripe tooltip-effect="dark" id="out-table">
 
         <el-table-column type="index" label="序号" />
 
@@ -193,7 +196,8 @@
 import { loadSJDSBData, updatePlanData, searchTotalAmount } from '@/api/scjhdsb'
 import { baseUrl } from '@/api/apiUrl'
 import { toUrlParam } from '@/utils/toUrlParam'
-
+import FileSaver from 'file-saver'
+import XLSX from 'xlsx'
 export default {
   data() {
     return {
@@ -330,6 +334,16 @@ export default {
       this.systemDate = formatedDate
       // this.$set(this.queryInfo, 'orderDate', this.systemDate + ',' + this.systemDate)
       // this.$set(this.pageSetting, 'orderDate', this.systemDate + ',' + this.systemDate)
+    },
+    exportExcel() {
+      /* generate workbook object from table */
+      var wb = XLSX.utils.table_to_book(document.querySelector('#out-table'))
+      /* get binary string as output */
+      var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
+      try {
+        FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '生产计划定纱表.xlsx')
+      } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
+      return wbout
     }
   }
 }
