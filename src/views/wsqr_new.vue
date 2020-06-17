@@ -387,7 +387,7 @@ export default {
 }
 </script>
 
-<style scrope>
+<style scoped>
 .el-date-editor.el-input, .el-date-editor.el-input__inner {
     width: auto;
 }

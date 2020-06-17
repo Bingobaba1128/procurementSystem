@@ -109,7 +109,7 @@ export const constantRoutes = [
       {
         path: '/原纱订货单',
         name: 'ysdhd',
-        component: () => import('@/views/ysdhd'),
+        component: () => import('@/views/ysdhd/ysdhd'),
         meta: { title: '原纱订货单', icon: 'tree' }
       }
     ]

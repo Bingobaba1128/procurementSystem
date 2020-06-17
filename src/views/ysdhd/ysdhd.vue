@@ -45,23 +45,29 @@
       <el-col :span="2">
         <el-button type="success" @click="searchData">检索</el-button>
       </el-col>
-            <!-- 新增 -->
+      <!-- 新增 -->
       <el-col :span="2">
         <el-button type="primary" @click="dialogAddNewTableVisible = true">新增</el-button>
       </el-col>
-                  <!-- 计划新增 -->
+      <el-dialog title="原纱订货单（申请）" :visible.sync="dialogAddNewTableVisible" width="95%">
+        <addNewForm />
+      </el-dialog>
+
+      <!-- 计划新增 -->
       <el-col :span="2">
-        <el-button type="primary" @click="searchData">计划新增</el-button>
+        <el-button type="primary" @click="dialogAddPlanNewTableVisible = true">计划新增</el-button>
       </el-col>
+      <el-dialog title="原纱订货单（计划申请）" :visible.sync="dialogAddPlanNewTableVisible" width="95%">
+        <addPlanNew />
+      </el-dialog>
     </el-row>
 
-
-        <el-row>
+    <el-row>
       <el-table :data="initData" border stripe max-height="750">
 
         <el-table-column type="index" label="序号" />
         <el-table-column label="单号" prop="" />
-                <el-table-column label="签订日期" prop="" />
+        <el-table-column label="签订日期" prop="" />
         <el-table-column label="供应商" prop="" />
         <el-table-column label="审核情况" prop="" />
         <el-table-column label="修改" prop="" />
@@ -73,7 +79,14 @@
 </template>
 
 <script>
+import addNewForm from '@/views/ysdhd/addNewYs'
+import addPlanNew from '@/views/ysdhd/addPlanNew'
+
 export default {
+  components: {
+    addNewForm,
+    addPlanNew
+  },
   data() {
     return {
       infoOptions: [
@@ -96,13 +109,14 @@ export default {
         productionNo: '',
         state: ''
       },
-      dialogAddNewTableVisible: false
+      dialogAddNewTableVisible: false,
+      dialogAddPlanNewTableVisible: false
     }
   }
 }
 </script>
 
-<style>
+<style scoped>
 .searchCombo {
   display: flex;
 }

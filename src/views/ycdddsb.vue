@@ -32,8 +32,6 @@
       </el-col>
     </el-row>
 
-
-
     <!-- 列表区 -->
     <el-row>
       <el-table :data="initData" border stripe max-height="750">
@@ -228,7 +226,7 @@ export default {
 }
 </script>
 
-<style scrope>
+<style scoped>
 
 .el-date-editor.el-input, .el-date-editor.el-input__inner {
     width: auto;
