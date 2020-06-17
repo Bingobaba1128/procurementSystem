@@ -3,32 +3,35 @@
     <el-row :gutter="10">
 
       <!-- 日期选择 -->
-      <el-col :span="5">
+      <el-col :lg="{span:4}" class="searchCombo">
+        <div class="searchHeader">日期</div>
         <el-date-picker
-          v-model="queryInfo.doTime"
+          v-model="s"
           type="date"
           placeholder="选择日期"
           value-format="yyyy-MM-dd"
         />
       </el-col>
 
-      <!-- 布编选择 -->
-      <el-col :span="5">
+      <!-- 单号选择 -->
+      <el-col :span="4">
         <el-input v-model="queryInfo.clothId" placeholder="请输入单号" clearable>
           <template slot="prepend">单号</template>
         </el-input>
       </el-col>
 
-      <!-- 生产单号 -->
-      <el-col :span="6">
+      <!-- 供应商选择 -->
+      <el-col :span="4">
         <el-input v-model="queryInfo.productionNo" placeholder="请输入生产单号" clearable>
           <template slot="prepend">供应商选择</template>
         </el-input>
       </el-col>
 
       <!-- 信息条件筛选 -->
-      <el-col :span="5">
-        <el-select v-model="queryInfo.state" placeholder="信息条件">
+
+      <el-col :lg="{span:4}" class="searchCombo">
+        <div class="searchHeader">信息条件</div>
+        <el-select v-model="queryInfo.state" placeholder="请选择">
           <el-option
             v-for="item in infoOptions"
             :key="item.value"
@@ -39,9 +42,32 @@
       </el-col>
 
       <!-- 按钮筛选 -->
-      <el-col :span="3">
+      <el-col :span="2">
         <el-button type="success" @click="searchData">检索</el-button>
       </el-col>
+            <!-- 新增 -->
+      <el-col :span="2">
+        <el-button type="primary" @click="dialogAddNewTableVisible = true">新增</el-button>
+      </el-col>
+                  <!-- 计划新增 -->
+      <el-col :span="2">
+        <el-button type="primary" @click="searchData">计划新增</el-button>
+      </el-col>
+    </el-row>
+
+
+        <el-row>
+      <el-table :data="initData" border stripe max-height="750">
+
+        <el-table-column type="index" label="序号" />
+        <el-table-column label="单号" prop="" />
+                <el-table-column label="签订日期" prop="" />
+        <el-table-column label="供应商" prop="" />
+        <el-table-column label="审核情况" prop="" />
+        <el-table-column label="修改" prop="" />
+        <el-table-column label="审核" prop="" />
+
+      </el-table>
     </el-row>
   </el-card>
 </template>
@@ -69,12 +95,28 @@ export default {
         clothId: '',
         productionNo: '',
         state: ''
-      }
+      },
+      dialogAddNewTableVisible: false
     }
   }
 }
 </script>
 
 <style>
-
+.searchCombo {
+  display: flex;
+}
+.searchHeader {
+  width:auto;
+    display: flex !important;
+    align-items: center;
+    background-color: #F5F7FA;
+    color: #909399;
+    vertical-align: middle;
+    display: table-cell;
+    position: relative;
+    border: 1px solid #DCDFE6;
+    padding: 0 20px;
+    white-space: nowrap;
+}
 </style>

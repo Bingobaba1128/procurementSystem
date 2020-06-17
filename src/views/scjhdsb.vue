@@ -89,10 +89,10 @@
       </el-col> -->
       <!-- 检索按钮 -->
       <el-col :lg="{span:2}" class="searchCombo">
-        <el-button type="success" @click="print">检索</el-button>
+        <el-button type="success" icon="el-icon-search" @click="print">检索</el-button>
       </el-col>
       <el-col :lg="{span:2}" class="searchCombo">
-        <el-button type="success" @click="exportExcel">导出</el-button>
+        <el-button type="success" :loading="downloadLoading" icon="el-icon-download" @click="exportExcel">导出</el-button>
       </el-col>
       <el-col :lg="{span:4}" class="searchCombo">
         <div style="display:flex; flex-direction:column; width:100%">
@@ -131,7 +131,7 @@
           </template>
         </el-table-column>
         <el-table-column label="成品交期" prop="chengPinDate" />
-        
+
         <!--二级表头 -->
         <el-table-column prop="parts" label="经纬纱信息" width="1900">
           <template slot-scope="scope">
@@ -198,6 +198,7 @@
 import { loadSJDSBData, updatePlanData, searchTotalAmount } from '@/api/scjhdsb'
 import { baseUrl } from '@/api/apiUrl'
 import { toUrlParam } from '@/utils/toUrlParam'
+
 import FileSaver from 'file-saver'
 import XLSX from 'xlsx'
 export default {
@@ -267,7 +268,8 @@ export default {
       },
       getInitData: '',
       checkedBox: [],
-      systemDate: ''
+      systemDate: '',
+      downloadLoading: false
     }
   },
   created() {
@@ -338,15 +340,91 @@ export default {
       // this.$set(this.pageSetting, 'orderDate', this.systemDate + ',' + this.systemDate)
     },
     exportExcel() {
+      this.downloadLoading = true
       /* generate workbook object from table */
       var wb = XLSX.utils.table_to_book(document.querySelector('#out-table'))
       /* get binary string as output */
       var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
       try {
         FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '生产计划定纱表.xlsx')
+        this.downloadLoading = false
       } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
       return wbout
     }
+    // handleDownload() {
+    //   this.downloadLoading = true
+    //   import('@/vendor/Export2Excel').then(excel => {
+    //     const multiHeader = [
+    //       [
+    //         '序号',
+    //         '下单日期',
+    //         '布编',
+    //         '浆纱单号',
+    //         '浆长(米)',
+    //         '坯布长',
+    //         '生产安排单',
+    //         '浆染厂',
+    //         '织造厂',
+    //         '交轴日期',
+    //         '坯布交期',
+    //         '成品交期',
+    //         '',
+    //         '',
+    //         '',
+    //         '',
+    //         '',
+    //         '',
+    //         '',
+    //         '',
+    //         '',
+    //         '',
+    //         '',
+    //         ''
+    //       ]
+    //     ]
+    //     const multiHeader2 = [
+    //       [
+    //         '',
+    //         '',
+    //         '',
+    //         '',
+    //         '',
+    //         '',
+    //         '',
+    //         '',
+    //         '',
+    //         '',
+    //         '',
+    //         '',
+    //         '经/纬纱',
+    //         '经纬纱名称',
+    //         '需用量（Kg）',
+    //         '库存（Kg）',
+    //         '最低周转量',
+    //         '消化量（Kg）',
+    //         '总需量',
+    //         '订购量（Kg）',
+    //         '备纱情况',
+    //         '证书情况',
+    //         '纱期',
+    //         '备注',
+    //         '购纱计划状态'
+    //       ]
+    //     ]
+
+    //     const data = this.getInitData
+
+    //     excel.export_json_to_excel({
+
+    //       multiHeader,
+    //       header: multiHeader2,
+    //       data,
+    //       // merges,
+    //       filename: 'table-list'
+    //     })
+    //     this.downloadLoading = false
+    //   })
+    // }
   }
 }
 </script>
