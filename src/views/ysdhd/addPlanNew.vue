@@ -22,8 +22,8 @@
 
       <!-- 供应商选择 -->
       <el-col :span="4">
-        <el-input v-model="queryInfo.productionNo" placeholder="请输入生产单号" clearable>
-          <template slot="prepend">供应商选择</template>
+        <el-input v-model="queryInfo.productionNo" placeholder="请选择" clearable>
+          <template slot="prepend">供应商</template>
         </el-input>
       </el-col>
 
