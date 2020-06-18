@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import baseUrl from '@/api/apiUrl'
 
 export function loadWSData(data) {
   return request({
@@ -26,7 +27,8 @@ export function loadWSData(data) {
 
 export function updateWSData(data) {
   return request({
-    baseURL: 'http://192.168.5.103:8088/addWeiSha',
+    baseURL: baseUrl,
+    url: '/addWeiSha',
     method: 'post',
     data
   })

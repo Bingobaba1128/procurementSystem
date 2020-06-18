@@ -11,7 +11,8 @@ export function loadSYuCeData(data) {
 
 export function uploadData(data) {
   return request({
-    baseURL: 'http://192.168.5.103:8088/addCeYuDingDanPlan',
+    baseURL: baseUrl,
+    url: '/addCeYuDingDanPlan',
     method: 'post',
     data
   })

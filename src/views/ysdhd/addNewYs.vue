@@ -19,12 +19,23 @@
           value-format="yyyy-MM-dd"
         />
       </el-col>
-
       <!-- 供应商选择 -->
-      <el-col :span="4">
-        <el-input v-model="queryInfo.productionNo" placeholder="请选择" clearable>
-          <template slot="prepend">供应商</template>
-        </el-input>
+
+      <el-col :lg="{span:4}" class="searchCombo">
+        <div class="searchHeader">供应商</div>
+        <el-select
+          v-model="queryInfo.suppler"
+          filterable
+          placeholder="请选择"
+          @change="selectTrigger(queryInfo.suppler)"
+        >
+          <el-option
+            v-for="item in filterList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-col>
 
       <el-col :lg="{span:4}" class="searchCombo">
@@ -80,41 +91,32 @@
 
       <el-col :span="5" style="display:flex">
         <el-col :span="8" style="text-align:center; line-height:40px">
-          <span> 品种</span>
+          <span> 品种*</span>
         </el-col>
         <el-col :span="16">
-          <el-select v-model="value" clearable placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
+           <el-select
+          v-model="queryInfo.suppler"
+          filterable
+          placeholder="请选择"
+          @change="selectTrigger(queryInfo.suppler)"
+        >
+          <el-option
+            v-for="item in filterList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
         </el-col>
       </el-col>
-      <el-col :span="3" style="display:flex">
-        <el-col :span="8" style="text-align:center; line-height:40px">
-          <span> 模糊查找</span>
-        </el-col>
-        <el-col :span="16">
-          <el-select v-model="value" clearable placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </el-col>
-      </el-col>
+
 
       <el-col :span="3" style="display:flex">
         <el-col :span="8" style="text-align:center; line-height:40px">
           <span> 到货仓库</span>
         </el-col>
         <el-col :span="16">
-          <el-select v-model="value" clearable placeholder="请选择">
+          <el-select v-model="value" clearable disabled placeholder="越南原纱仓">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -131,7 +133,7 @@
         <el-col :span="16">
           <el-select v-model="value" clearable placeholder="请选择">
             <el-option
-              v-for="item in options"
+              v-for="item in property"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -165,22 +167,17 @@
         <el-table-column label="经纱产地及型号" prop="" />
         <el-table-column label="数量（KG）" prop="" />
         <el-table-column label="单价（元/吨）" prop="" />
-        <el-table-column label="指导入库超限量（KG）" prop="" />
         <el-table-column label="到货仓库" prop="" />
-        <el-table-column label="交期" prop="" />
+        <el-table-column label="纱期" prop="" />
         <el-table-column label="生产安排编号" prop="" />
         <el-table-column label="备注" prop="" />
-        <el-table-column label="包装规格（个/包）" prop="" />
-        <el-table-column label="包重（KG）" prop="" />
         <el-table-column label="外销单价" prop="" />
         <el-table-column label="类型" prop="" />
         <el-table-column label="说明" prop="" />
         <el-table-column label="删除" prop="" />
-        <el-table-column label="完成日期" prop="" />
         <el-table-column label="布编" prop="" />
         <el-table-column label="未定天数" prop="" />
-        <el-table-column label="属性" prop="" />
-        <el-table-column label="订单" prop="" />
+        <el-table-column label="订单证书要求" prop="" />
 
       </el-table>
     </el-row>
@@ -199,6 +196,29 @@
 export default {
   data() {
     return {
+      filterList: [{
+        value: '选项1',
+        label: '供应商A'
+      }, {
+        value: '选项2',
+        label: '供应商B'
+      }, {
+        value: '选项3',
+        label: '供应商C'
+      }, {
+        value: '选项4',
+        label: '供应商D'
+      }, {
+        value: '选项5',
+        label: '供应商E'
+      }],
+      property: [{
+        value: '0',
+        label: '内销'
+      },{
+        value: '1',
+        label: '外销'
+      }],
       options: [{
         value: '1',
         label: '1'
@@ -233,7 +253,8 @@ export default {
         doTime: '',
         clothId: '',
         productionNo: '',
-        state: ''
+        state: '',
+        suppler: ''
       },
       dialogAddNewTableVisible: false
     }

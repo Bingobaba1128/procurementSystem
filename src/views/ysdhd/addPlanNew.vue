@@ -147,7 +147,7 @@
 
     </el-row>
 
-        <el-row>
+    <el-row>
       <el-table :data="initData" border stripe max-height="750">
 
         <el-table-column label="勾选采购" prop="" />
