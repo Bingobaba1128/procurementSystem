@@ -94,22 +94,21 @@
           <span> 品种*</span>
         </el-col>
         <el-col :span="16">
-           <el-select
-          v-model="queryInfo.suppler"
-          filterable
-          placeholder="请选择"
-          @change="selectTrigger(queryInfo.suppler)"
-        >
-          <el-option
-            v-for="item in filterList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
+          <el-select
+            v-model="queryInfo.suppler"
+            filterable
+            placeholder="请选择"
+            @change="selectTrigger(queryInfo.suppler)"
+          >
+            <el-option
+              v-for="item in filterList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
         </el-col>
       </el-col>
-
 
       <el-col :span="3" style="display:flex">
         <el-col :span="8" style="text-align:center; line-height:40px">
@@ -215,7 +214,7 @@ export default {
       property: [{
         value: '0',
         label: '内销'
-      },{
+      }, {
         value: '1',
         label: '外销'
       }],

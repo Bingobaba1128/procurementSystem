@@ -61,6 +61,7 @@
     <el-row>
       <el-table :data="initData" border stripe max-height="750">
 
+        <el-table-column type="index" label="序号" />
         <el-table-column label="经纱产地及型号" prop="" />
         <el-table-column label="数量（KG）" prop="" />
         <el-table-column label="单价（元/吨）" prop="" />
@@ -150,6 +151,7 @@
     <el-row>
       <el-table :data="initData" border stripe max-height="750">
 
+        <el-table-column type="index" label="序号" />
         <el-table-column label="勾选采购" prop="" />
         <el-table-column label="未定天数" prop="" />
         <el-table-column label="布编" prop="" />
