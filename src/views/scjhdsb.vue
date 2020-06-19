@@ -116,21 +116,27 @@
         <el-table-column label="生产安排单" prop="produceRequestNo" />
         <el-table-column label="浆染厂" prop="jiangRanChang" />
         <el-table-column label="织造厂" prop="zhiZaoChang" />
-        <el-table-column label="交轴日期" prop="jiaoZhouDate">
+        <el-table-column label="交轴日期" prop="jiaoZhouDate" width="100">
           <template slot-scope="scope">
             <p v-for="(item) in scope.row.jiaoZhouDate" :key="item" style="margin:0px">
               {{ item }}
             </p>
           </template>
         </el-table-column>
-        <el-table-column label="坯布交期" prop="huiPiDate">
+        <el-table-column label="坯布交期" prop="huiPiDate" width="100">
           <template slot-scope="scope">
             <p v-for="(item) in scope.row.huiPiDate" :key="item" style="margin:0px">
               {{ item }}
             </p>
           </template>
         </el-table-column>
-        <el-table-column label="成品交期" prop="chengPinDate" />
+        <el-table-column label="成品交期" prop="chengPinDate" width="100">
+          <template slot-scope="scope">
+            <p v-for="(item) in scope.row.chengPinDate" :key="item" style="margin:0px">
+              {{ item }}
+            </p>
+          </template>
+        </el-table-column>
 
         <!--二级表头 -->
         <el-table-column prop="parts" label="经纬纱信息" width="1900">

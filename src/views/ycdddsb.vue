@@ -32,6 +32,108 @@
       </el-col>
     </el-row>
 
+    <!-- 测试区 -->
+    <el-row>
+      <el-table :data="testingData" border stripe max-height="750" :span-method="objectSpanMethod">
+        <el-table-column type="index" label="序号" />
+        <!-- 预测订单带出 -->
+        <el-table-column class="alignCenter" label="预测订单信息">
+          <el-table-column
+            prop="yuCeNo"
+            label="预测订单号"
+            width="120"
+          />
+          <el-table-column
+            prop="beiShaDate"
+            label="备纱单日期"
+            width="120"
+          />
+          <el-table-column
+            prop="yeWuZu"
+            label="业务组"
+            width="120"
+          />
+
+          <el-table-column
+            prop="yuCeDate"
+            label="预测下单日期"
+            width="120"
+          />
+          <el-table-column
+            prop="variety"
+            label="品种"
+            width="120"
+          />
+          <el-table-column
+            prop="yuCeQuanity"
+            label="预测数量(码长)"
+            width="120"
+          />
+        </el-table-column>
+        <el-table-column style="text-align:center" label="备纱信息" width="1200">
+          <el-table-column label="经纱/纬纱" prop="jingOrWei" />
+          <el-table-column label="经纬纱名称" prop="name" />
+          <el-table-column label="长度">
+            <template slot-scope="scope">
+              <el-input
+                v-model="scope.row.length"
+                placeholder="请输入内容"
+                clearable
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="百米用量" prop="yongLiangBybm">
+            <template slot-scope="scope">
+              <el-input
+                v-model="scope.row.yongLiangBybm"
+                placeholder="请输入内容"
+                clearable
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="预计备纱" prop="yuJiBeiSha">
+            <template slot-scope="scope">
+              <el-input
+                v-model="scope.row.yuJiBeiSha"
+                placeholder="请输入内容"
+                clearable
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="备纱明细" prop="beiSahRemarks">
+            <template slot-scope="scope">
+              <el-input
+                v-model="scope.row.beiSahRemarks"
+                placeholder="请输入内容"
+                clearable
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="备注">
+            <template slot-scope="scope">
+              <el-input
+                v-model="scope.row.remarks"
+                placeholder="请输入内容"
+                clearable
+              />
+            </template>
+          </el-table-column>
+        </el-table-column>
+
+        <el-table-column label="状态">
+          <template slot-scope="scope">
+            <span>{{ formatStatus(scope.row.state) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" fixed="right" width="200">
+          <template slot-scope="scope">
+            <el-button type="text" @click="saveData(scope.row.yuCeNo)">确定存入</el-button>
+            <el-button type="text" :disabled="scope.row.approveState == '1'">{{ formatAppStatus(scope.row.approveState) }}</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-row>
+
     <!-- 列表区 -->
     <el-row>
       <el-table :data="initData" border stripe max-height="750">
@@ -147,6 +249,144 @@ import { loadSYuCeData, uploadData, searchData } from '@/api/yuDeDingDan'
 export default {
   data() {
     return {
+      testingData: [
+        // 一组
+        {
+          'beiShaDate': '2020-06-15',
+          'yeWuZu': 'E业务三区（叶淑文）',
+          'yuCeNo': 'YC2006-012',
+          'yuCeDate': '2020-7-22',
+          'variety': 'A4452B',
+          'yuCeQuanity': '14200.00',
+          'state': '0',
+          'approveState': '0',
+          'id': '',
+          'orderNo': '1',
+          'jingOrWei': '1',
+          'name': '天虹TEL24CP',
+          'length': '',
+          'yongLiangBybm': '',
+          'yuJiBeiSha': '',
+          'beiSahRemarks': '',
+          'remarks': ''
+        },
+        {
+          'beiShaDate': '2020-06-15',
+          'yeWuZu': 'E业务三区（叶淑文）',
+          'yuCeNo': 'YC2006-012',
+          'yuCeDate': '2020-7-22',
+          'variety': 'A4452B',
+          'yuCeQuanity': '14200.00',
+          'state': '0',
+          'approveState': '0',
+          'id': '',
+          'orderNo': '1',
+          'jingOrWei': '1',
+          'name': '天虹TEL24CP',
+          'length': '',
+          'yongLiangBybm': '',
+          'yuJiBeiSha': '',
+          'beiSahRemarks': '',
+          'remarks': ''
+        },
+        {
+          'beiShaDate': '2020-06-15',
+          'yeWuZu': 'E业务三区（叶淑文）',
+          'yuCeNo': 'YC2006-012',
+          'yuCeDate': '2020-7-22',
+          'variety': 'A4452B',
+          'yuCeQuanity': '14200.00',
+          'state': '0',
+          'approveState': '0',
+          'id': '',
+          'orderNo': '2',
+          'jingOrWei': '0',
+          'name': '天虹银龙16/40-1.75',
+          'length': '',
+          'yongLiangBybm': '',
+          'yuJiBeiSha': '',
+          'beiSahRemarks': '',
+          'remarks': ''
+        },
+        // 二组
+        {
+          'beiShaDate': '2020-06-15',
+          'yeWuZu': 'E业务三区（叶淑文）',
+          'yuCeNo': 'YC2006-013',
+          'yuCeDate': '2020-7-22',
+          'variety': 'A4452B',
+          'yuCeQuanity': '14200.00',
+          'state': '0',
+          'approveState': '0',
+          'id': '',
+          'orderNo': '1',
+          'jingOrWei': '1',
+          'name': '天虹TEL24CP',
+          'length': '',
+          'yongLiangBybm': '',
+          'yuJiBeiSha': '',
+          'beiSahRemarks': '',
+          'remarks': ''
+        },
+        {
+          'beiShaDate': '2020-06-15',
+          'yeWuZu': 'E业务三区（叶淑文）',
+          'yuCeNo': 'YC2006-01',
+          'yuCeDate': '2020-7-22',
+          'variety': 'A4452B',
+          'yuCeQuanity': '14200.00',
+          'state': '0',
+          'approveState': '0',
+          'id': '',
+          'orderNo': '2',
+          'jingOrWei': '0',
+          'name': '天虹银龙16/40-1.75',
+          'length': '',
+          'yongLiangBybm': '',
+          'yuJiBeiSha': '',
+          'beiSahRemarks': '',
+          'remarks': ''
+        },
+        // 三组
+        {
+          'beiShaDate': '2020-06-15',
+          'yeWuZu': 'E业务三区（叶淑文）',
+          'yuCeNo': 'YC2006-014',
+          'yuCeDate': '2020-7-22',
+          'variety': 'A4452B',
+          'yuCeQuanity': '14200.00',
+          'state': '0',
+          'approveState': '0',
+          'id': '',
+          'orderNo': '1',
+          'jingOrWei': '1',
+          'name': '天虹TEL24CP',
+          'length': '',
+          'yongLiangBybm': '',
+          'yuJiBeiSha': '',
+          'beiSahRemarks': '',
+          'remarks': ''
+        },
+        {
+          'beiShaDate': '2020-06-15',
+          'yeWuZu': 'E业务三区（叶淑文）',
+          'yuCeNo': 'YC2006-014',
+          'yuCeDate': '2020-7-22',
+          'variety': 'A4452B',
+          'yuCeQuanity': '14200.00',
+          'state': '0',
+          'approveState': '0',
+          'id': '',
+          'orderNo': '2',
+          'jingOrWei': '0',
+          'name': '天虹银龙16/40-1.75',
+          'length': '',
+          'yongLiangBybm': '',
+          'yuJiBeiSha': '',
+          'beiSahRemarks': '',
+          'remarks': ''
+        }
+      ],
       initData: '',
       queryInfo: {
         pageNumber: 1,
@@ -184,8 +424,48 @@ export default {
       var urlParam = toUrlParam(url, this.pageSetting)
       loadSYuCeData(urlParam).then(res => {
         this.initData = res.data.data
-        window.console.log(this.initData)
+        this.testingData = this.mergeTableRow(this.testingData, ['yuCeNo'])
+        // for (var i = 0; i < this.initData.length; i++) {
+        //   if (this.initData[i].listS.length > 0) {
+        //     const newlist = { ...this.initData[i] }
+        //     for (var j = 0; j < this.initData[i].listS.length; j++) {
+        //       for (var k = 0; k < this.initData[i].listS[j].length; k++) {
+        //         window.console.log(this.initData[i].listS[j][k])
+        //       }
+        //     }
+
+        //     // window.console.log(this.initData[i])
+        //   }
+        // }
       })
+    },
+    mergeTableRow(data, merge) {
+      if (!merge || merge.length === 0) {
+        return data
+      }
+      merge.forEach((m) => {
+        const mList = {}
+        data = data.map((v, index) => {
+          const rowVal = v[m]
+          if (mList[rowVal]) {
+            mList[rowVal]++
+            window.console.log(mList[rowVal])
+            data[index - (mList[rowVal] - 1)][m + '-span'].rowspan++
+            v[m + '-span'] = {
+              rowspan: 0,
+              colspan: 0
+            }
+          } else {
+            mList[rowVal] = 1
+            v[m + '-span'] = {
+              rowspan: 1,
+              colspan: 1
+            }
+          }
+          return v
+        })
+      })
+      return data
     },
     searchData() {
       var url = baseUrl + '/LoadYuCeDingDan?'
@@ -193,7 +473,6 @@ export default {
       window.console.log(urlParam)
       searchData(urlParam).then(res => {
         this.initData = res.data.data
-        window.console.log(this.initData)
       })
     },
     formatStatus(val) {
@@ -220,6 +499,12 @@ export default {
             }
           })
         }
+      }
+    },
+    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+      const span = column['property'] + '-span'
+      if (row[span]) {
+        return row[span]
       }
     }
   }
