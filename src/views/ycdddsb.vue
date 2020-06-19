@@ -30,11 +30,14 @@
       <el-col :lg="{span:6}">
         <el-button type="success" @click="searchData">筛选</el-button>
       </el-col>
+      <el-col :lg="{span:2}" class="searchCombo">
+        <el-button type="success" icon="el-icon-download" @click="exportExcel">导出</el-button>
+      </el-col>
     </el-row>
 
     <!-- 测试区 -->
     <el-row>
-      <el-table :data="testingData" border stripe max-height="750" :span-method="objectSpanMethod">
+      <el-table id="out-table" :data="testingData" border stripe max-height="750" :span-method="objectSpanMethod">
         <el-table-column type="index" label="序号" />
         <!-- 预测订单带出 -->
         <el-table-column class="alignCenter" label="预测订单信息">
@@ -246,6 +249,9 @@ import { baseUrl } from '@/api/apiUrl'
 import { toUrlParam } from '@/utils/toUrlParam'
 import { loadSYuCeData, uploadData, searchData } from '@/api/yuDeDingDan'
 
+import FileSaver from 'file-saver'
+import XLSX from 'xlsx'
+
 export default {
   data() {
     return {
@@ -418,6 +424,18 @@ export default {
     this.initDataF()
   },
   methods: {
+    exportExcel() {
+      this.downloadLoading = true
+      /* generate workbook object from table */
+      var wb = XLSX.utils.table_to_book(document.querySelector('#out-table'))
+      /* get binary string as output */
+      var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
+      try {
+        FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '生产计划定纱表.xlsx')
+        this.downloadLoading = false
+      } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
+      return wbout
+    },
     // 数据初始化
     initDataF() {
       var url = baseUrl + '/LoadYuCeDingDan?'
@@ -425,6 +443,8 @@ export default {
       loadSYuCeData(urlParam).then(res => {
         this.initData = res.data.data
         this.testingData = this.mergeTableRow(this.testingData, ['yuCeNo'])
+                this.testingData = this.mergeTableRow(this.testingData, ['yeWuZu'])
+
         // for (var i = 0; i < this.initData.length; i++) {
         //   if (this.initData[i].listS.length > 0) {
         //     const newlist = { ...this.initData[i] }
@@ -439,6 +459,38 @@ export default {
         // }
       })
     },
+    // mergeTableRow(data, merge) {
+    //   if (!merge || merge.length === 0) {
+    //     return data
+    //   }
+    //   merge.forEach((m) => {
+    //     const mList = {}
+    //     for (var i = 0; i < data.length; i++) {
+    //       // window.console.log(data[i])
+    //       if (data[i].yuCeNo == 'YC2006-012') {
+    //         // data = data.map((v, index) => {
+    //           const rowVal = data[i][m]
+    //           if (mList[rowVal]) {
+    //             mList[rowVal]++
+    //     data[index - (mList[rowVal] - 1)][m + '-span'].rowspan++
+    //     v[m + '-span'] = {
+    //       rowspan: 0,
+    //       colspan: 0
+    //     }
+    //           } else {
+    //             mList[rowVal] = 1
+    //     v[m + '-span'] = {
+    //       rowspan: 1,
+    //       colspan: 1
+    //     }
+    //           }
+    //           return data[i]
+    //         // })
+    //       }
+    //     }
+    //   })
+    //   return data
+    // },
     mergeTableRow(data, merge) {
       if (!merge || merge.length === 0) {
         return data
@@ -447,9 +499,14 @@ export default {
         const mList = {}
         data = data.map((v, index) => {
           const rowVal = v[m]
+          window.console.log('rowVal is' + rowVal)
+
           if (mList[rowVal]) {
             mList[rowVal]++
+            window.console.log('index is' + index)
             window.console.log(mList[rowVal])
+
+            window.console.log(data[index - (mList[rowVal] - 1)])
             data[index - (mList[rowVal] - 1)][m + '-span'].rowspan++
             v[m + '-span'] = {
               rowspan: 0,
@@ -461,6 +518,7 @@ export default {
               rowspan: 1,
               colspan: 1
             }
+            window.console.log(v)
           }
           return v
         })
