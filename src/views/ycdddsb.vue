@@ -443,7 +443,7 @@ export default {
       loadSYuCeData(urlParam).then(res => {
         this.initData = res.data.data
         this.testingData = this.mergeTableRow(this.testingData, ['yuCeNo'])
-                this.testingData = this.mergeTableRow(this.testingData, ['yeWuZu'])
+        // this.testingData = this.mergeTableRow(this.testingData, ['yeWuZu'])
 
         // for (var i = 0; i < this.initData.length; i++) {
         //   if (this.initData[i].listS.length > 0) {
@@ -497,32 +497,49 @@ export default {
       }
       merge.forEach((m) => {
         const mList = {}
+        // 循环每一组
         data = data.map((v, index) => {
+          // 提取每一组需要合并的列， 此时v[m]就是YC2006-012
           const rowVal = v[m]
-          window.console.log('rowVal is' + rowVal)
+          const idVal = v['yuCeNo']
+          window.console.log(idVal)
 
           if (mList[rowVal]) {
+            // mList['YC2006-012']:0
             mList[rowVal]++
-            window.console.log('index is' + index)
-            window.console.log(mList[rowVal])
+            // window.console.log('index is' + index)
+            // window.console.log(mList[rowVal])
+            // window.console.log(index - (mList[rowVal] - 1))
+            // if (index === 1) {
+            //   // window.console.log(data[index]['yuCeNo'])
+            //   data[index][m + '-span'].rowspan++
+            // } else {
+            //   window.console.log(data[index]['yuCeNo'])
 
-            window.console.log(data[index - (mList[rowVal] - 1)])
-            data[index - (mList[rowVal] - 1)][m + '-span'].rowspan++
+            //   // if (data[index]['yuCeNo'] !== data[index + 1]['yuCeNo']) {
+            //   //   data[index + 1][m + '-span'].rowspan++
+            //   // }
+            // }
+
+            data[index - mList[rowVal] + 1][m + '-span'].rowspan++
             v[m + '-span'] = {
               rowspan: 0,
               colspan: 0
             }
           } else {
             mList[rowVal] = 1
+            // v是提取出来的每组
             v[m + '-span'] = {
               rowspan: 1,
               colspan: 1
             }
-            window.console.log(v)
+            // window.console.log(v)
           }
+          window.console.log(v[m + '-span'])
           return v
         })
       })
+      // window.console.log(data)
       return data
     },
     searchData() {
