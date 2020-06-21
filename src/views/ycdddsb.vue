@@ -442,8 +442,8 @@ export default {
       var urlParam = toUrlParam(url, this.pageSetting)
       loadSYuCeData(urlParam).then(res => {
         this.initData = res.data.data
-        this.testingData = this.mergeTableRow(this.testingData, ['yuCeNo'])
-        // this.testingData = this.mergeTableRow(this.testingData, ['yeWuZu'])
+        // this.testingData = this.mergeTableRow(this.testingData, ['yuCeNo'])
+        this.testingData = this.mergeTableRow(this.testingData, ['yuCeNo','beiShaDate','yuCeDate','variety','yuCeQuanity','yeWuZu'])
 
         // for (var i = 0; i < this.initData.length; i++) {
         //   if (this.initData[i].listS.length > 0) {
@@ -504,9 +504,9 @@ export default {
           const idVal = v['yuCeNo']
           window.console.log(idVal)
 
-          if (mList[rowVal]) {
+          if (mList[v['yuCeNo']]) {
             // mList['YC2006-012']:0
-            mList[rowVal]++
+            mList[v['yuCeNo']]++
             // window.console.log('index is' + index)
             // window.console.log(mList[rowVal])
             // window.console.log(index - (mList[rowVal] - 1))
@@ -521,13 +521,13 @@ export default {
             //   // }
             // }
 
-            data[index - mList[rowVal] + 1][m + '-span'].rowspan++
+            data[index - mList[v['yuCeNo']] + 1][m + '-span'].rowspan++
             v[m + '-span'] = {
               rowspan: 0,
               colspan: 0
             }
           } else {
-            mList[rowVal] = 1
+            mList[v['yuCeNo']] = 1
             // v是提取出来的每组
             v[m + '-span'] = {
               rowspan: 1,
