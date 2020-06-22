@@ -21,25 +21,25 @@
       </el-col>
       <!-- 供应商选择 -->
 
-      <el-col :lg="{span:4}" class="searchCombo">
+      <el-col :lg="{span:5}" class="searchCombo">
         <div class="searchHeader">供应商</div>
         <el-select
-          v-model="queryInfo.productionNo"
+          v-model="selectedSupplier.id"
           filterable
           placeholder="请选择"
-          @change="selectTrigger()"
+          @change="selectTrigger(selectedSupplier.id)"
         >
           <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            v-for="item in supplierList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
           />
         </el-select>
       </el-col>
 
       <el-col :lg="{span:4}" class="searchCombo">
-        <el-input v-model="queryInfo.productionNo" clearable>
+        <el-input v-model="selectedSupplier.personInchargeName" disabled>
           <template slot="prepend">负责人</template>
         </el-input>
       </el-col>
@@ -70,7 +70,7 @@
     </el-row>
     <el-row style="margin-top: 20px" :gutter="10">
       <el-col :span="1.5">
-        <el-button type="primary">增加行</el-button>
+        <el-button type="primary" @click="addRow">增加行</el-button>
       </el-col>
 
       <el-col :span="3" style="display:flex">
@@ -78,14 +78,7 @@
           <span> 产地</span>
         </el-col>
         <el-col :span="16">
-          <el-select v-model="value" clearable placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
+          <el-input v-model="selectedSupplier.chanDi" disabled />
         </el-col>
       </el-col>
 
@@ -95,16 +88,16 @@
         </el-col>
         <el-col :span="16">
           <el-select
-            v-model="queryInfo.suppler"
+            v-model="selectedSupplier.pinZhong"
             filterable
             placeholder="请选择"
-            @change="selectTrigger(queryInfo.suppler)"
+            @change="selectPinZhongTrigger(selectedSupplier.pinZhong)"
           >
             <el-option
-              v-for="item in filterList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="item in productFeature"
+              :key="item.id"
+              :label="item.pinZhong"
+              :value="item.pinZhong"
             />
           </el-select>
         </el-col>
@@ -193,7 +186,8 @@
 
 <script>
 import { baseUrl } from '@/api/apiUrl'
-import { addNewYuanSha } from '@/api/ysdhd'
+import { addNewYuanSha, loadContactPerson, loadFeature } from '@/api/ysdhd'
+import { toUrlParam } from '@/utils/toUrlParam'
 
 export default {
   data() {
@@ -262,15 +256,20 @@ export default {
       selectedSupplier: {
         name: '',
         id: '',
-        contactName: ''
+        contactName: '',
+        personInchargeName: '',
+        chanDi: '',
+        pinZhong: ''
       },
-      supplierList: ''
+      supplierList: '',
+      productFeature: ''
     }
   },
   created() {
     this.initOData()
   },
   methods: {
+    // 供应商初始化
     initOData() {
       var url = baseUrl + '/api/supplier/getAllSupplier?supplierType=1'
       // var urlParam = toUrlParam(url, this.queryInfo)
@@ -279,7 +278,32 @@ export default {
         this.supplierList = res.data.data
         window.console.log(this.supplierList)
       })
+    },
+    selectTrigger(id) {
+      // 加载指定供应商联系人
+      var url = baseUrl + '/api/supplier/getLoadContactName?id=' + id
+      loadContactPerson(url).then(res => {
+        this.selectedSupplier.personInchargeName = res.data.data
+        window.console.log(this.selectedSupplier)
+      })
+      // 加载产地品种
+      var url2 = baseUrl + '/api/getYarnArchives?GysId=' + id
+      loadFeature(url2).then(res => {
+        // window.console.log(res.data.data)
+        this.productFeature = res.data.data
+      })
+    },
+    selectPinZhongTrigger(pinZhong) {
+      for (var i = 1; i < this.productFeature.length; i++) {
+        if (this.productFeature[i].pinZhong == pinZhong) {
+          this.$set(this.selectedSupplier, 'chanDi', this.productFeature[i].chanDi)
+        }
+      }
+    },
+    addRow() {
+      window.console.log(this.selectedSupplier)
     }
+
   }
 }
 </script>

@@ -17,6 +17,21 @@ export function addNewYuanSha(data) {
   })
 }
 
+export function loadContactPerson(data) {
+  return request({
+    baseURL: '',
+    url: data,
+    method: 'get'
+  })
+}
+
+export function loadFeature(data) {
+  return request({
+    baseURL: '',
+    url: data,
+    method: 'get'
+  })
+}
 // export function addNewYuanSha(data) {
 //   return request({
 //     baseURL: baseUrl,
