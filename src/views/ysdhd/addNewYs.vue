@@ -4,7 +4,7 @@
 
       <!-- 单号选择 -->
       <el-col :span="4">
-        <el-input v-model="queryInfo.clothId" placeholder="请输入单号" clearable>
+        <el-input v-model="queryInfo.clothId" placeholder="" disabled>
           <template slot="prepend">单号</template>
         </el-input>
       </el-col>
@@ -13,7 +13,7 @@
       <el-col :lg="{span:4}" class="searchCombo">
         <div class="searchHeader">日期</div>
         <el-date-picker
-          v-model="s"
+          v-model="selectedSupplier.signDate"
           type="date"
           placeholder="选择日期"
           value-format="yyyy-MM-dd"
@@ -34,12 +34,13 @@
             :key="item.id"
             :label="item.name"
             :value="item.id"
+            @click.native="onChange(item.name)"
           />
         </el-select>
       </el-col>
 
       <el-col :lg="{span:4}" class="searchCombo">
-        <el-input v-model="selectedSupplier.personInchargeName" disabled>
+        <el-input v-model="selectedSupplier.contactName" disabled>
           <template slot="prepend">负责人</template>
         </el-input>
       </el-col>
@@ -58,12 +59,12 @@
 
       <el-col :lg="{span:12}" class="searchCombo">
 
-        <el-input v-model="queryInfo.productionNo" clearable class="expand">
+        <el-input v-model="selectedSupplier.remarks" clearable class="expand">
           <template slot="prepend">备注</template>
         </el-input>
       </el-col>
-      <el-col :lg="{span:3}" class="searchCombo1">
-        <el-input v-model="queryInfo.productionNo" clearable>
+      <el-col :lg="{span:5}" class="searchCombo1">
+        <el-input v-model="selectedSupplier.signer" clearable>
           <template slot="prepend">签订人</template>
         </el-input>
       </el-col>
@@ -82,7 +83,7 @@
         </el-col>
       </el-col>
 
-      <el-col :span="5" style="display:flex">
+      <el-col :span="4" style="display:flex">
         <el-col :span="8" style="text-align:center; line-height:40px">
           <span> 品种*</span>
         </el-col>
@@ -103,7 +104,13 @@
         </el-col>
       </el-col>
 
-      <el-col :span="3" style="display:flex">
+      <el-col :span="4">
+        <el-input v-model="queryInfo.clothId" placeholder="请输入" clearable>
+          <template slot="prepend">原纱名称</template>
+        </el-input>
+      </el-col>
+
+      <el-col :span="4" style="display:flex">
         <el-col :span="8" style="text-align:center; line-height:40px">
           <span> 到货仓库</span>
         </el-col>
@@ -123,12 +130,12 @@
           <span> 属性</span>
         </el-col>
         <el-col :span="16">
-          <el-select v-model="value" clearable placeholder="请选择">
+          <el-select v-model="nature" clearable placeholder="请选择">
             <el-option
               v-for="item in property"
               :key="item.value"
               :label="item.label"
-              :value="item.value"
+              :value="item.label"
             />
           </el-select>
         </el-col>
@@ -152,30 +159,110 @@
     </el-row>
 
     <el-row>
-      <el-table :data="initData" border stripe max-height="750">
+      <el-table :data="innerForm" border stripe max-height="750">
 
         <el-table-column type="index" label="序号" />
         <el-table-column label="修改" prop="" />
-        <el-table-column label="经纱产地及型号" prop="" />
-        <el-table-column label="数量（KG）" prop="" />
-        <el-table-column label="单价（元/吨）" prop="" />
-        <el-table-column label="到货仓库" prop="" />
-        <el-table-column label="纱期" prop="" />
-        <el-table-column label="生产安排编号" prop="" />
-        <el-table-column label="备注" prop="" />
-        <el-table-column label="外销单价" prop="" />
-        <el-table-column label="类型" prop="" />
-        <el-table-column label="说明" prop="" />
+        <el-table-column label="经纱产地及型号" prop="jingSha" />
+        <el-table-column label="数量（KG）">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.quanity"
+              placeholder=""
+              clearable
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="单价（元/吨）" prop="unitprice">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.unitprice"
+              placeholder=""
+              clearable
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="到货仓库" prop="cangku" />
+        <el-table-column label="纱期" prop="shaQi">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.shaQi"
+              placeholder=""
+              clearable
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="生产安排编号" prop="productionNo">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.productionNo"
+              placeholder=""
+              clearable
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="备注" prop="remarks">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.remarks"
+              placeholder=""
+              clearable
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="外销单价" prop="outUnitprice">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.outUnitprice"
+              placeholder=""
+              clearable
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="类型" prop="nature" />
+        <el-table-column label="说明" prop="explain">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.explain"
+              placeholder=""
+              clearable
+            />
+          </template>
+        </el-table-column>
         <el-table-column label="删除" prop="" />
-        <el-table-column label="布编" prop="" />
-        <el-table-column label="未定天数" prop="" />
-        <el-table-column label="订单证书要求" prop="" />
+        <el-table-column label="布编" prop="clothId">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.clothId"
+              placeholder=""
+              clearable
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="未定天数" prop="noDingDays">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.noDingDays"
+              placeholder=""
+              clearable
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="订单证书要求" prop="zhengShu">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.zhengShu"
+              placeholder=""
+              clearable
+            />
+          </template>
+        </el-table-column>
 
       </el-table>
     </el-row>
     <el-row style="margin-top: 20px" :gutter="10">
       <el-col :span="2">
-        <el-button type="primary">确定存入</el-button>
+        <el-button type="primary" @click="saveToServe">确定存入</el-button>
       </el-col>
       <el-col :span="2">
         <el-button type="primary">继续添加</el-button>
@@ -186,7 +273,7 @@
 
 <script>
 import { baseUrl } from '@/api/apiUrl'
-import { addNewYuanSha, loadContactPerson, loadFeature } from '@/api/ysdhd'
+import { addNewYuanSha, loadContactPerson, loadFeature, addNewData } from '@/api/ysdhd'
 import { toUrlParam } from '@/utils/toUrlParam'
 
 export default {
@@ -254,15 +341,19 @@ export default {
       },
       dialogAddNewTableVisible: false,
       selectedSupplier: {
+        signDate: '',
         name: '',
-        id: '',
         contactName: '',
-        personInchargeName: '',
         chanDi: '',
-        pinZhong: ''
+        pinZhong: '',
+        remarks: '',
+        signer: '',
+        listS: ''  
       },
       supplierList: '',
-      productFeature: ''
+      productFeature: '',
+      innerForm: [],
+      nature: ''
     }
   },
   created() {
@@ -283,7 +374,7 @@ export default {
       // 加载指定供应商联系人
       var url = baseUrl + '/api/supplier/getLoadContactName?id=' + id
       loadContactPerson(url).then(res => {
-        this.selectedSupplier.personInchargeName = res.data.data
+        this.selectedSupplier.contactName = res.data.data
         window.console.log(this.selectedSupplier)
       })
       // 加载产地品种
@@ -301,7 +392,39 @@ export default {
       }
     },
     addRow() {
+      var insertItem = {
+        id: null,
+        jingSha: this.selectedSupplier.pinZhong + '' + this.selectedSupplier.chanDi,
+        quanity: '',
+        unitprice: '',
+        cangku: '越南原纱仓',
+        shaQi: '',
+        productionNo: '',
+        remarks: '',
+        outUnitprice: '',
+        nature: this.nature,
+        explain: '',
+        clothId: '',
+        noDingDays: '',
+        zhengShu: ''
+      }
+      this.innerForm.push(insertItem)
+      this.$set(this.selectedSupplier, 'listS', this.innerForm)
+    },
+    onChange(name) {
+      this.$set(this.selectedSupplier, 'name', name)
+    },
+    saveToServe() {
       window.console.log(this.selectedSupplier)
+      addNewData(this.selectedSupplier).then(res => {
+        if (res.data.code !== 200) {
+          this.$message.error(res.data.msg)
+        } else {
+
+          this.$message.success(res.data.msg)
+          window.console.log(res.data)
+        }
+      })
     }
 
   }

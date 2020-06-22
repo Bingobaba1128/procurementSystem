@@ -32,12 +32,13 @@ export function loadFeature(data) {
     method: 'get'
   })
 }
-// export function addNewYuanSha(data) {
-//   return request({
-//     baseURL: baseUrl,
-//     url: '/api/supplier/getAllSupplier',
-//     method: 'post',
-//     data
-//   })
-// }
+
+export function addNewData(data) {
+  return request({
+    baseURL: '',
+    url: 'http://120.78.186.60:8097/addPurchaseByNoPlan',
+    method: 'post',
+    data
+  })
+}
 
