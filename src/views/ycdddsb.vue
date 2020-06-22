@@ -443,7 +443,7 @@ export default {
       loadSYuCeData(urlParam).then(res => {
         this.initData = res.data.data
         // this.testingData = this.mergeTableRow(this.testingData, ['yuCeNo'])
-        this.testingData = this.mergeTableRow(this.testingData, ['yuCeNo','beiShaDate','yuCeDate','variety','yuCeQuanity','yeWuZu'])
+        this.testingData = this.mergeTableRow(this.testingData, ['yuCeNo', 'beiShaDate', 'yuCeDate', 'variety', 'yuCeQuanity', 'yeWuZu'])
 
         // for (var i = 0; i < this.initData.length; i++) {
         //   if (this.initData[i].listS.length > 0) {

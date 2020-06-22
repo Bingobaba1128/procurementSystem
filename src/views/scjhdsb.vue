@@ -314,6 +314,7 @@ export default {
       this.multipleSelection = val
     },
     print() {
+      window.console.log(this.queryInfo)
       this.initData(this.queryInfo)
       searchTotalAmount()
       searchTotalAmount().then(res => {

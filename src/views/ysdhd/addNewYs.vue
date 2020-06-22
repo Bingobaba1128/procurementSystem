@@ -24,13 +24,13 @@
       <el-col :lg="{span:4}" class="searchCombo">
         <div class="searchHeader">供应商</div>
         <el-select
-          v-model="queryInfo.suppler"
+          v-model="queryInfo.productionNo"
           filterable
           placeholder="请选择"
-          @change="selectTrigger(queryInfo.suppler)"
+          @change="selectTrigger()"
         >
           <el-option
-            v-for="item in filterList"
+            v-for="item in options"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -75,7 +75,7 @@
 
       <el-col :span="3" style="display:flex">
         <el-col :span="8" style="text-align:center; line-height:40px">
-          <span> 签订人</span>
+          <span> 产地</span>
         </el-col>
         <el-col :span="16">
           <el-select v-model="value" clearable placeholder="请选择">
@@ -192,6 +192,9 @@
 </template>
 
 <script>
+import { baseUrl } from '@/api/apiUrl'
+import { addNewYuanSha } from '@/api/ysdhd'
+
 export default {
   data() {
     return {
@@ -255,7 +258,27 @@ export default {
         state: '',
         suppler: ''
       },
-      dialogAddNewTableVisible: false
+      dialogAddNewTableVisible: false,
+      selectedSupplier: {
+        name: '',
+        id: '',
+        contactName: ''
+      },
+      supplierList: ''
+    }
+  },
+  created() {
+    this.initOData()
+  },
+  methods: {
+    initOData() {
+      var url = baseUrl + '/api/supplier/getAllSupplier?supplierType=1'
+      // var urlParam = toUrlParam(url, this.queryInfo)
+      window.console.log(url)
+      addNewYuanSha(url).then(res => {
+        this.supplierList = res.data.data
+        window.console.log(this.supplierList)
+      })
     }
   }
 }
