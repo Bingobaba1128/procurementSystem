@@ -16,16 +16,6 @@
         />
       </el-col>
 
-      <!-- <el-col :lg="{span:4}" class="searchCombo">
-        <div class="searchHeader">日期</div>
-        <el-date-picker
-          v-model="queryInfo.orderDate"
-          type="date"
-          placeholder="选择日期"
-          value-format="yyyy-MM-dd"
-        />
-      </el-col> -->
-
       <!-- 单号选择 -->
       <el-col :span="4">
         <el-input v-model="queryInfo.yuanShaPurchaseNo" placeholder="请输入单号" clearable>
@@ -66,7 +56,7 @@
         <addNewForm />
       </el-dialog>
       <el-dialog title="原纱订货单（修改）" :visible.sync="dialogEditTableVisible" width="95%">
-        <editTable />
+        <editTable :param="editOriginData" />
       </el-dialog>
 
       <!-- 计划新增 -->
@@ -90,9 +80,10 @@
             {{ formatStatus(scope.row.approveState) }}
           </template>
         </el-table-column>
-        <el-table-column label="修改">
+        <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text" @click="editData(scope.row.yuanShaPurchaseNo)">修改</el-button>
+            <el-button type="text" @click="deleteData(scope.row.yuanShaPurchaseNo)">删除</el-button>
           </template>
         </el-table-column>
         <el-table-column label="审核" prop="" />
@@ -147,7 +138,8 @@ export default {
       dialogAddNewTableVisible: false,
       dialogAddPlanNewTableVisible: false,
       initOriginData: '',
-      dialogEditTableVisible: false
+      dialogEditTableVisible: false,
+      editOriginData: ''
     }
   },
   mounted() {
@@ -203,9 +195,10 @@ export default {
       var url = baseUrl + '/LoadPurchase?yuanShaPurchaseNo=' + id + '&'
       var urlParam = toUrlParam(url, this.pageSetting)
       loadYuanShaData(urlParam).then(res => {
-        window.console.log(res.data.data)
+        this.editOriginData = res.data.data
+        this.dialogEditTableVisible = true
+        // window.console.log(this.editOriginData)
       })
-      this.dialogEditTableVisible = true
     }
   }
 }

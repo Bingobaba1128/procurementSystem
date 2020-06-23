@@ -1,14 +1,13 @@
 <template>
   <el-card>
     <el-row :gutter="10">
-
+      <!-- {{param[0]}} -->
       <!-- 单号选择 -->
-      <el-col :span="4">
-        <el-input v-model="queryInfo.clothId" placeholder="" disabled>
+      <el-col :span="5">
+        <el-input v-model="param[0].yuanShaPurchaseNo" placeholder="" disabled>
           <template slot="prepend">单号</template>
         </el-input>
       </el-col>
-
       <!-- 日期选择 -->
       <el-col :lg="{span:5}" class="searchCombo">
         <div class="searchHeader">日期</div>
@@ -236,15 +235,17 @@
             />
           </template>
         </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
 
       </el-table>
     </el-row>
     <el-row style="margin-top: 20px" :gutter="10">
       <el-col :span="2">
         <el-button type="primary" @click="saveToServe">确定存入</el-button>
-      </el-col>
-      <el-col :span="2">
-        <el-button type="primary" @click="test">继续添加</el-button>
       </el-col>
     </el-row>
   </el-card>
@@ -253,9 +254,9 @@
 <script>
 import { baseUrl } from '@/api/apiUrl'
 import { addNewYuanSha, loadContactPerson, loadPinZhongByCloth, loadFeature, addNewData } from '@/api/ysdhd'
-import { toUrlParam } from '@/utils/toUrlParam'
 
 export default {
+  props: ['param'],
   data() {
     return {
       property: [{
@@ -296,10 +297,11 @@ export default {
         remarks: '',
         signer: '',
         listS: '',
-        clothId: ''
+        clothId: '',
+        yuanShaPurchaseNo: this.param[0].yuanShaPurchaseNo
       },
       supplierList: '',
-      innerForm: [],
+      innerForm: this.param[0].listS,
       nature: '内销',
       productFeatures: ''
     }
@@ -309,7 +311,7 @@ export default {
   },
   methods: {
     test() {
-      window.console.log(this.productFeatures)
+      window.console.log(this.param)
     },
     // 供应商初始化
     initOData() {
@@ -397,8 +399,10 @@ export default {
           window.console.log(res.data)
         }
       })
+    },
+    handleDelete(index, row) {
+      this.innerForm.splice(index, 1)
     }
-
   }
 }
 </script>
