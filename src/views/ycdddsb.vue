@@ -30,22 +30,17 @@
       <el-col :lg="{span:6}">
         <el-button type="success" @click="searchData">筛选</el-button>
       </el-col>
-      <el-col :lg="{span:2}" class="searchCombo">
+      <!-- <el-col :lg="{span:2}" class="searchCombo">
         <el-button type="success" icon="el-icon-download" @click="exportExcel">导出</el-button>
-      </el-col>
+      </el-col> -->
     </el-row>
 
-    <!-- 测试区 -->
+    <!-- 列表区 -->
     <el-row>
-      <el-table id="out-table" :data="testingData" border stripe max-height="750" :span-method="objectSpanMethod">
+      <el-table :data="initData" border stripe max-height="750" :span-method="objectSpanMethod">
         <el-table-column type="index" label="序号" />
         <!-- 预测订单带出 -->
         <el-table-column class="alignCenter" label="预测订单信息">
-          <el-table-column
-            prop="yuCeNo"
-            label="预测订单号"
-            width="120"
-          />
           <el-table-column
             prop="beiShaDate"
             label="备纱单日期"
@@ -56,7 +51,11 @@
             label="业务组"
             width="120"
           />
-
+          <el-table-column
+            prop="yuCeNo"
+            label="预测订单号"
+            width="120"
+          />
           <el-table-column
             prop="yuCeDate"
             label="预测下单日期"
@@ -121,111 +120,7 @@
               />
             </template>
           </el-table-column>
-        </el-table-column>
 
-        <el-table-column label="状态">
-          <template slot-scope="scope">
-            <span>{{ formatStatus(scope.row.state) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" fixed="right" width="200">
-          <template slot-scope="scope">
-            <el-button type="text" @click="saveData(scope.row.yuCeNo)">确定存入</el-button>
-            <el-button type="text" :disabled="scope.row.approveState == '1'">{{ formatAppStatus(scope.row.approveState) }}</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-row>
-
-    <!-- 列表区 -->
-    <el-row>
-      <el-table :data="initData" border stripe max-height="750">
-        <el-table-column type="index" label="序号" />
-        <!-- 预测订单带出 -->
-        <el-table-column class="alignCenter" label="预测订单信息">
-          <el-table-column
-            prop="beiShaDate"
-            label="备纱单日期"
-            width="120"
-          />
-          <el-table-column
-            prop="yeWuZu"
-            label="业务组"
-            width="120"
-          />
-          <el-table-column
-            prop="yuCeNo"
-            label="预测订单号"
-            width="120"
-          />
-          <el-table-column
-            prop="yuCeDate"
-            label="预测下单日期"
-            width="120"
-          />
-          <el-table-column
-            prop="variety"
-            label="品种"
-            width="120"
-          />
-          <el-table-column
-            prop="yuCeQuanity"
-            label="预测数量(码长)"
-            width="120"
-          />
-        </el-table-column>
-        <el-table-column style="text-align:center" label="备纱信息" width="1200">
-          <template slot-scope="scope">
-            <el-table :data="scope.row.listS" border stripe>
-              <el-table-column label="经纱/纬纱" prop="jingOrWei" />
-              <el-table-column label="经纬纱名称" prop="name" />
-              <el-table-column label="长度">
-                <template slot-scope="scope">
-                  <el-input
-                    v-model="scope.row.length"
-                    placeholder="请输入内容"
-                    clearable
-                  />
-                </template>
-              </el-table-column>
-              <el-table-column label="百米用量" prop="yongLiangBybm">
-                <template slot-scope="scope">
-                  <el-input
-                    v-model="scope.row.yongLiangBybm"
-                    placeholder="请输入内容"
-                    clearable
-                  />
-                </template>
-              </el-table-column>
-              <el-table-column label="预计备纱" prop="yuJiBeiSha">
-                <template slot-scope="scope">
-                  <el-input
-                    v-model="scope.row.yuJiBeiSha"
-                    placeholder="请输入内容"
-                    clearable
-                  />
-                </template>
-              </el-table-column>
-              <el-table-column label="备纱明细" prop="beiSahRemarks">
-                <template slot-scope="scope">
-                  <el-input
-                    v-model="scope.row.beiSahRemarks"
-                    placeholder="请输入内容"
-                    clearable
-                  />
-                </template>
-              </el-table-column>
-              <el-table-column label="备注">
-                <template slot-scope="scope">
-                  <el-input
-                    v-model="scope.row.remarks"
-                    placeholder="请输入内容"
-                    clearable
-                  />
-                </template>
-              </el-table-column>
-            </el-table>
-          </template>
         </el-table-column>
 
         <el-table-column label="状态">
@@ -248,9 +143,6 @@
 import { baseUrl } from '@/api/apiUrl'
 import { toUrlParam } from '@/utils/toUrlParam'
 import { loadSYuCeData, uploadData, searchData } from '@/api/yuDeDingDan'
-
-import FileSaver from 'file-saver'
-import XLSX from 'xlsx'
 
 export default {
   data() {
@@ -393,6 +285,7 @@ export default {
           'remarks': ''
         }
       ],
+      initOData: '',
       initData: '',
       queryInfo: {
         pageNumber: 1,
@@ -424,73 +317,17 @@ export default {
     this.initDataF()
   },
   methods: {
-    exportExcel() {
-      this.downloadLoading = true
-      /* generate workbook object from table */
-      var wb = XLSX.utils.table_to_book(document.querySelector('#out-table'))
-      /* get binary string as output */
-      var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
-      try {
-        FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '生产计划定纱表.xlsx')
-        this.downloadLoading = false
-      } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
-      return wbout
-    },
+
     // 数据初始化
     initDataF() {
       var url = baseUrl + '/LoadYuCeDingDan?'
       var urlParam = toUrlParam(url, this.pageSetting)
       loadSYuCeData(urlParam).then(res => {
-        this.initData = res.data.data
-        // this.testingData = this.mergeTableRow(this.testingData, ['yuCeNo'])
-        this.testingData = this.mergeTableRow(this.testingData, ['yuCeNo', 'beiShaDate', 'yuCeDate', 'variety', 'yuCeQuanity', 'yeWuZu'])
-
-        // for (var i = 0; i < this.initData.length; i++) {
-        //   if (this.initData[i].listS.length > 0) {
-        //     const newlist = { ...this.initData[i] }
-        //     for (var j = 0; j < this.initData[i].listS.length; j++) {
-        //       for (var k = 0; k < this.initData[i].listS[j].length; k++) {
-        //         window.console.log(this.initData[i].listS[j][k])
-        //       }
-        //     }
-
-        //     // window.console.log(this.initData[i])
-        //   }
-        // }
+        this.initOData = res.data.data
+        this.initData = this.mergeTableRow(this.initOData, ['yuCeNo', 'beiShaDate', 'yuCeDate', 'variety', 'yuCeQuanity', 'yeWuZu'])
+        window.console.log(this.initData)
       })
     },
-    // mergeTableRow(data, merge) {
-    //   if (!merge || merge.length === 0) {
-    //     return data
-    //   }
-    //   merge.forEach((m) => {
-    //     const mList = {}
-    //     for (var i = 0; i < data.length; i++) {
-    //       // window.console.log(data[i])
-    //       if (data[i].yuCeNo == 'YC2006-012') {
-    //         // data = data.map((v, index) => {
-    //           const rowVal = data[i][m]
-    //           if (mList[rowVal]) {
-    //             mList[rowVal]++
-    //     data[index - (mList[rowVal] - 1)][m + '-span'].rowspan++
-    //     v[m + '-span'] = {
-    //       rowspan: 0,
-    //       colspan: 0
-    //     }
-    //           } else {
-    //             mList[rowVal] = 1
-    //     v[m + '-span'] = {
-    //       rowspan: 1,
-    //       colspan: 1
-    //     }
-    //           }
-    //           return data[i]
-    //         // })
-    //       }
-    //     }
-    //   })
-    //   return data
-    // },
     mergeTableRow(data, merge) {
       if (!merge || merge.length === 0) {
         return data
@@ -500,27 +337,11 @@ export default {
         // 循环每一组
         data = data.map((v, index) => {
           // 提取每一组需要合并的列， 此时v[m]就是YC2006-012
-          const rowVal = v[m]
           const idVal = v['yuCeNo']
-          window.console.log(idVal)
+          // window.console.log(idVal)
 
           if (mList[v['yuCeNo']]) {
-            // mList['YC2006-012']:0
             mList[v['yuCeNo']]++
-            // window.console.log('index is' + index)
-            // window.console.log(mList[rowVal])
-            // window.console.log(index - (mList[rowVal] - 1))
-            // if (index === 1) {
-            //   // window.console.log(data[index]['yuCeNo'])
-            //   data[index][m + '-span'].rowspan++
-            // } else {
-            //   window.console.log(data[index]['yuCeNo'])
-
-            //   // if (data[index]['yuCeNo'] !== data[index + 1]['yuCeNo']) {
-            //   //   data[index + 1][m + '-span'].rowspan++
-            //   // }
-            // }
-
             data[index - mList[v['yuCeNo']] + 1][m + '-span'].rowspan++
             v[m + '-span'] = {
               rowspan: 0,
@@ -533,9 +354,8 @@ export default {
               rowspan: 1,
               colspan: 1
             }
-            // window.console.log(v)
           }
-          window.console.log(v[m + '-span'])
+          // window.console.log(v[m + '-span'])
           return v
         })
       })
@@ -545,7 +365,7 @@ export default {
     searchData() {
       var url = baseUrl + '/LoadYuCeDingDan?'
       var urlParam = toUrlParam(url, this.queryInfo)
-      window.console.log(urlParam)
+      // window.console.log(urlParam)
       searchData(urlParam).then(res => {
         this.initData = res.data.data
       })

@@ -10,7 +10,7 @@
       </el-col>
 
       <!-- 日期选择 -->
-      <el-col :lg="{span:4}" class="searchCombo">
+      <el-col :lg="{span:5}" class="searchCombo">
         <div class="searchHeader">日期</div>
         <el-date-picker
           v-model="selectedSupplier.signDate"
@@ -49,9 +49,9 @@
       <el-col :span="2">
         <el-button type="primary" @click="searchData">导出订单</el-button>
       </el-col>
-      <!-- 原始订单 -->
+      <!-- 导出模板 -->
       <el-col :span="2">
-        <el-button type="primary" @click="dialogAddNewTableVisible = true">原始订单</el-button>
+        <el-button type="primary" @click="dialogAddNewTableVisible = true">导出模板</el-button>
       </el-col>
     </el-row>
 
@@ -70,24 +70,19 @@
       </el-col>
     </el-row>
     <el-row style="margin-top: 20px" :gutter="10">
-      <el-col :span="1.5">
+
+      <el-col :span="3">
         <el-button type="primary" @click="addRow">增加行</el-button>
       </el-col>
 
-      <el-col :span="3" style="display:flex">
-        <el-col :span="8" style="text-align:center; line-height:40px">
-          <span> 产地</span>
-        </el-col>
-        <el-col :span="16">
-          <el-input v-model="selectedSupplier.chanDi" disabled />
-        </el-col>
+      <el-col :span="5" :offset="2" style="display:flex">
+          <el-input v-model="selectedSupplier.chanDi" disabled>
+            <template slot="prepend">产地</template>
+          </el-input>
       </el-col>
 
-      <el-col :span="4" style="display:flex">
-        <el-col :span="8" style="text-align:center; line-height:40px">
-          <span> 品种*</span>
-        </el-col>
-        <el-col :span="16">
+      <el-col :span="7" :offset="1" class="searchCombo">
+        <div class="searchHeader">品种</div>
           <el-select
             v-model="selectedSupplier.pinZhong"
             filterable
@@ -101,20 +96,19 @@
               :value="item.pinZhong"
             />
           </el-select>
-        </el-col>
       </el-col>
-
-      <el-col :span="4">
+    </el-row>
+    <el-row style="margin-top: 20px" :gutter="10">
+      <el-col :span="3" />
+      <el-col :span="5">
         <el-input v-model="queryInfo.clothId" placeholder="请输入" clearable>
           <template slot="prepend">原纱名称</template>
         </el-input>
       </el-col>
 
-      <el-col :span="4" style="display:flex">
-        <el-col :span="8" style="text-align:center; line-height:40px">
-          <span> 到货仓库</span>
-        </el-col>
-        <el-col :span="16">
+      <el-col :span="6" class="searchCombo">
+                  <div class="searchHeader">到货仓库</div>
+
           <el-select v-model="value" clearable disabled placeholder="越南原纱仓">
             <el-option
               v-for="item in options"
@@ -123,13 +117,10 @@
               :value="item.value"
             />
           </el-select>
-        </el-col>
       </el-col>
-      <el-col :span="3" style="display:flex">
-        <el-col :span="8" style="text-align:center; line-height:40px">
-          <span> 属性</span>
-        </el-col>
-        <el-col :span="16">
+      <el-col :span="5" class="searchCombo">
+        <div class="searchHeader">属性</div>
+
           <el-select v-model="nature" clearable placeholder="请选择">
             <el-option
               v-for="item in property"
@@ -138,22 +129,11 @@
               :value="item.label"
             />
           </el-select>
-        </el-col>
       </el-col>
-      <el-col :span="3" style="display:flex">
-        <el-col :span="8" style="text-align:center; line-height:40px">
-          <span> 客户</span>
-        </el-col>
-        <el-col :span="16">
-          <el-select v-model="value" clearable placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </el-col>
+      <el-col :span="5" style="display:flex">
+        <el-input v-model="queryInfo.clothId" placeholder="请输入" clearable>
+          <template slot="prepend">布编</template>
+        </el-input>
       </el-col>
 
     </el-row>
@@ -162,7 +142,6 @@
       <el-table :data="innerForm" border stripe max-height="750">
 
         <el-table-column type="index" label="序号" />
-        <el-table-column label="修改" prop="" />
         <el-table-column label="经纱产地及型号" prop="jingSha" />
         <el-table-column label="数量（KG）">
           <template slot-scope="scope">
@@ -341,19 +320,19 @@ export default {
       },
       dialogAddNewTableVisible: false,
       selectedSupplier: {
-        signDate: '',
+        signDate: this.getNowTime(),
         name: '',
         contactName: '',
         chanDi: '',
         pinZhong: '',
         remarks: '',
         signer: '',
-        listS: ''  
+        listS: ''
       },
       supplierList: '',
       productFeature: '',
       innerForm: [],
-      nature: ''
+      nature: '内销'
     }
   },
   created() {
@@ -391,6 +370,19 @@ export default {
         }
       }
     },
+    getNowTime() {
+      var now = new Date()
+      var year = now.getFullYear() // 得到年份
+      var month = now.getMonth() // 得到月份
+      var date = now.getDate() // 得到日期
+      month = month + 1
+      month = month.toString().padStart(2, '0')
+      date = date.toString().padStart(2, '0')
+      var defaultDate = `${year}-${month}-${date}`
+      console.log(defaultDate)
+      return defaultDate
+      // this.$set(this.selectedSupplier, 'signDate', defaultDate)
+    },
     addRow() {
       var insertItem = {
         id: null,
@@ -420,7 +412,6 @@ export default {
         if (res.data.code !== 200) {
           this.$message.error(res.data.msg)
         } else {
-
           this.$message.success(res.data.msg)
           window.console.log(res.data)
         }

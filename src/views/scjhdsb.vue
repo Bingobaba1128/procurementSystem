@@ -104,7 +104,7 @@
 
     <!-- 列表区 -->
     <el-row>
-      <el-table id="out-table" :data="getInitData" border stripe tooltip-effect="dark">
+      <el-table id="out-table" ref="multipleTable" :data="getInitData" border stripe tooltip-effect="dark" :span-method="objectSpanMethod" @selection-change="handleSelectionChange">
 
         <el-table-column type="index" label="序号" />
 
@@ -139,60 +139,57 @@
         </el-table-column>
 
         <!--二级表头 -->
-        <el-table-column prop="parts" label="经纬纱信息" width="1900">
-          <template slot-scope="scope">
-            <el-table ref="multipleTable" :data="scope.row.parts" border stripe @selection-change="handleSelectionChange">
-              <el-table-column label="经/纬纱">
-                <template slot-scope="scope">
-                  <span>{{ formatStatus(scope.row.jingOrWei) }}</span>
-                </template>
+        <el-table-column label="经纬纱信息" width="1900">
+          <!-- <el-table ref="multipleTable" border stripe @selection-change="handleSelectionChange"> -->
+          <el-table-column label="经/纬纱">
+            <template slot-scope="scope">
+              <span>{{ formatStatus(scope.row.jingOrWei) }}</span>
+            </template>
 
-              </el-table-column>
-              <el-table-column label="经纬纱名称" prop="jingSha" />
+          </el-table-column>
+          <el-table-column label="经纬纱名称" prop="jingSha" />
 
-              <el-table-column label="需用量(KG)" prop="" width="160">
-                <template slot-scope="scope">
-                  <input v-model="scope.row.xuYaoLiang" placeholder="scope.row.xuYaoLiang">
-                </template>
-              </el-table-column>
+          <el-table-column label="需用量(KG)" prop="" width="160">
+            <template slot-scope="scope">
+              <input v-model="scope.row.xuYaoLiang" placeholder="scope.row.xuYaoLiang">
+            </template>
+          </el-table-column>
 
-              <el-table-column label="库存(KG)" prop="kuCun" />
-              <el-table-column label="最低周转量" prop="zhouZhuanLiang" />
-              <el-table-column label="消化量(KG)" prop="xiaoHuaLiang" />
-              <el-table-column label="总需量" prop="totalXuYaoLiang" />
-              <el-table-column label="订购量(KG)" prop="">
-                <template slot-scope="scope">
-                  <input v-model="scope.row.dingGouLiang" placeholder="0">
-                </template>
-              </el-table-column>
-              <el-table-column label="备纱情况" prop="beiShaQingKuang" />
-              <el-table-column label="证书情况" prop="zhengShuQingKuang" />
-              <el-table-column label="纱期" prop="shaQi" />
+          <el-table-column label="库存(KG)" prop="kuCun" />
+          <el-table-column label="最低周转量" prop="zhouZhuanLiang" />
+          <el-table-column label="消化量(KG)" prop="xiaoHuaLiang" />
+          <el-table-column label="总需量" prop="totalXuYaoLiang" />
+          <el-table-column label="订购量(KG)" prop="">
+            <template slot-scope="scope">
+              <input v-model="scope.row.dingGouLiang" placeholder="0">
+            </template>
+          </el-table-column>
+          <el-table-column label="备纱情况" prop="beiShaQingKuang" />
+          <el-table-column label="证书情况" prop="zhengShuQingKuang" />
+          <el-table-column label="纱期" prop="shaQi" />
 
-              <el-table-column label="备注" prop="remarks" width="350">
-                <template slot-scope="scope">
-                  <el-input
-                    v-model="scope.row.remarks"
-                    type="textarea"
-                    placeholder="请输入内容"
-                  />
-                </template>
-              </el-table-column>
-
-              <el-table-column label="购纱计划状态" prop="queRenComplete" width="350">
-                <template slot-scope="scope">
-                  <span>{{ formatConfirmStatus(scope.row.queRenComplete) }}</span>
-                </template>
-              </el-table-column>
-
-              <el-table-column
-                type="selection"
-                width="55"
+          <el-table-column label="备注" prop="remarks" width="350">
+            <template slot-scope="scope">
+              <el-input
+                v-model="scope.row.remarks"
+                type="textarea"
+                placeholder="请输入内容"
               />
-            </el-table>
-          </template>
-        </el-table-column>
+            </template>
+          </el-table-column>
 
+          <el-table-column label="购纱计划状态" prop="queRenComplete" width="350">
+            <template slot-scope="scope">
+              <span>{{ formatConfirmStatus(scope.row.queRenComplete) }}</span>
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            type="selection"
+            width="55"
+          />
+          <!-- </el-table> -->
+        </el-table-column>
       </el-table>
 
     </el-row>
@@ -272,12 +269,14 @@ export default {
         pageNumber: 1,
         pageSize: 10
       },
+      getInitOData: '',
       getInitData: '',
       checkedBox: [],
       systemDate: '',
       downloadLoading: false
     }
   },
+
   created() {
     this.DateFormat()
     this.initData(this.pageSetting)
@@ -287,11 +286,56 @@ export default {
       var url = baseUrl + '/LoadPlanList?'
       var urlParam = toUrlParam(url, setting)
       loadSJDSBData(urlParam).then(res => {
-        this.getInitData = res.data.data
+        this.getInitOData = res.data.data
+        // 合并的地方
+        this.getInitData = this.mergeTableRow(this.getInitOData, ['doTime', 'clothId', 'productionNo', 'jiaoZhouLength', 'huiPiLength', 'produceRequestNo', 'jiangRanChang', 'zhiZaoChang', 'jiaoZhouDate', 'huiPiDate', 'chengPinDate'])
+
         window.console.log('dengke pass to me')
 
         window.console.log(this.getInitData)
       })
+    },
+    // 给合并提供样式
+    mergeTableRow(data, merge) {
+      if (!merge || merge.length === 0) {
+        return data
+      }
+      merge.forEach((m) => {
+        const mList = {}
+        // 循环每一组
+        data = data.map((v, index) => {
+          // 提取每一组需要合并的列， 此时v[m]就是YC2006-012
+          // const idVal = v['produceRequestNo']
+          // window.console.log(idVal)
+
+          if (mList[v['productionNo']]) {
+            mList[v['productionNo']]++
+            data[index - mList[v['productionNo']] + 1][m + '-span'].rowspan++
+            v[m + '-span'] = {
+              rowspan: 0,
+              colspan: 0
+            }
+          } else {
+            mList[v['productionNo']] = 1
+            // v是提取出来的每组
+            v[m + '-span'] = {
+              rowspan: 1,
+              colspan: 1
+            }
+          }
+          window.console.log(v[m + '-span'])
+          return v
+        })
+      })
+      // window.console.log(data)
+      return data
+    },
+    // 合并实现方法
+    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+      const span = column['property'] + '-span'
+      if (row[span]) {
+        return row[span]
+      }
     },
 
     formatStatus(val) {
@@ -326,12 +370,12 @@ export default {
     },
     clickToShow() {
       window.console.log('dengkeeeeeeeeeeee')
-
       window.console.log(this.multipleSelection)
       updatePlanData(this.multipleSelection).then(res => {
         if (res.data.code !== 200) {
           this.$message.error(res.data.msg)
         } else {
+          this.$message.success(res.data.msg)
           this.initData(this.pageSetting)
         }
       })
