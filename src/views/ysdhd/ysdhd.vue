@@ -65,6 +65,9 @@
       <el-dialog title="原纱订货单（申请）" :visible.sync="dialogAddNewTableVisible" width="95%">
         <addNewForm />
       </el-dialog>
+      <el-dialog title="原纱订货单（修改）" :visible.sync="dialogEditTableVisible" width="95%">
+        <editTable />
+      </el-dialog>
 
       <!-- 计划新增 -->
       <el-col :span="2">
@@ -81,9 +84,17 @@
         <el-table-column type="index" label="序号" />
         <el-table-column label="单号" prop="yuanShaPurchaseNo" />
         <el-table-column label="签订日期" prop="signDate" />
-        <el-table-column label="供应商" prop="supplierName" />
-        <el-table-column label="审核情况" prop="approveState" />
-        <el-table-column label="修改" prop="" />
+        <el-table-column label="供应商" prop="name" />
+        <el-table-column label="审核情况" prop="approveState">
+          <template slot-scope="scope">
+            {{ formatStatus(scope.row.approveState) }}
+          </template>
+        </el-table-column>
+        <el-table-column label="修改">
+          <template slot-scope="scope">
+            <el-button type="text" @click="editData(scope.row.yuanShaPurchaseNo)">修改</el-button>
+          </template>
+        </el-table-column>
         <el-table-column label="审核" prop="" />
 
       </el-table>
@@ -95,6 +106,7 @@
 import { baseUrl } from '@/api/apiUrl'
 
 import addNewForm from '@/views/ysdhd/addNewYs'
+import editTable from '@/views/ysdhd/editDingDan'
 import addPlanNew from '@/views/ysdhd/addPlanNew'
 import { loadYuanShaData, addNewYuanSha } from '@/api/ysdhd'
 import { toUrlParam } from '@/utils/toUrlParam'
@@ -102,7 +114,8 @@ import { toUrlParam } from '@/utils/toUrlParam'
 export default {
   components: {
     addNewForm,
-    addPlanNew
+    addPlanNew,
+    editTable
   },
   data() {
     return {
@@ -133,7 +146,8 @@ export default {
 
       dialogAddNewTableVisible: false,
       dialogAddPlanNewTableVisible: false,
-      initOriginData: ''
+      initOriginData: '',
+      dialogEditTableVisible: false
     }
   },
   mounted() {
@@ -180,6 +194,18 @@ export default {
       //   this.supplierList = res.data.data
       //   window.console.log(this.supplierList)
       // })
+    },
+    formatStatus(val) {
+      return val == 0 ? '未审核' : '已审核'
+    },
+    editData(id) {
+      window.console.log(id)
+      var url = baseUrl + '/LoadPurchase?yuanShaPurchaseNo=' + id + '&'
+      var urlParam = toUrlParam(url, this.pageSetting)
+      loadYuanShaData(urlParam).then(res => {
+        window.console.log(res.data.data)
+      })
+      this.dialogEditTableVisible = true
     }
   }
 }

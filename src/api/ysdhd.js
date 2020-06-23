@@ -42,3 +42,10 @@ export function addNewData(data) {
   })
 }
 
+export function loadPinZhongByCloth(data) {
+  return request({
+    baseURL: '',
+    url: data,
+    method: 'get'
+  })
+}

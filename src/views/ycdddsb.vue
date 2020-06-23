@@ -73,7 +73,11 @@
           />
         </el-table-column>
         <el-table-column style="text-align:center" label="备纱信息" width="1200">
-          <el-table-column label="经纱/纬纱" prop="jingOrWei" />
+          <el-table-column label="经纱/纬纱" prop="jingOrWei">
+            <template slot-scope="scope">
+              <span>{{ formatStatus(scope.row.jingOrWei) }}</span>
+            </template>
+          </el-table-column>
           <el-table-column label="经纬纱名称" prop="name" />
           <el-table-column label="长度">
             <template slot-scope="scope">
@@ -375,6 +379,9 @@ export default {
     },
     formatAppStatus(val) {
       return val == 0 ? '未审核' : val == 1 ? '已审核' : ''
+    },
+    formatStatus(val) {
+      return val == 0 ? '纬' : val == 1 ? '经' : ''
     },
     saveData(no) {
       for (var i = 0; i < this.initData.length; i++) {
