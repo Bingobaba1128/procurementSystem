@@ -1,7 +1,7 @@
 <template>
   <el-card>
     <el-row :gutter="10">
-      <!-- {{param[0]}} -->
+      {{param[0]}}
       <!-- 单号选择 -->
       <el-col :span="5">
         <el-input v-model="param[0].yuanShaPurchaseNo" placeholder="" disabled>
@@ -21,12 +21,15 @@
       <!-- 供应商选择 -->
 
       <el-col :lg="{span:5}" class="searchCombo">
-        <div class="searchHeader">供应商</div>
-        <el-select
+        <el-input v-model="param[0].name" placeholder="" disabled>
+          <template slot="prepend">供应商</template>
+        </el-input>
+        <!-- <el-select
           v-model="selectedSupplier.id"
           filterable
           placeholder="请选择"
           @change="selectTrigger(selectedSupplier.id)"
+          disabled
         >
           <el-option
             v-for="item in supplierList"
@@ -34,8 +37,8 @@
             :label="item.name"
             :value="item.id"
             @click.native="onChange(item.name)"
-          />
-        </el-select>
+          /> -->
+        <!-- </el-select> -->
       </el-col>
 
       <el-col :lg="{span:4}" class="searchCombo">
@@ -163,11 +166,11 @@
         <el-table-column label="到货仓库" prop="cangku" />
         <el-table-column label="纱期" prop="shaQi">
           <template slot-scope="scope">
-            <el-input
+            <el-date-picker
               v-model="scope.row.shaQi"
-              placeholder=""
-              clearable
-            />
+              type="date"
+              placeholder="选择日期">
+            </el-date-picker>
           </template>
         </el-table-column>
         <el-table-column label="生产安排编号" prop="productionNo">
@@ -289,14 +292,15 @@ export default {
       },
       dialogAddNewTableVisible: false,
       selectedSupplier: {
+        id: this.param[0].name,
         signDate: this.getNowTime(),
         name: '',
-        contactName: '',
+        contactName: this.param[0].contactName,
         chanDi: '',
         pinZhong: '',
-        remarks: '',
-        signer: '',
-        listS: '',
+        remarks: this.param[0].remarks,
+        signer: this.param[0].signer,
+        listS: this.param[0].listS,
         clothId: '',
         yuanShaPurchaseNo: this.param[0].yuanShaPurchaseNo
       },
@@ -315,25 +319,8 @@ export default {
     },
     // 供应商初始化
     initOData() {
-      var url = baseUrl + '/api/supplier/getAllSupplier?supplierType=1'
-      // var urlParam = toUrlParam(url, this.queryInfo)
-      window.console.log(url)
-      addNewYuanSha(url).then(res => {
-        this.supplierList = res.data.data
-        window.console.log(this.supplierList)
-      })
-    },
-    selectTrigger(id) {
-      // 加载指定供应商联系人
-      var url = baseUrl + '/api/supplier/getLoadContactName?id=' + id
-      loadContactPerson(url).then(res => {
-        this.selectedSupplier.contactName = res.data.data
-        window.console.log(this.selectedSupplier)
-      })
-      // 加载产地品种
-      var url2 = baseUrl + '/api/getYarnArchives?GysId=' + id
+      var url2 = baseUrl + '/api/getYarnArchives?GysId=' + this.param[0].id
       loadFeature(url2).then(res => {
-        // window.console.log(res.data.data)
         this.productFeatures = res.data.data
       })
     },

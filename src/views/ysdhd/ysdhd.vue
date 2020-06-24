@@ -99,7 +99,7 @@ import { baseUrl } from '@/api/apiUrl'
 import addNewForm from '@/views/ysdhd/addNewYs'
 import editTable from '@/views/ysdhd/editDingDan'
 import addPlanNew from '@/views/ysdhd/addPlanNew'
-import { loadYuanShaData, addNewYuanSha } from '@/api/ysdhd'
+import { loadYuanShaData, deleteData } from '@/api/ysdhd'
 import { toUrlParam } from '@/utils/toUrlParam'
 
 export default {
@@ -198,6 +198,17 @@ export default {
         this.editOriginData = res.data.data
         this.dialogEditTableVisible = true
         // window.console.log(this.editOriginData)
+      })
+    },
+    deleteData(yuanShaPurchaseNo) {
+      var url = baseUrl + '/delPurchase?yuanShaPurchaseNo=' + yuanShaPurchaseNo
+      deleteData(url).then(res => {
+        if (res.data.code !== 200) {
+          this.$message.error(res.data.msg)
+        } else {
+          this.initData()
+          this.$message.success(res.data.msg)
+        }
       })
     }
   }

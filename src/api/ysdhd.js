@@ -49,3 +49,11 @@ export function loadPinZhongByCloth(data) {
     method: 'get'
   })
 }
+
+export function deleteData(data) {
+  return request({
+    baseURL: '',
+    url: data,
+    method: 'post'
+  })
+}
