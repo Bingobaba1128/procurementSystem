@@ -86,6 +86,12 @@
             <el-button type="text" @click="deleteData(scope.row.yuanShaPurchaseNo)">删除</el-button>
           </template>
         </el-table-column>
+        <el-table-column label="导出">
+          <template slot-scope="scope">
+            <el-button type="text" @click="exportPDF(scope.row.yuanShaPurchaseNo)">PDF</el-button>
+            <el-button type="text" @click="exportExcel(scope.row.yuanShaPurchaseNo)">EXCEL</el-button>
+          </template>
+        </el-table-column>
         <el-table-column label="审核" prop="" />
 
       </el-table>
@@ -99,7 +105,7 @@ import { baseUrl } from '@/api/apiUrl'
 import addNewForm from '@/views/ysdhd/addNewYs'
 import editTable from '@/views/ysdhd/editDingDan'
 import addPlanNew from '@/views/ysdhd/addPlanNew'
-import { loadYuanShaData, deleteData } from '@/api/ysdhd'
+import { loadYuanShaData, deleteData, getFile } from '@/api/ysdhd'
 import { toUrlParam } from '@/utils/toUrlParam'
 
 export default {
@@ -209,6 +215,20 @@ export default {
           this.initData()
           this.$message.success(res.data.msg)
         }
+      })
+    },
+    exportPDF(yuanShaPurchaseNo) {
+      var url = baseUrl + '/shengChengPDF?style=1&yuanShaPurchaseNo=' + yuanShaPurchaseNo
+      getFile(url).then(res => {
+        var pdfLink = baseUrl + res.data.data
+        window.open(pdfLink, '_blank')
+      })
+    },
+    exportExcel(yuanShaPurchaseNo) {
+      var url = baseUrl + '/shengChengPDF?style=2&yuanShaPurchaseNo=' + yuanShaPurchaseNo
+      getFile(url).then(res => {
+        var excelLink = baseUrl + res.data.data
+        window.open(excelLink, '_blank')
       })
     }
   }

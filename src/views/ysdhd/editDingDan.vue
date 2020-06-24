@@ -1,7 +1,7 @@
 <template>
   <el-card>
     <el-row :gutter="10">
-      {{param[0]}}
+      <!-- {{ param[0] }} -->
       <!-- 单号选择 -->
       <el-col :span="5">
         <el-input v-model="param[0].yuanShaPurchaseNo" placeholder="" disabled>
@@ -24,36 +24,13 @@
         <el-input v-model="param[0].name" placeholder="" disabled>
           <template slot="prepend">供应商</template>
         </el-input>
-        <!-- <el-select
-          v-model="selectedSupplier.id"
-          filterable
-          placeholder="请选择"
-          @change="selectTrigger(selectedSupplier.id)"
-          disabled
-        >
-          <el-option
-            v-for="item in supplierList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-            @click.native="onChange(item.name)"
-          /> -->
-        <!-- </el-select> -->
+
       </el-col>
 
       <el-col :lg="{span:4}" class="searchCombo">
         <el-input v-model="selectedSupplier.contactName" disabled>
           <template slot="prepend">负责人</template>
         </el-input>
-      </el-col>
-
-      <!-- 导出订单 -->
-      <el-col :span="2">
-        <el-button type="primary" @click="searchData">导出订单</el-button>
-      </el-col>
-      <!-- 导出模板 -->
-      <el-col :span="2">
-        <el-button type="primary" @click="dialogAddNewTableVisible = true">导出模板</el-button>
       </el-col>
     </el-row>
 
@@ -169,8 +146,9 @@
             <el-date-picker
               v-model="scope.row.shaQi"
               type="date"
-              placeholder="选择日期">
-            </el-date-picker>
+              placeholder="选择日期"
+              value-format="yyyy-MM-dd"
+            />
           </template>
         </el-table-column>
         <el-table-column label="生产安排编号" prop="productionNo">
@@ -292,9 +270,9 @@ export default {
       },
       dialogAddNewTableVisible: false,
       selectedSupplier: {
-        id: this.param[0].name,
+        id: this.param[0].id,
         signDate: this.getNowTime(),
-        name: '',
+        name: this.param[0].name,
         contactName: this.param[0].contactName,
         chanDi: '',
         pinZhong: '',

@@ -57,3 +57,19 @@ export function deleteData(data) {
     method: 'post'
   })
 }
+
+export function searchData(data) {
+  return request({
+    baseURL: '',
+    url: data,
+    method: 'get'
+  })
+}
+
+export function getFile(data) {
+  return request({
+    baseURL: '',
+    url: data,
+    method: 'get'
+  })
+}

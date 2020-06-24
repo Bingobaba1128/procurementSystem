@@ -24,17 +24,17 @@
       <el-col :lg="{span:5}" class="searchCombo">
         <div class="searchHeader">供应商</div>
         <el-select
-          v-model="selectedSupplier.id"
+          v-model="selectedSupplier.name"
           filterable
           placeholder="请选择"
-          @change="selectTrigger(selectedSupplier.id)"
+          @change="onChange(selectedSupplier.name)"
         >
           <el-option
             v-for="item in supplierList"
             :key="item.id"
             :label="item.name"
-            :value="item.id"
-            @click.native="onChange(item.name)"
+            :value="item.name"
+            @click.native="selectTrigger(item.id)"
           />
         </el-select>
       </el-col>
@@ -43,15 +43,6 @@
         <el-input v-model="selectedSupplier.contactName" disabled>
           <template slot="prepend">负责人</template>
         </el-input>
-      </el-col>
-
-      <!-- 导出订单 -->
-      <el-col :span="2">
-        <el-button type="primary" @click="searchData">导出订单</el-button>
-      </el-col>
-      <!-- 导出模板 -->
-      <el-col :span="2">
-        <el-button type="primary" @click="dialogAddNewTableVisible = true">导出模板</el-button>
       </el-col>
     </el-row>
 
@@ -164,10 +155,11 @@
         <el-table-column label="到货仓库" prop="cangku" />
         <el-table-column label="纱期" prop="shaQi">
           <template slot-scope="scope">
-            <el-input
+            <el-date-picker
               v-model="scope.row.shaQi"
-              placeholder=""
-              clearable
+              type="date"
+              placeholder="选择日期"
+              value-format="yyyy-MM-dd"
             />
           </template>
         </el-table-column>
@@ -326,6 +318,7 @@ export default {
       var url = baseUrl + '/api/supplier/getLoadContactName?id=' + id
       loadContactPerson(url).then(res => {
         this.selectedSupplier.contactName = res.data.data
+        this.$set(this.selectedSupplier, 'id', id)
         window.console.log(this.selectedSupplier)
       })
       // 加载产地品种
