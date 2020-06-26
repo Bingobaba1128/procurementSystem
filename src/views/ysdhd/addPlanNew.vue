@@ -60,7 +60,7 @@
         </el-input>
       </el-col>
     </el-row>
-        <el-row style="margin-top: 20px" :gutter="10">
+    <el-row style="margin-top: 20px" :gutter="10">
 
       <el-col :span="4" class="searchCombo">
         <div class="searchHeader">经纬</div>
@@ -80,22 +80,6 @@
           <template slot="prepend">纱</template>
         </el-input>
       </el-col>
-
-      <!-- <el-col :span="3" style="display:flex">
-        <el-col :span="8" style="text-align:center; line-height:40px">
-          <span> 排序</span>
-        </el-col>
-        <el-col :span="16">
-          <el-select v-model="value" clearable placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </el-col>
-      </el-col> -->
       <el-col :span="2">
         <el-button type="primary" @click="searchJingData">检索</el-button>
       </el-col>
@@ -107,89 +91,86 @@
 
         <el-table-column type="index" label="序号" />
         <el-table-column label="勾选采购">
-            <el-button type="text" @click="addRow">确定</el-button>
+          <el-button type="text" @click="addRow">确定</el-button>
         </el-table-column>
-        <el-table-column label="未定天数" prop="" />
-        <el-table-column label="布编" prop="clothId" />
-        <el-table-column label="生产安排单号" prop="productionNo" />
-        <el-table-column label="经纬" prop="jingOrWei" />
-        <el-table-column label="纱产地及型号" prop="jingShaD" />
-        <el-table-column label="需用量（KG）" prop="xuYaoLiang" />
-        <el-table-column label="订购量（KG）" prop="dingGouLiang" />
-        <el-table-column label="数量（KG）">
-<template slot-scope="scope">
+        <el-table-column label="未定天数" prop="" width="120" />
+        <el-table-column label="布编" prop="clothId" width="120" />
+        <el-table-column label="生产安排单号" prop="productionNo" width="120" />
+        <el-table-column label="经纬" prop="jingOrWei" width="120" />
+        <el-table-column label="纱产地及型号" prop="jingShaD" width="120" />
+        <el-table-column label="需用量（KG）" prop="xuYaoLiang" width="120" />
+        <el-table-column label="订购量（KG）" prop="dingGouLiang" width="120" />
+        <el-table-column label="数量（KG）" width="120">
+          <template slot-scope="scope">
             <el-input
               v-model="userInput.amount"
               placeholder=""
               clearable
+              type="number"
               @change="saveToQuery1"
             />
           </template>
         </el-table-column>
-        <el-table-column label="单价（元/吨）">
-        <template slot-scope="scope">
+        <el-table-column label="单价（元/吨）" width="120">
+          <template slot-scope="scope">
             <el-input
               v-model="userInput.unitPrice"
               placeholder=""
               clearable
+              type="number"
               @change="saveToQuery2"
             />
           </template>
         </el-table-column>
-
-        <el-table-column label="外销单价">
-                  <template slot-scope="scope">
+        <el-table-column label="外销单价" width="120">
+          <template slot-scope="scope">
             <el-input
               v-model="userInput.outUnitprice"
               placeholder=""
               clearable
+              type="number"
               @change="saveToQuery3"
             />
           </template>
         </el-table-column>
-
-        <el-table-column label="到货仓库" prop="" />
-        <el-table-column label="计划交期" prop="shaQi" />
-        <el-table-column label="确认交期" prop="chengPinDate" />
-        <el-table-column label="交轴日期" prop="jiaoZhouDate" />
-        <el-table-column label="坯布交期" prop="huiPiDate" />
-        <el-table-column label="备注" prop="remarks" />
-        <el-table-column label="属性" prop="" />
+        <el-table-column label="到货仓库" prop="" width="120" />
+        <el-table-column label="计划交期" prop="shaQi" width="120" />
+        <el-table-column label="确认交期" prop="chengPinDate" width="120" />
+        <el-table-column label="交轴日期" prop="jiaoZhouDate" width="120" />
+        <el-table-column label="坯布交期" prop="huiPiDate" width="120" />
+        <el-table-column label="备注" prop="remarks" width="120" />
+        <el-table-column label="属性" prop="" width="120" />
 
       </el-table>
     </el-row>
-    <!-- <el-row style="margin-top: 20px" :gutter="10">
-
-      <el-col :span="3">
-        <el-button type="primary" @click="addRow">增加行</el-button>
-      </el-col>
-    </el-row> -->
 
     <el-row style="margin-top: 20px">
       <el-table :data="innerForm" border stripe max-height="750">
 
         <el-table-column type="index" label="序号" />
-        <el-table-column label="经纱产地及型号" prop="jingSha" />
-        <el-table-column label="数量（KG）">
+        <el-table-column label="经纱产地及型号" prop="jingSha" width="120" />
+        <el-table-column label="数量（KG）" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.quanity"
               placeholder=""
               clearable
+              type="number"
             />
           </template>
         </el-table-column>
-        <el-table-column label="单价（元/吨）" prop="unitprice">
+        <el-table-column label="单价（元/吨）" prop="unitprice" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.unitprice"
               placeholder=""
               clearable
+              type="number"
             />
           </template>
         </el-table-column>
-        <el-table-column label="到货仓库" prop="cangku" />
-        <el-table-column label="纱期" prop="shaQi">
+        <el-table-column label="到货仓库" prop="cangku" width="120" />
+        <el-table-column label="纱期" prop="shaQi" width="160">
           <template slot-scope="scope">
             <el-date-picker
               v-model="scope.row.shaQi"
@@ -199,25 +180,25 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="计划交期" prop="unitprice">
+        <el-table-column label="计划交期" prop="shaQi" width="160">
           <template slot-scope="scope">
             <el-input
-              v-model="scope.row.unitprice"
+              v-model="scope.row.shaQi"
               placeholder=""
               clearable
             />
           </template>
         </el-table-column>
-        <el-table-column label="确认交期" prop="unitprice">
+        <el-table-column label="确认交期" prop="chengPinDate" width="160">
           <template slot-scope="scope">
             <el-input
-              v-model="scope.row.unitprice"
+              v-model="scope.row.chengPinDate"
               placeholder=""
               clearable
             />
           </template>
         </el-table-column>
-        <el-table-column label="生产安排编号" prop="productionNo">
+        <el-table-column label="生产安排编号" prop="productionNo" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.productionNo"
@@ -226,25 +207,25 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="交轴日期" prop="unitprice">
+        <el-table-column label="交轴日期" prop="jiaoZhouDate" width="160">
           <template slot-scope="scope">
             <el-input
-              v-model="scope.row.unitprice"
+              v-model="scope.row.jiaoZhouDate"
               placeholder=""
               clearable
             />
           </template>
         </el-table-column>
-        <el-table-column label="坯布交期" prop="unitprice">
+        <el-table-column label="坯布交期" prop="huiPiDate" width="160">
           <template slot-scope="scope">
             <el-input
-              v-model="scope.row.unitprice"
+              v-model="scope.row.huiPiDate"
               placeholder=""
               clearable
             />
           </template>
         </el-table-column>
-        <el-table-column label="备注" prop="remarks">
+        <el-table-column label="备注" prop="remarks" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.remarks"
@@ -253,12 +234,9 @@
             />
           </template>
         </el-table-column>
-
-        <el-table-column label="属性" prop="" />
-
-        <el-table-column label="类型" prop="nature" />
-
-        <el-table-column label="说明" prop="explain">
+        <el-table-column label="属性" prop="" width="120" />
+        <el-table-column label="类型" prop="nature" width="120" />
+        <el-table-column label="说明" prop="explain" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.explain"
@@ -267,18 +245,18 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="外销单价" prop="outUnitprice">
+        <el-table-column label="外销单价" prop="outUnitprice" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.outUnitprice"
               placeholder=""
               clearable
+              type="number"
             />
           </template>
         </el-table-column>
-        <el-table-column label="完成日期" prop="" />
-
-        <el-table-column label="布编" prop="clothId">
+        <el-table-column label="完成日期" prop="" width="160" />
+        <el-table-column label="布编" prop="clothId" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.clothId"
@@ -287,9 +265,8 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="未定天数" prop="" />
-
-        <el-table-column label="订单证书要求" prop="zhengShu">
+        <el-table-column label="未定天数" prop="" width="120" />
+        <el-table-column label="订单证书要求" prop="zhengShu" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.zhengShu"
@@ -298,7 +275,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="120">
           <template slot-scope="scope">
             <el-button type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
@@ -358,10 +335,10 @@ export default {
           label: '全部信息'
         }
       ],
-      userInput:{
-        amount:'',
-        unitPrice:'',
-        outUnitprice:''
+      userInput: {
+        amount: '',
+        unitPrice: '',
+        outUnitprice: ''
       },
       queryInfo: {
         doTime: '',
@@ -468,7 +445,10 @@ export default {
         clothId: data.clothId,
         noDingDays: '',
         zhengShu: '',
-        planNo: data.id
+        planNo: data.id,
+        chengPinDate: data.chengPinDate,
+        huiPiDate: data.huiPiDate,
+        jiaoZhouDate: data.jiaoZhouDate
       }
       this.innerForm.push(insertItem)
       window.console.log(this.innerForm)
@@ -500,19 +480,20 @@ export default {
         } else {
           this.$message.success(res.data.msg)
           this.planData = res.data.data
+          window.console.log('testingeduhewiudheidhewoid')
+          window.console.log(this.planData)
         }
       })
     },
-    saveToQuery1(){
+    saveToQuery1() {
       this.$set(this.planData[0], 'quanity', this.userInput.amount)
     },
-        saveToQuery2(){
+    saveToQuery2() {
       this.$set(this.planData[0], 'unitprice', this.userInput.unitPrice)
     },
-            saveToQuery3(){
+    saveToQuery3() {
       this.$set(this.planData[0], 'outUnitprice', this.userInput.outUnitprice)
-    },
-
+    }
 
   }
 }

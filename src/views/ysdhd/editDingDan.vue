@@ -119,29 +119,30 @@
 
     <el-row>
       <el-table :data="innerForm" border stripe max-height="750">
-
         <el-table-column type="index" label="序号" />
-        <el-table-column label="经纱产地及型号" prop="jingSha" />
-        <el-table-column label="数量（KG）">
+        <el-table-column label="经纱产地及型号" prop="jingSha" width="120" />
+        <el-table-column label="数量（KG）" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.quanity"
               placeholder=""
               clearable
+              type="number"
             />
           </template>
         </el-table-column>
-        <el-table-column label="单价（元/吨）" prop="unitprice">
+        <el-table-column label="单价（元/吨）" prop="unitprice" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.unitprice"
               placeholder=""
               clearable
+              type="number"
             />
           </template>
         </el-table-column>
-        <el-table-column label="到货仓库" prop="cangku" />
-        <el-table-column label="纱期" prop="shaQi">
+        <el-table-column label="到货仓库" prop="cangku" width="120" />
+        <el-table-column label="纱期" prop="shaQi" width="160">
           <template slot-scope="scope">
             <el-date-picker
               v-model="scope.row.shaQi"
@@ -151,7 +152,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="生产安排编号" prop="productionNo">
+        <el-table-column label="生产安排编号" prop="productionNo" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.productionNo"
@@ -160,7 +161,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="备注" prop="remarks">
+        <el-table-column label="备注" prop="remarks" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.remarks"
@@ -169,17 +170,18 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="外销单价" prop="outUnitprice">
+        <el-table-column label="外销单价" prop="outUnitprice" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.outUnitprice"
               placeholder=""
               clearable
+              type="number"
             />
           </template>
         </el-table-column>
-        <el-table-column label="类型" prop="nature" />
-        <el-table-column label="说明" prop="explain">
+        <el-table-column label="类型" prop="nature" width="120" />
+        <el-table-column label="说明" prop="explain" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.explain"
@@ -188,8 +190,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="删除" prop="" />
-        <el-table-column label="布编" prop="clothId">
+        <el-table-column label="布编" prop="clothId" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.clothId"
@@ -198,16 +199,17 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="未定天数" prop="noDingDays">
+        <el-table-column label="未定天数" prop="noDingDays" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.noDingDays"
               placeholder=""
               clearable
+              type="number"
             />
           </template>
         </el-table-column>
-        <el-table-column label="订单证书要求" prop="zhengShu">
+        <el-table-column label="订单证书要求" prop="zhengShu" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.zhengShu"
@@ -216,12 +218,11 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="120">
           <template slot-scope="scope">
             <el-button type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
-
       </el-table>
     </el-row>
     <el-row style="margin-top: 20px" :gutter="10">
@@ -234,10 +235,10 @@
 
 <script>
 import { baseUrl } from '@/api/apiUrl'
-import { addNewYuanSha, loadContactPerson, loadPinZhongByCloth, loadFeature, addNewData } from '@/api/ysdhd'
+import { loadPinZhongByCloth, loadFeature, addNewData } from '@/api/ysdhd'
 
 export default {
-  props: ['param'],
+  props: ['param', 'dialogEditTableVisible'],
   data() {
     return {
       property: [{
@@ -268,7 +269,7 @@ export default {
         state: '',
         suppler: ''
       },
-      dialogAddNewTableVisible: false,
+      // dialogAddNewTableVisible: false,
       selectedSupplier: {
         id: this.param[0].id,
         signDate: this.getNowTime(),
@@ -300,6 +301,8 @@ export default {
       var url2 = baseUrl + '/api/getYarnArchives?GysId=' + this.param[0].id
       loadFeature(url2).then(res => {
         this.productFeatures = res.data.data
+        window.console.log('dscdecew')
+        window.console.log(this.productFeatures)
       })
     },
     selectPinZhongTrigger(pinZhong) {
@@ -361,6 +364,7 @@ export default {
           this.$message.error(res.data.msg)
         } else {
           this.$message.success(res.data.msg)
+          this.$emit('closeDialog')
           window.console.log(res.data)
         }
       })

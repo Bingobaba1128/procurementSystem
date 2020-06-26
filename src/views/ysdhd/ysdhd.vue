@@ -56,7 +56,7 @@
         <addNewForm />
       </el-dialog>
       <el-dialog title="原纱订货单（修改）" :visible.sync="dialogEditTableVisible" width="95%">
-        <editTable :param="editOriginData" />
+        <editTable :param="editOriginData" @closeDialog="closeDialog" />
       </el-dialog>
 
       <!-- 计划新增 -->
@@ -230,6 +230,10 @@ export default {
         var excelLink = baseUrl + res.data.data
         window.open(excelLink, '_blank')
       })
+    },
+    closeDialog() {
+      this.dialogEditTableVisible = false
+      this.initData()
     }
   }
 }
