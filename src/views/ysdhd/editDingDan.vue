@@ -365,7 +365,6 @@ export default {
         } else {
           this.$message.success(res.data.msg)
           this.$emit('closeDialog')
-          window.console.log(res.data)
         }
       })
     },

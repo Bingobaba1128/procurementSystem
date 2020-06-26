@@ -52,10 +52,10 @@
       <el-col :span="2">
         <el-button type="primary" @click="addNewYS">新增</el-button>
       </el-col>
-      <el-dialog title="原纱订货单（申请）" :visible.sync="dialogAddNewTableVisible" width="95%">
-        <addNewForm />
+      <el-dialog title="原纱订货单（申请）" :visible.sync="dialogAddNewTableVisible" v-if="dialogAddNewTableVisible" width="95%">
+        <addNewForm @closeDialog="closeDialog" />
       </el-dialog>
-      <el-dialog title="原纱订货单（修改）" :visible.sync="dialogEditTableVisible" width="95%">
+      <el-dialog title="原纱订货单（修改）" :visible.sync="dialogEditTableVisible" v-if="dialogEditTableVisible" width="95%">
         <editTable :param="editOriginData" @closeDialog="closeDialog" />
       </el-dialog>
 
@@ -63,7 +63,7 @@
       <el-col :span="2">
         <el-button type="primary" @click="dialogAddPlanNewTableVisible = true">计划新增</el-button>
       </el-col>
-      <el-dialog title="原纱订货单（计划申请）" :visible.sync="dialogAddPlanNewTableVisible" width="95%">
+      <el-dialog title="原纱订货单（计划申请）" :visible.sync="dialogAddPlanNewTableVisible" v-if="dialogAddPlanNewTableVisible" width="95%">
         <addPlanNew />
       </el-dialog>
     </el-row>
@@ -145,7 +145,8 @@ export default {
       dialogAddPlanNewTableVisible: false,
       initOriginData: '',
       dialogEditTableVisible: false,
-      editOriginData: ''
+      editOriginData: '',
+      flag: false
     }
   },
   mounted() {
@@ -202,8 +203,10 @@ export default {
       var urlParam = toUrlParam(url, this.pageSetting)
       loadYuanShaData(urlParam).then(res => {
         this.editOriginData = res.data.data
+        this.flag = true
         this.dialogEditTableVisible = true
-        // window.console.log(this.editOriginData)
+        window.console.log('hey look at me')
+        window.console.log(this.editOriginData)
       })
     },
     deleteData(yuanShaPurchaseNo) {
@@ -233,6 +236,8 @@ export default {
     },
     closeDialog() {
       this.dialogEditTableVisible = false
+      this.dialogAddNewTableVisible = false
+      this.dialogAddPlanNewTableVisible = false
       this.initData()
     }
   }

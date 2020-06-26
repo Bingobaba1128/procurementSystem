@@ -464,7 +464,7 @@ export default {
           this.$message.error(res.data.msg)
         } else {
           this.$message.success(res.data.msg)
-          window.console.log(res.data)
+          this.$emit('closeDialog')
         }
       })
     },
