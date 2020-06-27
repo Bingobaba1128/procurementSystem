@@ -52,19 +52,22 @@
       <el-col :span="2">
         <el-button type="primary" @click="addNewYS">新增</el-button>
       </el-col>
-      <el-dialog title="原纱订货单（申请）" :visible.sync="dialogAddNewTableVisible" v-if="dialogAddNewTableVisible" width="95%">
+      <el-dialog v-if="dialogAddNewTableVisible" title="原纱订货单（申请）" :visible.sync="dialogAddNewTableVisible" width="95%">
         <addNewForm @closeDialog="closeDialog" />
       </el-dialog>
-      <el-dialog title="原纱订货单（修改）" :visible.sync="dialogEditTableVisible" v-if="dialogEditTableVisible" width="95%">
+      <el-dialog v-if="dialogEditTableVisible" title="原纱订货单（修改）" :visible.sync="dialogEditTableVisible" width="95%">
         <editTable :param="editOriginData" @closeDialog="closeDialog" />
       </el-dialog>
 
       <!-- 计划新增 -->
       <el-col :span="2">
-        <el-button type="primary" @click="dialogAddPlanNewTableVisible = true">计划新增</el-button>
+        <el-button type="primary" @click="addPlanNewForm">计划新增</el-button>
       </el-col>
-      <el-dialog title="原纱订货单（计划申请）" :visible.sync="dialogAddPlanNewTableVisible" v-if="dialogAddPlanNewTableVisible" width="95%">
-        <addPlanNew />
+      <el-dialog v-if="dialogAddPlanNewTableVisible" title="原纱订货单（计划申请）" :visible.sync="dialogAddPlanNewTableVisible" width="95%">
+        <addPlanNew @closeDialog="closeDialog" />
+      </el-dialog>
+      <el-dialog v-if="dialogEditPlanTableVisible" title="计划原纱订货单（修改）" :visible.sync="dialogEditPlanTableVisible" width="95%">
+        <editPlanTable :param="editOriginData" @closeDialog="closeDialog" />
       </el-dialog>
     </el-row>
 
@@ -105,6 +108,7 @@ import { baseUrl } from '@/api/apiUrl'
 import addNewForm from '@/views/ysdhd/addNewYs'
 import editTable from '@/views/ysdhd/editDingDan'
 import addPlanNew from '@/views/ysdhd/addPlanNew'
+import editPlanTable from '@/views/ysdhd/editPlanNew'
 import { loadYuanShaData, deleteData, getFile } from '@/api/ysdhd'
 import { toUrlParam } from '@/utils/toUrlParam'
 
@@ -112,7 +116,8 @@ export default {
   components: {
     addNewForm,
     addPlanNew,
-    editTable
+    editTable,
+    editPlanTable
   },
   data() {
     return {
@@ -145,6 +150,7 @@ export default {
       dialogAddPlanNewTableVisible: false,
       initOriginData: '',
       dialogEditTableVisible: false,
+      dialogEditPlanTableVisible: false,
       editOriginData: '',
       flag: false
     }
@@ -202,11 +208,17 @@ export default {
       var url = baseUrl + '/LoadPurchase?yuanShaPurchaseNo=' + id + '&'
       var urlParam = toUrlParam(url, this.pageSetting)
       loadYuanShaData(urlParam).then(res => {
-        this.editOriginData = res.data.data
-        this.flag = true
-        this.dialogEditTableVisible = true
-        window.console.log('hey look at me')
-        window.console.log(this.editOriginData)
+        if (res.data.data[0].listS[0].planNo == '') {
+          this.editOriginData = res.data.data
+          this.flag = true
+          this.dialogEditTableVisible = true
+        } else {
+          this.editOriginData = res.data.data
+          this.flag = true
+          this.dialogEditPlanTableVisible = true
+
+        }
+        // this.editOriginData = res.data.data
       })
     },
     deleteData(yuanShaPurchaseNo) {
@@ -234,10 +246,14 @@ export default {
         window.open(excelLink, '_blank')
       })
     },
+    addPlanNewForm() {
+      this.dialogAddPlanNewTableVisible = true
+    },
     closeDialog() {
       this.dialogEditTableVisible = false
       this.dialogAddNewTableVisible = false
       this.dialogAddPlanNewTableVisible = false
+      this.dialogEditPlanTableVisible = false
       this.initData()
     }
   }

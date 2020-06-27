@@ -1,14 +1,13 @@
 <template>
   <el-card>
     <el-row :gutter="10">
-
+      <!-- {{ param[0] }} -->
       <!-- 单号选择 -->
-      <el-col :span="4">
-        <el-input v-model="queryInfo.clothId" placeholder="" disabled>
+      <el-col :span="5">
+        <el-input v-model="param[0].yuanShaPurchaseNo" placeholder="" disabled>
           <template slot="prepend">单号</template>
         </el-input>
       </el-col>
-
       <!-- 日期选择 -->
       <el-col :lg="{span:5}" class="searchCombo">
         <div class="searchHeader">日期</div>
@@ -22,21 +21,10 @@
       <!-- 供应商选择 -->
 
       <el-col :lg="{span:5}" class="searchCombo">
-        <div class="searchHeader">供应商</div>
-        <el-select
-          v-model="selectedSupplier.name"
-          filterable
-          placeholder="请选择"
-          @change="onChange(selectedSupplier.name)"
-        >
-          <el-option
-            v-for="item in supplierList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.name"
-            @click.native="selectTrigger(item.id)"
-          />
-        </el-select>
+        <el-input v-model="param[0].name" placeholder="" disabled>
+          <template slot="prepend">供应商</template>
+        </el-input>
+
       </el-col>
 
       <el-col :lg="{span:4}" class="searchCombo">
@@ -60,93 +48,8 @@
         </el-input>
       </el-col>
     </el-row>
-    <el-row style="margin-top: 20px" :gutter="10">
-
-      <el-col :span="4" class="searchCombo">
-        <div class="searchHeader">经纬</div>
-
-        <el-select v-model="searchQuery.jingOrWei" clearable placeholder="请选择">
-          <el-option
-            v-for="item in jingWeiList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </el-col>
-
-      <el-col :span="5">
-        <el-input v-model="searchQuery.jingSha" placeholder="请输入" clearable>
-          <template slot="prepend">纱</template>
-        </el-input>
-      </el-col>
-      <el-col :span="2">
-        <el-button type="primary" @click="searchJingData">检索</el-button>
-      </el-col>
-
-    </el-row>
-
     <el-row>
-      <el-table :data="planData" border stripe max-height="750">
-
-        <el-table-column type="index" label="序号" />
-        <el-table-column label="勾选采购">
-          <el-button type="text" @click="addRow">确定</el-button>
-        </el-table-column>
-        <el-table-column label="未定天数" prop="" width="120" />
-        <el-table-column label="布编" prop="clothId" width="120" />
-        <el-table-column label="生产安排单号" prop="productionNo" width="120" />
-        <el-table-column label="经纬" prop="jingOrWei" width="120" />
-        <el-table-column label="纱产地及型号" prop="jingShaD" width="120" />
-        <el-table-column label="需用量（KG）" prop="xuYaoLiang" width="120" />
-        <el-table-column label="订购量（KG）" prop="dingGouLiang" width="120" />
-        <el-table-column label="数量（KG）" width="120">
-          <template slot-scope="scope">
-            <el-input
-              v-model="userInput.amount"
-              placeholder=""
-              clearable
-              type="number"
-              @change="saveToQuery1"
-            />
-          </template>
-        </el-table-column>
-        <el-table-column label="单价（元/吨）" width="120">
-          <template slot-scope="scope">
-            <el-input
-              v-model="userInput.unitPrice"
-              placeholder=""
-              clearable
-              type="number"
-              @change="saveToQuery2"
-            />
-          </template>
-        </el-table-column>
-        <el-table-column label="外销单价" width="120">
-          <template slot-scope="scope">
-            <el-input
-              v-model="userInput.outUnitprice"
-              placeholder=""
-              clearable
-              type="number"
-              @change="saveToQuery3"
-            />
-          </template>
-        </el-table-column>
-        <el-table-column label="到货仓库" prop="" width="120" />
-        <el-table-column label="计划交期" prop="shaQi" width="120" />
-        <el-table-column label="确认交期" prop="chengPinDate" width="120" />
-        <el-table-column label="交轴日期" prop="jiaoZhouDate" width="120" />
-        <el-table-column label="坯布交期" prop="huiPiDate" width="120" />
-        <el-table-column label="备注" prop="remarks" width="120" />
-        <el-table-column label="属性" prop="" width="120" />
-
-      </el-table>
-    </el-row>
-
-    <el-row style="margin-top: 20px">
       <el-table :data="innerForm" border stripe max-height="750">
-
         <el-table-column type="index" label="序号" />
         <el-table-column label="经纱产地及型号" prop="jingSha" width="120" />
         <el-table-column label="数量（KG）" width="120">
@@ -180,24 +83,6 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="计划交期" prop="shaQi" width="160">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.shaQi"
-              placeholder=""
-              clearable
-            />
-          </template>
-        </el-table-column>
-        <el-table-column label="确认交期" prop="chengPinDate" width="160">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.chengPinDate"
-              placeholder=""
-              clearable
-            />
-          </template>
-        </el-table-column>
         <el-table-column label="生产安排编号" prop="productionNo" width="120">
           <template slot-scope="scope">
             <el-input
@@ -207,39 +92,10 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="交轴日期" prop="jiaoZhouDate" width="160">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.jiaoZhouDate"
-              placeholder=""
-              clearable
-            />
-          </template>
-        </el-table-column>
-        <el-table-column label="坯布交期" prop="huiPiDate" width="160">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.huiPiDate"
-              placeholder=""
-              clearable
-            />
-          </template>
-        </el-table-column>
         <el-table-column label="备注" prop="remarks" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.remarks"
-              placeholder=""
-              clearable
-            />
-          </template>
-        </el-table-column>
-        <el-table-column label="属性" prop="" width="120" />
-        <el-table-column label="类型" prop="nature" width="120" />
-        <el-table-column label="说明" prop="explain" width="120">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.explain"
               placeholder=""
               clearable
             />
@@ -255,7 +111,16 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="完成日期" prop="" width="160" />
+        <el-table-column label="类型" prop="nature" width="120" />
+        <el-table-column label="说明" prop="explain" width="120">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.explain"
+              placeholder=""
+              clearable
+            />
+          </template>
+        </el-table-column>
         <el-table-column label="布编" prop="clothId" width="120">
           <template slot-scope="scope">
             <el-input
@@ -265,7 +130,16 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="未定天数" prop="" width="120" />
+        <el-table-column label="未定天数" prop="noDingDays" width="120">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.noDingDays"
+              placeholder=""
+              clearable
+              type="number"
+            />
+          </template>
+        </el-table-column>
         <el-table-column label="订单证书要求" prop="zhengShu" width="120">
           <template slot-scope="scope">
             <el-input
@@ -287,29 +161,17 @@
         <el-button type="primary" @click="saveToServe">确定存入</el-button>
       </el-col>
     </el-row>
-
   </el-card>
 </template>
 
 <script>
 import { baseUrl } from '@/api/apiUrl'
-import { addNewYuanSha, loadContactPerson, searchData, loadPinZhongByCloth, loadFeature, addNewData } from '@/api/ysdhd'
-import { toUrlParam } from '@/utils/toUrlParam'
+import { loadPinZhongByCloth, loadFeature, addNewData } from '@/api/ysdhd'
 
 export default {
+  props: ['param', 'dialogEditTableVisible'],
   data() {
     return {
-      jingWeiList: [{
-        value: '0',
-        label: '纬'
-      }, {
-        value: '1',
-        label: '经'
-      }, {
-        value: '2',
-        label: '全部'
-      }
-      ],
       property: [{
         value: '0',
         label: '内销'
@@ -317,10 +179,6 @@ export default {
         value: '1',
         label: '外销'
       }],
-      searchQuery: {
-        jingOrWei: '',
-        jingSha: ''
-      },
       infoOptions: [
         {
           value: '1',
@@ -335,11 +193,6 @@ export default {
           label: '全部信息'
         }
       ],
-      userInput: {
-        amount: '',
-        unitPrice: '',
-        outUnitprice: ''
-      },
       queryInfo: {
         doTime: '',
         clothId: '',
@@ -347,23 +200,24 @@ export default {
         state: '',
         suppler: ''
       },
-      dialogAddNewTableVisible: false,
+      // dialogAddNewTableVisible: false,
       selectedSupplier: {
+        id: this.param[0].id,
         signDate: this.getNowTime(),
-        name: '',
-        contactName: '',
+        name: this.param[0].name,
+        contactName: this.param[0].contactName,
         chanDi: '',
         pinZhong: '',
-        remarks: '',
-        signer: '',
-        listS: '',
-        clothId: ''
+        remarks: this.param[0].remarks,
+        signer: this.param[0].signer,
+        listS: this.param[0].listS,
+        clothId: '',
+        yuanShaPurchaseNo: this.param[0].yuanShaPurchaseNo
       },
       supplierList: '',
-      innerForm: [],
+      innerForm: this.param[0].listS,
       nature: '内销',
-      productFeatures: '',
-      planData: ''
+      productFeatures: ''
     }
   },
   created() {
@@ -371,31 +225,15 @@ export default {
   },
   methods: {
     test() {
-      window.console.log(this.productFeatures)
+      window.console.log(this.param)
     },
     // 供应商初始化
     initOData() {
-      var url = baseUrl + '/api/supplier/getAllSupplier?supplierType=1'
-      // var urlParam = toUrlParam(url, this.queryInfo)
-      window.console.log(url)
-      addNewYuanSha(url).then(res => {
-        this.supplierList = res.data.data
-        window.console.log(this.supplierList)
-      })
-    },
-    selectTrigger(id) {
-      // 加载指定供应商联系人
-      var url = baseUrl + '/api/supplier/getLoadContactName?id=' + id
-      loadContactPerson(url).then(res => {
-        this.selectedSupplier.contactName = res.data.data
-        this.$set(this.selectedSupplier, 'id', id)
-        window.console.log(this.selectedSupplier)
-      })
-      // 加载产地品种
-      var url2 = baseUrl + '/api/getYarnArchives?GysId=' + id
+      var url2 = baseUrl + '/api/getYarnArchives?GysId=' + this.param[0].id
       loadFeature(url2).then(res => {
-        // window.console.log(res.data.data)
         this.productFeatures = res.data.data
+        window.console.log('dscdecew')
+        window.console.log(this.productFeatures)
       })
     },
     selectPinZhongTrigger(pinZhong) {
@@ -428,37 +266,30 @@ export default {
       // this.$set(this.selectedSupplier, 'signDate', defaultDate)
     },
     addRow() {
-      var data = this.planData[0]
-      window.console.log(data.jingShaD)
       var insertItem = {
-        id: data.id,
-        jingSha: data.jingShaD,
-        quanity: data.quanity,
-        unitprice: data.unitprice,
+        id: null,
+        jingSha: this.selectedSupplier.pinZhong + '' + this.selectedSupplier.chanDi,
+        quanity: '',
+        unitprice: '',
         cangku: '越南原纱仓',
-        shaQi: data.shaQi,
-        productionNo: data.productionNo,
-        remarks: data.remarks,
-        outUnitprice: data.outUnitprice,
+        shaQi: '',
+        productionNo: '',
+        remarks: '',
+        outUnitprice: '',
         nature: this.nature,
         explain: '',
-        clothId: data.clothId,
+        clothId: '',
         noDingDays: '',
-        zhengShu: '',
-        planNo: data.id,
-        chengPinDate: data.chengPinDate,
-        huiPiDate: data.huiPiDate,
-        jiaoZhouDate: data.jiaoZhouDate
+        zhengShu: ''
       }
       this.innerForm.push(insertItem)
-      window.console.log(this.innerForm)
       this.$set(this.selectedSupplier, 'listS', this.innerForm)
     },
     onChange(name) {
       this.$set(this.selectedSupplier, 'name', name)
     },
     saveToServe() {
-      // window.console.log(this.selectedSupplier)
+      window.console.log(this.selectedSupplier)
       addNewData(this.selectedSupplier).then(res => {
         if (res.data.code !== 200) {
           this.$message.error(res.data.msg)
@@ -470,31 +301,7 @@ export default {
     },
     handleDelete(index, row) {
       this.innerForm.splice(index, 1)
-    },
-    searchJingData() {
-      var url = baseUrl + '/loadPlanData?'
-      var urlParam = toUrlParam(url, this.searchQuery)
-      searchData(urlParam).then(res => {
-        if (res.data.code !== 200) {
-          this.$message.error(res.data.msg)
-        } else {
-          this.$message.success(res.data.msg)
-          this.planData = res.data.data
-          window.console.log('testingeduhewiudheidhewoid')
-          window.console.log(this.planData)
-        }
-      })
-    },
-    saveToQuery1() {
-      this.$set(this.planData[0], 'quanity', this.userInput.amount)
-    },
-    saveToQuery2() {
-      this.$set(this.planData[0], 'unitprice', this.userInput.unitPrice)
-    },
-    saveToQuery3() {
-      this.$set(this.planData[0], 'outUnitprice', this.userInput.outUnitprice)
     }
-
   }
 }
 </script>
