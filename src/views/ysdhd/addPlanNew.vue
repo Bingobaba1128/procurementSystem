@@ -104,7 +104,7 @@
         <el-table-column label="纱产地及型号" prop="jingShaD" width="120" />
         <el-table-column label="需用量（KG）" prop="xuYaoLiang" width="120" />
         <el-table-column label="订购量（KG）" prop="dingGouLiang" width="120" />
-        <el-table-column label="数量（KG）" width="120">
+        <!-- <el-table-column label="数量（KG）" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="userInput.amount"
@@ -112,6 +112,7 @@
               clearable
               type="number"
               @change="saveToQuery1"
+              disabled
             />
           </template>
         </el-table-column>
@@ -123,6 +124,7 @@
               clearable
               type="number"
               @change="saveToQuery2"
+              disabled
             />
           </template>
         </el-table-column>
@@ -134,9 +136,10 @@
               clearable
               type="number"
               @change="saveToQuery3"
+              disabled
             />
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="到货仓库" width="120">
           越南原纱仓
         </el-table-column>
@@ -145,7 +148,7 @@
         <el-table-column label="交轴日期" prop="jiaoZhouDate" width="120" />
         <el-table-column label="坯布交期" prop="huiPiDate" width="120" />
         <el-table-column label="备注" prop="remarks" width="120" />
-        <el-table-column label="属性" prop="nature" width="120">
+        <!-- <el-table-column label="属性" prop="nature" width="120">
           <template slot-scope="scope">
             <el-select v-model="scope.row.nature" placeholder="请选择">
               <el-option
@@ -154,10 +157,11 @@
                 :label="item.label"
                 :value="item.value"
                 @click.native="checkNature(item.value)"
+                disabled
               />
             </el-select>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
       </el-table>
     </el-row>
@@ -252,9 +256,19 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="属性" prop="" width="120" />
-        <el-table-column label="类型" prop="nature" width="120" />
-        <el-table-column label="说明" prop="explain" width="120">
+        <el-table-column label="属性" prop="nature" width="120">
+          <template slot-scope="scope">
+            <el-select v-model="scope.row.nature" placeholder="请选择">
+              <el-option
+                v-for="item in natureList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+                @click.native="checkNature(item.value)"
+              />
+            </el-select>
+          </template>
+        </el-table-column>        <el-table-column label="说明" prop="explain" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.explain"
@@ -263,7 +277,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="外销单价" prop="outUnitprice" width="120">
+        <el-table-column v-if="!banned" label="外销单价" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.outUnitprice"
@@ -457,49 +471,55 @@ export default {
       // this.$set(this.selectedSupplier, 'signDate', defaultDate)
     },
     addRow() {
-      if (this.userInput.unitPrice == '' || this.userInput.amount == '') {
-        this.$message.error('请选择供产品数量及单价')
-      } else {
-        var data = this.planData[0]
-        window.console.log(data.jingShaD)
-        var insertItem = {
-          id: data.id,
-          jingSha: data.jingShaD,
-          quanity: data.quanity,
-          unitprice: data.unitprice,
-          cangku: '越南原纱仓',
-          shaQi: data.shaQi,
-          productionNo: data.productionNo,
-          remarks: data.remarks,
-          outUnitprice: data.outUnitprice,
-          nature: '0',
-          explain: '',
-          clothId: data.clothId,
-          noDingDays: '',
-          zhengShu: '',
-          planNo: data.id,
-          chengPinDate: data.chengPinDate,
-          huiPiDate: data.huiPiDate,
-          jiaoZhouDate: data.jiaoZhouDate
-        }
-        this.innerForm.push(insertItem)
-        window.console.log(this.innerForm)
-        this.$set(this.selectedSupplier, 'listS', this.innerForm)
+      var data = this.planData[0]
+      window.console.log(data)
+      var insertItem = {
+        id: data.id,
+        jingSha: data.jingShaD,
+        quanity: '',
+        unitprice: '',
+        cangku: '越南原纱仓',
+        shaQi: data.shaQi,
+        productionNo: data.productionNo,
+        remarks: data.remarks,
+        outUnitprice: '',
+        nature: data.nature,
+        explain: '',
+        clothId: data.clothId,
+        noDingDays: '',
+        zhengShu: '',
+        planNo: data.id,
+        chengPinDate: data.chengPinDate,
+        huiPiDate: data.huiPiDate,
+        jiaoZhouDate: data.jiaoZhouDate
       }
+      this.innerForm.push(insertItem)
+      window.console.log(this.innerForm)
+      this.$set(this.selectedSupplier, 'listS', this.innerForm)
     },
     onChange(name) {
       this.$set(this.selectedSupplier, 'name', name)
     },
     saveToServe() {
-      // window.console.log(this.selectedSupplier)
-      addNewData(this.selectedSupplier).then(res => {
-        if (res.data.code !== 200) {
-          this.$message.error(res.data.msg)
+      window.console.log(this.selectedSupplier)
+
+      if (this.selectedSupplier.name == '') {
+        this.$message.error('请选择供应商')
+      } else {
+        window.console.log(this.selectedSupplier.listS)
+        if (this.selectedSupplier.listS[0].unitprice == '' || this.selectedSupplier.listS[0].quanity == '') {
+          this.$message.error('请添加产品数量和单价')
         } else {
-          this.$message.success(res.data.msg)
-          this.$emit('closeDialog')
+          addNewData(this.selectedSupplier).then(res => {
+            if (res.data.code !== 200) {
+              this.$message.error(res.data.msg)
+            } else {
+              this.$message.success(res.data.msg)
+              this.$emit('closeDialog')
+            }
+          })
         }
-      })
+      }
     },
     handleDelete(index, row) {
       this.innerForm.splice(index, 1)

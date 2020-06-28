@@ -140,7 +140,6 @@
           </template>
         </el-table-column>
         <el-table-column label="属性" prop="" width="120" />
-        <el-table-column label="类型" prop="nature" width="120" />
         <el-table-column label="说明" prop="explain" width="120">
           <template slot-scope="scope">
             <el-input
