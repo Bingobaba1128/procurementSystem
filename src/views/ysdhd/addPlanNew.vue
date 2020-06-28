@@ -96,7 +96,11 @@
         <el-table-column label="未定天数" prop="" width="120" />
         <el-table-column label="布编" prop="clothId" width="120" />
         <el-table-column label="生产安排单号" prop="productionNo" width="120" />
-        <el-table-column label="经纬" prop="jingOrWei" width="120" />
+        <el-table-column label="经纬" prop="jingOrWei" width="120">
+          <template slot-scope="scope">
+            {{ formatjingOrWei(scope.row.jingOrWei) }}
+          </template>
+        </el-table-column>
         <el-table-column label="纱产地及型号" prop="jingShaD" width="120" />
         <el-table-column label="需用量（KG）" prop="xuYaoLiang" width="120" />
         <el-table-column label="订购量（KG）" prop="dingGouLiang" width="120" />
@@ -122,7 +126,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="外销单价" width="120">
+        <el-table-column v-if="!banned" label="外销单价" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="userInput.outUnitprice"
@@ -133,13 +137,27 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="到货仓库" prop="" width="120" />
+        <el-table-column label="到货仓库" width="120">
+          越南原纱仓
+        </el-table-column>
         <el-table-column label="计划交期" prop="shaQi" width="120" />
         <el-table-column label="确认交期" prop="chengPinDate" width="120" />
         <el-table-column label="交轴日期" prop="jiaoZhouDate" width="120" />
         <el-table-column label="坯布交期" prop="huiPiDate" width="120" />
         <el-table-column label="备注" prop="remarks" width="120" />
-        <el-table-column label="属性" prop="" width="120" />
+        <el-table-column label="属性" prop="nature" width="120">
+          <template slot-scope="scope">
+            <el-select v-model="scope.row.nature" placeholder="请选择">
+              <el-option
+                v-for="item in natureList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+                @click.native="checkNature(item.value)"
+              />
+            </el-select>
+          </template>
+        </el-table-column>
 
       </el-table>
     </el-row>
@@ -361,9 +379,20 @@ export default {
       },
       supplierList: '',
       innerForm: [],
-      nature: '内销',
+      nature: '0',
       productFeatures: '',
-      planData: ''
+      planData: '',
+      natureList: [
+        {
+          value: '1',
+          label: '外销'
+        },
+        {
+          value: '0',
+          label: '内销'
+        }
+      ],
+      banned: true
     }
   },
   created() {
@@ -428,31 +457,35 @@ export default {
       // this.$set(this.selectedSupplier, 'signDate', defaultDate)
     },
     addRow() {
-      var data = this.planData[0]
-      window.console.log(data.jingShaD)
-      var insertItem = {
-        id: data.id,
-        jingSha: data.jingShaD,
-        quanity: data.quanity,
-        unitprice: data.unitprice,
-        cangku: '越南原纱仓',
-        shaQi: data.shaQi,
-        productionNo: data.productionNo,
-        remarks: data.remarks,
-        outUnitprice: data.outUnitprice,
-        nature: this.nature,
-        explain: '',
-        clothId: data.clothId,
-        noDingDays: '',
-        zhengShu: '',
-        planNo: data.id,
-        chengPinDate: data.chengPinDate,
-        huiPiDate: data.huiPiDate,
-        jiaoZhouDate: data.jiaoZhouDate
+      if (this.userInput.unitPrice == '' || this.userInput.amount == '') {
+        this.$message.error('请选择供产品数量及单价')
+      } else {
+        var data = this.planData[0]
+        window.console.log(data.jingShaD)
+        var insertItem = {
+          id: data.id,
+          jingSha: data.jingShaD,
+          quanity: data.quanity,
+          unitprice: data.unitprice,
+          cangku: '越南原纱仓',
+          shaQi: data.shaQi,
+          productionNo: data.productionNo,
+          remarks: data.remarks,
+          outUnitprice: data.outUnitprice,
+          nature: '0',
+          explain: '',
+          clothId: data.clothId,
+          noDingDays: '',
+          zhengShu: '',
+          planNo: data.id,
+          chengPinDate: data.chengPinDate,
+          huiPiDate: data.huiPiDate,
+          jiaoZhouDate: data.jiaoZhouDate
+        }
+        this.innerForm.push(insertItem)
+        window.console.log(this.innerForm)
+        this.$set(this.selectedSupplier, 'listS', this.innerForm)
       }
-      this.innerForm.push(insertItem)
-      window.console.log(this.innerForm)
-      this.$set(this.selectedSupplier, 'listS', this.innerForm)
     },
     onChange(name) {
       this.$set(this.selectedSupplier, 'name', name)
@@ -480,8 +513,9 @@ export default {
         } else {
           this.$message.success(res.data.msg)
           this.planData = res.data.data
-          window.console.log('testingeduhewiudheidhewoid')
-          window.console.log(this.planData)
+          for (var i = 0; i < this.planData.length; i++) {
+            this.$set(this.planData[i], 'nature', '0')
+          }
         }
       })
     },
@@ -493,6 +527,16 @@ export default {
     },
     saveToQuery3() {
       this.$set(this.planData[0], 'outUnitprice', this.userInput.outUnitprice)
+    },
+    checkNature(value) {
+      if (value == 1) {
+        this.banned = false
+      } else {
+        this.banned = true
+      }
+    },
+    formatjingOrWei(val) {
+      return val == 0 ? '纬' : '经'
     }
 
   }

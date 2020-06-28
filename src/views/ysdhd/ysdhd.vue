@@ -25,7 +25,7 @@
 
       <!-- 供应商选择 -->
       <el-col :span="4">
-        <el-input v-model="queryInfo.customer" placeholder="请选择" clearable>
+        <el-input v-model="queryInfo.name" placeholder="请选择" clearable>
           <template slot="prepend">供应商</template>
         </el-input>
       </el-col>
@@ -142,7 +142,7 @@ export default {
       queryInfo: {
         orderDate: '',
         yuanShaPurchaseNo: '',
-        customer: '',
+        name: '',
         state: ''
       },
 
@@ -180,7 +180,7 @@ export default {
       this.$set(this.queryInfo, 'pageNumber', this.pageSetting.pageNumber)
       this.$set(this.queryInfo, 'pageSize', this.pageSetting.pageSize)
       var urlParam = toUrlParam(url, this.queryInfo)
-      // window.console.log(urlParam)
+      window.console.log(urlParam)
       loadYuanShaData(urlParam).then(res => {
         if (res.data.code !== 200) {
           this.$message.error(res.data.msg)
@@ -216,7 +216,6 @@ export default {
           this.editOriginData = res.data.data
           this.flag = true
           this.dialogEditPlanTableVisible = true
-
         }
         // this.editOriginData = res.data.data
       })

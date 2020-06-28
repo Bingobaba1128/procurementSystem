@@ -293,6 +293,7 @@ export default {
         listS: '',
         clothId: ''
       },
+
       supplierList: '',
       innerForm: [],
       nature: '内销',
@@ -361,24 +362,29 @@ export default {
       // this.$set(this.selectedSupplier, 'signDate', defaultDate)
     },
     addRow() {
-      var insertItem = {
-        id: null,
-        jingSha: this.selectedSupplier.pinZhong + '' + this.selectedSupplier.chanDi,
-        quanity: '',
-        unitprice: '',
-        cangku: '越南原纱仓',
-        shaQi: '',
-        productionNo: '',
-        remarks: '',
-        outUnitprice: '',
-        nature: this.nature,
-        explain: '',
-        clothId: '',
-        noDingDays: '',
-        zhengShu: ''
+      // 预验证供应商品种不为空
+      if (this.selectedSupplier.name == '' || this.selectedSupplier.pinZhong == '') {
+        this.$message.error('请选择供应商及品种')
+      } else {
+        var insertItem = {
+          id: null,
+          jingSha: this.selectedSupplier.pinZhong + '' + this.selectedSupplier.chanDi,
+          quanity: '',
+          unitprice: '',
+          cangku: '越南原纱仓',
+          shaQi: '',
+          productionNo: '',
+          remarks: '',
+          outUnitprice: '',
+          nature: this.nature,
+          explain: '',
+          clothId: '',
+          noDingDays: '',
+          zhengShu: ''
+        }
+        this.innerForm.push(insertItem)
+        this.$set(this.selectedSupplier, 'listS', this.innerForm)
       }
-      this.innerForm.push(insertItem)
-      this.$set(this.selectedSupplier, 'listS', this.innerForm)
     },
     onChange(name) {
       this.$set(this.selectedSupplier, 'name', name)

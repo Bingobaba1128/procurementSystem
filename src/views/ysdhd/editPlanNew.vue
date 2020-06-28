@@ -48,8 +48,10 @@
         </el-input>
       </el-col>
     </el-row>
-    <el-row>
+
+    <el-row style="margin-top: 20px">
       <el-table :data="innerForm" border stripe max-height="750">
+
         <el-table-column type="index" label="序号" />
         <el-table-column label="经纱产地及型号" prop="jingSha" width="120" />
         <el-table-column label="数量（KG）" width="120">
@@ -83,6 +85,24 @@
             />
           </template>
         </el-table-column>
+        <el-table-column label="计划交期" prop="shaQi" width="160">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.shaQi"
+              placeholder=""
+              clearable
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="确认交期" prop="chengPinDate" width="160">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.chengPinDate"
+              placeholder=""
+              clearable
+            />
+          </template>
+        </el-table-column>
         <el-table-column label="生产安排编号" prop="productionNo" width="120">
           <template slot-scope="scope">
             <el-input
@@ -92,10 +112,39 @@
             />
           </template>
         </el-table-column>
+        <el-table-column label="交轴日期" prop="jiaoZhouDate" width="160">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.jiaoZhouDate"
+              placeholder=""
+              clearable
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="坯布交期" prop="huiPiDate" width="160">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.huiPiDate"
+              placeholder=""
+              clearable
+            />
+          </template>
+        </el-table-column>
         <el-table-column label="备注" prop="remarks" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.remarks"
+              placeholder=""
+              clearable
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="属性" prop="" width="120" />
+        <el-table-column label="类型" prop="nature" width="120" />
+        <el-table-column label="说明" prop="explain" width="120">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.explain"
               placeholder=""
               clearable
             />
@@ -111,16 +160,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="类型" prop="nature" width="120" />
-        <el-table-column label="说明" prop="explain" width="120">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.explain"
-              placeholder=""
-              clearable
-            />
-          </template>
-        </el-table-column>
+        <el-table-column label="完成日期" prop="" width="160" />
         <el-table-column label="布编" prop="clothId" width="120">
           <template slot-scope="scope">
             <el-input
@@ -130,16 +170,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="未定天数" prop="noDingDays" width="120">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.noDingDays"
-              placeholder=""
-              clearable
-              type="number"
-            />
-          </template>
-        </el-table-column>
+        <el-table-column label="未定天数" prop="" width="120" />
         <el-table-column label="订单证书要求" prop="zhengShu" width="120">
           <template slot-scope="scope">
             <el-input
