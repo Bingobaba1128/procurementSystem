@@ -2,7 +2,7 @@
   <el-card>
     <el-form :inline="true" :rules="rules" :model="data" class="demo-form-inline">
 
-      <el-form-item label="产地" prop="chanDi">
+      <el-form-item label="原纱产地" prop="chanDi">
         <el-input v-model="data.chanDi" placeholder="添加产地" />
       </el-form-item>
 

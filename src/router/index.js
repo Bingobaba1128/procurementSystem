@@ -141,7 +141,7 @@ export const constantRoutes = [
         path: '/原纱产地',
         name: 'yscd',
         component: () => import('@/views/ysdaCd/yscd'),
-        meta: { title: '原纱产地', icon: 'tree' }
+        meta: { title: '原纱产地', icon: 'nested' }
       }
     ]
   },
@@ -153,7 +153,31 @@ export const constantRoutes = [
         path: '/原纱颜色',
         name: 'ysys',
         component: () => import('@/views/ysdaYs/ysys'),
-        meta: { title: '原纱颜色', icon: 'tree' }
+        meta: { title: '原纱颜色', icon: 'nested' }
+      }
+    ]
+  },
+  {
+    path: '/yscf',
+    component: Layout,
+    children: [
+      {
+        path: '/原纱成分',
+        name: 'yscf',
+        component: () => import('@/views/ysdaCf/yscf'),
+        meta: { title: '原纱成分', icon: 'nested' }
+      }
+    ]
+  },
+  {
+    path: '/ysdp',
+    component: Layout,
+    children: [
+      {
+        path: '/原纱吊牌',
+        name: 'ysdp',
+        component: () => import('@/views/ysdaDp/ysdp'),
+        meta: { title: '原纱吊牌', icon: 'nested' }
       }
     ]
   },

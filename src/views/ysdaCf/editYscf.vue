@@ -2,8 +2,8 @@
   <el-card>
     <el-form :inline="true" :model="data" class="demo-form-inline">
 
-      <el-form-item label="原纱吊牌">
-        <el-input v-model="data.diaoPai" placeholder="添加吊牌" />
+      <el-form-item label="成分名称">
+        <el-input v-model="data.chengFen" placeholder="添加成分" />
       </el-form-item>
 
       <el-form-item label="停用">
@@ -19,20 +19,15 @@
     </el-form>
 
     <el-form ref="form" :model="data" label-position="left">
-      <el-form-item label="备注" width="200px">
-        <el-input v-model="data.bz" type="textarea" />
-      </el-form-item>
-
       <el-form-item>
         <el-button type="primary" @click="saveToServe">确定存入</el-button>
-      </el-form-item>
       </el-form-item>
     </el-form>
 
   </el-card>
 </template>
 <script>
-import { saveEditDiaoPai } from '@/api/ysdp'
+import { saveEditChengFen } from '@/api/yscf'
 
 export default {
   props: {
@@ -61,10 +56,10 @@ export default {
       this.$set(this.data, 'tybz', val)
     },
     saveToServe() {
-      if (this.data.diaoPai == '') {
-        this.$message.error('请添加吊牌名称')
+      if (this.data.chengFen == '') {
+        this.$message.error('请添加成分名称')
       } else {
-        saveEditDiaoPai(this.data).then(res => {
+        saveEditChengFen(this.data).then(res => {
           if (res.status !== 200) {
             this.$message.error(res.data.tipInfo)
           } else {

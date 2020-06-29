@@ -165,7 +165,7 @@ export default {
       loadYuanShaData(urlParam).then(res => {
         // window.console.log(res)
         if (res.data.code !== 200) {
-          this.$message.error(res.data.msg)
+          // this.$message.error(res.data.msg)
         } else {
           this.initOriginData = res.data.data
         }

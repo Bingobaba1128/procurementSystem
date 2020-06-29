@@ -1,9 +1,9 @@
 <template>
   <el-card>
-    <el-form :inline="true" :model="data" class="demo-form-inline">
+    <el-form :inline="true" :rules="rules" :model="data" class="demo-form-inline">
 
-      <el-form-item label="原纱吊牌">
-        <el-input v-model="data.diaoPai" placeholder="添加吊牌" />
+      <el-form-item label="原纱成分" prop="chengFen">
+        <el-input v-model="data.chengFen" placeholder="添加成分" />
       </el-form-item>
 
       <el-form-item label="停用">
@@ -17,30 +17,25 @@
         </el-select>
       </el-form-item>
     </el-form>
-
-    <el-form ref="form" :model="data" label-position="left">
-      <el-form-item label="备注" width="200px">
-        <el-input v-model="data.bz" type="textarea" />
-      </el-form-item>
-
+    <el-form>
       <el-form-item>
         <el-button type="primary" @click="saveToServe">确定存入</el-button>
-      </el-form-item>
       </el-form-item>
     </el-form>
 
   </el-card>
 </template>
 <script>
-import { saveEditDiaoPai } from '@/api/ysdp'
+import { addNewChengFen } from '@/api/yscf'
 
 export default {
-  props: {
-    param: Object
-  },
+
   data() {
     return {
-      data: this.param,
+      data: {
+        chengFen: '',
+        tybz: 'false'
+      },
       options: [
         {
           value: 'true',
@@ -51,20 +46,26 @@ export default {
           label: '否'
         }
       ],
-
-      value: this.param.tybz == true ? '是' : '否'
-
+      value: '否',
+      rules: {
+        chengFen: [
+          { required: true, message: '请填写成分名称', trigger: 'blur' }
+        ]
+      }
     }
+  },
+  created() {
+    this.initData()
   },
   methods: {
     saveValue(val) {
       this.$set(this.data, 'tybz', val)
     },
     saveToServe() {
-      if (this.data.diaoPai == '') {
-        this.$message.error('请添加吊牌名称')
+      if (this.data.chengFen == '') {
+        this.$message.error('请添加成分名称')
       } else {
-        saveEditDiaoPai(this.data).then(res => {
+        addNewChengFen(this.data).then(res => {
           if (res.status !== 200) {
             this.$message.error(res.data.tipInfo)
           } else {
@@ -74,7 +75,6 @@ export default {
         })
       }
     }
-
   }
 }
 </script>

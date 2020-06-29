@@ -7,13 +7,12 @@
       <el-table :data="initFormData" border stripe max-height="750">
         <el-table-column type="index" label="序号" />
 
-        <el-table-column label="颜色" prop="yanSe" />
+        <el-table-column label="产地" prop="chengFen" />
         <el-table-column label="停用">
           <template slot-scope="scope">
             <span>{{ formatStatus(scope.row.tybz) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="备注" prop="bz" />
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text" @click="editData(scope.row.id)">修改</el-button>
@@ -22,23 +21,23 @@
         </el-table-column>
       </el-table>
     </el-row>
-    <el-dialog v-if="dialogEditVisible" title="原纱颜色（编辑）" :visible.sync="dialogEditVisible" width="95%">
-      <editYsys :param="selectedData" @closeDialog="closeDialog" />
+    <el-dialog v-if="dialogEditVisible" title="原纱成分（编辑）" :visible.sync="dialogEditVisible" width="95%">
+      <editYscf :param="selectedData" @closeDialog="closeDialog" />
     </el-dialog>
-    <el-dialog v-if="dialogAddVisible" title="原纱颜色（新增）" :visible.sync="dialogAddVisible" width="95%">
-      <addYsys @closeDialog="closeDialog" />
+    <el-dialog v-if="dialogAddVisible" title="原纱成分（新增）" :visible.sync="dialogAddVisible" width="95%">
+      <addYscf @closeDialog="closeDialog" />
     </el-dialog>
   </el-card>
 </template>
 <script>
-import { getAllYarnYanSe, deleteYanSe, getOneYarnYanSe } from '@/api/ysys'
-import editYsys from '@/views/ysdaYs/editYsys'
-import addYsys from '@/views/ysdaYs/addYsys'
+import { getAllYarnChengFen, deleteChengFen, getOneYarnChengFen, addNewChengFen } from '@/api/yscf'
+import editYscf from '@/views/ysdaCf/editYscf'
+import addYscf from '@/views/ysdaCf/addYscf'
 
 export default {
   components: {
-    editYsys,
-    addYsys
+    editYscf,
+    addYscf
   },
   data() {
     return {
@@ -53,16 +52,15 @@ export default {
   },
   methods: {
     initData() {
-      getAllYarnYanSe().then(res => {
-        window.console.log(res.data.data)
+      getAllYarnChengFen().then(res => {
         this.initFormData = res.data.data
       })
     },
     deleteData(id) {
       this.$confirm('确认删除？')
         .then(_ => {
-          var url = '/api/deleteYarnYanSe/' + id
-          deleteYanSe(url).then(res => {
+          var url = '/api/deleteYarnChengFen/' + id
+          deleteChengFen(url).then(res => {
             if (res.status !== 200) {
               this.$message.error(res.data.tipInfo)
             } else {
@@ -74,9 +72,8 @@ export default {
         .catch(_ => {})
     },
     editData(id) {
-      var url = '/api/getOneYarnYanSe/' + id
-      getOneYarnYanSe(url).then(res => {
-        window.console.log(res.data.data)
+      var url = '/api/getOneYarnChengFen/' + id
+      getOneYarnChengFen(url).then(res => {
         this.selectedData = res.data.data
         this.dialogEditVisible = true
       })

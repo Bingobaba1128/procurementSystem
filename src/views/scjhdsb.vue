@@ -290,9 +290,9 @@ export default {
         // 合并的地方
         this.getInitData = this.mergeTableRow(this.getInitOData, ['doTime', 'clothId', 'productionNo', 'jiaoZhouLength', 'huiPiLength', 'produceRequestNo', 'jiangRanChang', 'zhiZaoChang', 'jiaoZhouDate', 'huiPiDate', 'chengPinDate'])
 
-        window.console.log('dengke pass to me')
+        // window.console.log('dengke pass to me')
 
-        window.console.log(this.getInitData)
+        // window.console.log(this.getInitData)
       })
     },
     // 给合并提供样式

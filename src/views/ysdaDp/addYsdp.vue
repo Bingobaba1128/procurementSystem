@@ -2,16 +2,8 @@
   <el-card>
     <el-form :inline="true" :rules="rules" :model="data" class="demo-form-inline">
 
-      <el-form-item label="产地" prop="chanDi">
-        <el-input v-model="data.chanDi" placeholder="添加产地" />
-      </el-form-item>
-
-      <el-form-item label="预计到货天数">
-        <el-input v-model="data.yjdhts" placeholder="" type="number" />
-      </el-form-item>
-
-      <el-form-item label="耗纱系数">
-        <el-input v-model="data.hsxs" placeholder="" type="number" />
+      <el-form-item label="原纱吊牌" prop="diaoPai">
+        <el-input v-model="data.diaoPai" placeholder="添加吊牌" />
       </el-form-item>
 
       <el-form-item label="停用">
@@ -39,16 +31,14 @@
   </el-card>
 </template>
 <script>
-import { addNewChanDi } from '@/api/ysdaComponents'
+import { addNewDiaoPai } from '@/api/ysdp'
 
 export default {
 
   data() {
     return {
       data: {
-        chanDi: '',
-        yjdhts: '',
-        hsxs: '',
+        diaoPai: '',
         tybz: 'false',
         bz: ''
       },
@@ -64,7 +54,7 @@ export default {
       ],
       value: '否',
       rules: {
-        chanDi: [
+        diaoPai: [
           { required: true, message: '请填写产地名称', trigger: 'blur' }
         ]
       }
@@ -78,10 +68,10 @@ export default {
       this.$set(this.data, 'tybz', val)
     },
     saveToServe() {
-      if (this.data.chanDi == '') {
-        this.$message.error('请添加产地名称')
+      if (this.data.diaoPai == '') {
+        this.$message.error('请添加吊牌名称')
       } else {
-        addNewChanDi(this.data).then(res => {
+        addNewDiaoPai(this.data).then(res => {
           if (res.status !== 200) {
             this.$message.error(res.data.tipInfo)
           } else {

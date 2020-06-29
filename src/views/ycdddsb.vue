@@ -129,10 +129,10 @@
 
         <el-table-column label="状态">
           <template slot-scope="scope">
-            <span>{{ formatStatus(scope.row.state) }}</span>
+            <span>{{ formatStatus1(scope.row.state) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" fixed="right" width="200">
+        <el-table-column label="操作" fixed="right" width="200" prop="action">
           <template slot-scope="scope">
             <el-button type="text" @click="saveData(scope.row.yuCeNo)">确定存入</el-button>
             <el-button type="text" :disabled="scope.row.approveState == '1'">{{ formatAppStatus(scope.row.approveState) }}</el-button>
@@ -151,144 +151,6 @@ import { loadSYuCeData, uploadData, searchData } from '@/api/yuDeDingDan'
 export default {
   data() {
     return {
-      testingData: [
-        // 一组
-        {
-          'beiShaDate': '2020-06-15',
-          'yeWuZu': 'E业务三区（叶淑文）',
-          'yuCeNo': 'YC2006-012',
-          'yuCeDate': '2020-7-22',
-          'variety': 'A4452B',
-          'yuCeQuanity': '14200.00',
-          'state': '0',
-          'approveState': '0',
-          'id': '',
-          'orderNo': '1',
-          'jingOrWei': '1',
-          'name': '天虹TEL24CP',
-          'length': '',
-          'yongLiangBybm': '',
-          'yuJiBeiSha': '',
-          'beiSahRemarks': '',
-          'remarks': ''
-        },
-        {
-          'beiShaDate': '2020-06-15',
-          'yeWuZu': 'E业务三区（叶淑文）',
-          'yuCeNo': 'YC2006-012',
-          'yuCeDate': '2020-7-22',
-          'variety': 'A4452B',
-          'yuCeQuanity': '14200.00',
-          'state': '0',
-          'approveState': '0',
-          'id': '',
-          'orderNo': '1',
-          'jingOrWei': '1',
-          'name': '天虹TEL24CP',
-          'length': '',
-          'yongLiangBybm': '',
-          'yuJiBeiSha': '',
-          'beiSahRemarks': '',
-          'remarks': ''
-        },
-        {
-          'beiShaDate': '2020-06-15',
-          'yeWuZu': 'E业务三区（叶淑文）',
-          'yuCeNo': 'YC2006-012',
-          'yuCeDate': '2020-7-22',
-          'variety': 'A4452B',
-          'yuCeQuanity': '14200.00',
-          'state': '0',
-          'approveState': '0',
-          'id': '',
-          'orderNo': '2',
-          'jingOrWei': '0',
-          'name': '天虹银龙16/40-1.75',
-          'length': '',
-          'yongLiangBybm': '',
-          'yuJiBeiSha': '',
-          'beiSahRemarks': '',
-          'remarks': ''
-        },
-        // 二组
-        {
-          'beiShaDate': '2020-06-15',
-          'yeWuZu': 'E业务三区（叶淑文）',
-          'yuCeNo': 'YC2006-013',
-          'yuCeDate': '2020-7-22',
-          'variety': 'A4452B',
-          'yuCeQuanity': '14200.00',
-          'state': '0',
-          'approveState': '0',
-          'id': '',
-          'orderNo': '1',
-          'jingOrWei': '1',
-          'name': '天虹TEL24CP',
-          'length': '',
-          'yongLiangBybm': '',
-          'yuJiBeiSha': '',
-          'beiSahRemarks': '',
-          'remarks': ''
-        },
-        {
-          'beiShaDate': '2020-06-15',
-          'yeWuZu': 'E业务三区（叶淑文）',
-          'yuCeNo': 'YC2006-01',
-          'yuCeDate': '2020-7-22',
-          'variety': 'A4452B',
-          'yuCeQuanity': '14200.00',
-          'state': '0',
-          'approveState': '0',
-          'id': '',
-          'orderNo': '2',
-          'jingOrWei': '0',
-          'name': '天虹银龙16/40-1.75',
-          'length': '',
-          'yongLiangBybm': '',
-          'yuJiBeiSha': '',
-          'beiSahRemarks': '',
-          'remarks': ''
-        },
-        // 三组
-        {
-          'beiShaDate': '2020-06-15',
-          'yeWuZu': 'E业务三区（叶淑文）',
-          'yuCeNo': 'YC2006-014',
-          'yuCeDate': '2020-7-22',
-          'variety': 'A4452B',
-          'yuCeQuanity': '14200.00',
-          'state': '0',
-          'approveState': '0',
-          'id': '',
-          'orderNo': '1',
-          'jingOrWei': '1',
-          'name': '天虹TEL24CP',
-          'length': '',
-          'yongLiangBybm': '',
-          'yuJiBeiSha': '',
-          'beiSahRemarks': '',
-          'remarks': ''
-        },
-        {
-          'beiShaDate': '2020-06-15',
-          'yeWuZu': 'E业务三区（叶淑文）',
-          'yuCeNo': 'YC2006-014',
-          'yuCeDate': '2020-7-22',
-          'variety': 'A4452B',
-          'yuCeQuanity': '14200.00',
-          'state': '0',
-          'approveState': '0',
-          'id': '',
-          'orderNo': '2',
-          'jingOrWei': '0',
-          'name': '天虹银龙16/40-1.75',
-          'length': '',
-          'yongLiangBybm': '',
-          'yuJiBeiSha': '',
-          'beiSahRemarks': '',
-          'remarks': ''
-        }
-      ],
       initOData: '',
       initData: '',
       queryInfo: {
@@ -314,7 +176,8 @@ export default {
           value: '0',
           label: '未安排'
         }
-      ]
+      ],
+      toServeList: []
     }
   },
   created() {
@@ -328,7 +191,9 @@ export default {
       var urlParam = toUrlParam(url, this.pageSetting)
       loadSYuCeData(urlParam).then(res => {
         this.initOData = res.data.data
+        window.console.log(this.initOData)
         this.initData = this.mergeTableRow(this.initOData, ['yuCeNo', 'beiShaDate', 'yuCeDate', 'variety', 'yuCeQuanity', 'yeWuZu'])
+
         window.console.log(this.initData)
       })
     },
@@ -359,11 +224,17 @@ export default {
               colspan: 1
             }
           }
-          // window.console.log(v[m + '-span'])
+          // window.console.log(v[yuCeNo' + '-span'])
           return v
         })
       })
-      // window.console.log(data)
+      window.console.log(data)
+      for (var i = 0; i < data.length; i++) {
+        // window.console.log(data[i])
+        // window.console.log(data[i]['yuCeNo-span'])
+        this.$set(data[i], 'action-span', data[i]['yuCeNo-span'])
+      }
+      window.console.log(data)
       return data
     },
     searchData() {
@@ -371,10 +242,11 @@ export default {
       var urlParam = toUrlParam(url, this.queryInfo)
       // window.console.log(urlParam)
       searchData(urlParam).then(res => {
-        this.initData = res.data.data
+        this.initOData = res.data.data
+        this.initData = this.mergeTableRow(this.initOData, ['yuCeNo', 'beiShaDate', 'yuCeDate', 'variety', 'yuCeQuanity', 'yeWuZu', 'state'])
       })
     },
-    formatStatus(val) {
+    formatStatus1(val) {
       return val == 0 ? '未安排' : val == 1 ? '已安排' : ''
     },
     formatAppStatus(val) {
@@ -386,22 +258,26 @@ export default {
     saveData(no) {
       for (var i = 0; i < this.initData.length; i++) {
         if (this.initData[i].yuCeNo === no) {
-          // window.console.log(this.initData[i])
-          uploadData(this.initData[i]).then(res => {
-            // window.console.log(res.data.code)
-            if (res.data.code !== 200) {
-              this.$message.error(res.data.msg)
-            } else {
-              this.$message({
-                message: res.data.data,
-                type: 'success'
+          this.toServeList.push(this.initData[i])
 
-              })
-              this.initDataF()
-            }
-          })
+          // window.console.log(this.initData[i],'eshi')
         }
       }
+      window.console.log(this.toServeList)
+      var data = this.toServeList
+      uploadData(data).then(res => {
+        // window.console.log(res.data.code)
+        if (res.data.code !== 200) {
+          this.$message.error(res.data.msg)
+        } else {
+          this.$message({
+            message: res.data.data,
+            type: 'success'
+
+          })
+          this.initDataF()
+        }
+      })
     },
     objectSpanMethod({ row, column, rowIndex, columnIndex }) {
       const span = column['property'] + '-span'

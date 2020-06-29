@@ -1,15 +1,15 @@
 import request from '@/utils/request'
 import { baseUrl } from '@/api/apiUrl'
 
-export function getAllYarnYanSe(data) {
+export function getAllYarnChengFen(data) {
   return request({
     baseURL: baseUrl,
-    url: '/api/getAllYarnYanSe',
+    url: '/api/getAllYarnChengFen',
     method: 'get'
   })
 }
 
-export function getOneYarnYanSe(data) {
+export function getOneYarnChengFen(data) {
   return request({
     baseURL: baseUrl,
     url: data,
@@ -17,7 +17,7 @@ export function getOneYarnYanSe(data) {
   })
 }
 
-export function deleteYanSe(data) {
+export function deleteChengFen(data) {
   return request({
     baseURL: baseUrl,
     url: data,
@@ -25,19 +25,19 @@ export function deleteYanSe(data) {
   })
 }
 
-export function addNewYanSe(data) {
+export function addNewChengFen(data) {
   return request({
     baseURL: baseUrl,
-    url: '/api/addYarnYanSe',
+    url: '/api/addYarnChengFen',
     data: data,
     method: 'post'
   })
 }
 
-export function saveEditYanSe(data) {
+export function saveEditChengFen(data) {
   return request({
     baseURL: baseUrl,
-    url: '/api/addYarnYanSe',
+    url: '/api/addYarnChengFen',
     data: data,
     method: 'post'
   })

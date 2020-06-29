@@ -6,7 +6,6 @@
         <el-input v-model="data.yanSe" placeholder="添加颜色" />
       </el-form-item>
 
-
       <el-form-item label="停用">
         <el-select v-model="value" placeholder="请选择" @change="saveValue(value)">
           <el-option
