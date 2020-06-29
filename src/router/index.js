@@ -133,6 +133,18 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/yscd',
+    component: Layout,
+    children: [
+      {
+        path: '/原纱产地',
+        name: 'yscd',
+        component: () => import('@/views/ysdaComponents/yscd'),
+        meta: { title: '原纱产地', icon: 'tree' }
+      }
+    ]
+  },
 
   // {
   //   path: '/nested',

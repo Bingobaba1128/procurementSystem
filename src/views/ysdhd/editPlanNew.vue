@@ -139,8 +139,19 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="属性" prop="" width="120" />
-        <el-table-column label="说明" prop="explain" width="120">
+        <el-table-column label="属性" prop="nature" width="120">
+          <template slot-scope="scope">
+            <el-select v-model="scope.row.nature" placeholder="请选择">
+              <el-option
+                v-for="item in natureList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+                @click.native="checkNature(item.value)"
+              />
+            </el-select>
+          </template>
+        </el-table-column>        <el-table-column label="说明" prop="explain" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.explain"
@@ -149,7 +160,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="外销单价" prop="outUnitprice" width="120">
+        <el-table-column v-if="!banned" label="外销单价" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.outUnitprice"
@@ -246,8 +257,18 @@ export default {
       },
       supplierList: '',
       innerForm: this.param[0].listS,
-      nature: '内销',
-      productFeatures: ''
+      productFeatures: '',
+      natureList: [
+        {
+          value: '1',
+          label: '外销'
+        },
+        {
+          value: '0',
+          label: '内销'
+        }
+      ],
+      banned: true
     }
   },
   created() {
@@ -291,7 +312,6 @@ export default {
       month = month.toString().padStart(2, '0')
       date = date.toString().padStart(2, '0')
       var defaultDate = `${year}-${month}-${date}`
-      console.log(defaultDate)
       return defaultDate
       // this.$set(this.selectedSupplier, 'signDate', defaultDate)
     },
@@ -320,17 +340,34 @@ export default {
     },
     saveToServe() {
       window.console.log(this.selectedSupplier)
-      addNewData(this.selectedSupplier).then(res => {
-        if (res.data.code !== 200) {
-          this.$message.error(res.data.msg)
+
+      if (this.selectedSupplier.name == '') {
+        this.$message.error('请选择供应商')
+      } else {
+        window.console.log(this.selectedSupplier.listS)
+        if (this.selectedSupplier.listS[0].unitprice == '' || this.selectedSupplier.listS[0].quanity == '') {
+          this.$message.error('请添加产品数量和单价')
         } else {
-          this.$message.success(res.data.msg)
-          this.$emit('closeDialog')
+          addNewData(this.selectedSupplier).then(res => {
+            if (res.data.code !== 200) {
+              this.$message.error(res.data.msg)
+            } else {
+              this.$message.success(res.data.msg)
+              this.$emit('closeDialog')
+            }
+          })
         }
-      })
+      }
     },
     handleDelete(index, row) {
       this.innerForm.splice(index, 1)
+    },
+    checkNature(value) {
+      if (value == 1) {
+        this.banned = false
+      } else {
+        this.banned = true
+      }
     }
   }
 }

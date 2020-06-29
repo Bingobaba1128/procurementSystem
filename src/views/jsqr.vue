@@ -56,6 +56,8 @@
         <el-table-column label="生产单号" prop="productionNo" />
         <el-table-column label="布编" prop="clothId" />
         <el-table-column label="浆长" prop="jiaoZhouLength" />
+        <el-table-column label="测试" prop="shaZhi" />
+
         <el-table-column label="经纱" class="jingsha">
           <template slot-scope="scope">
             <el-button type="text" @click="showReplaceJS(scope.row.jingSha,scope.row.shaZhi,scope.row.id)"> {{ scope.row.jingSha }} <i class="el-icon-arrow-down el-icon--right" /> </el-button>
@@ -284,6 +286,7 @@ export default {
         jingSha: jingsha
       }
       var urlParam = toUrlParam(url, data)
+      window.console.log(urlParam)
       insteadOfJing(urlParam).then(res => {
         this.jingshaList = Object.assign({}, this.jingshaList, res.data.data)
       })

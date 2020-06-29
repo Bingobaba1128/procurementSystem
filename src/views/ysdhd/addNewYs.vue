@@ -118,6 +118,7 @@
             :key="item.value"
             :label="item.label"
             :value="item.label"
+            @click.native="checkNature(item.value)"
           />
         </el-select>
       </el-col>
@@ -202,7 +203,6 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="删除" prop="" width="120" />
         <el-table-column label="布编" prop="clothId" width="120">
           <template slot-scope="scope">
             <el-input
@@ -293,11 +293,11 @@ export default {
         listS: '',
         clothId: ''
       },
-
       supplierList: '',
       innerForm: [],
       nature: '内销',
-      productFeatures: ''
+      productFeatures: '',
+      banned: true
     }
   },
   created() {
@@ -390,18 +390,31 @@ export default {
       this.$set(this.selectedSupplier, 'name', name)
     },
     saveToServe() {
-      window.console.log(this.selectedSupplier)
-      addNewData(this.selectedSupplier).then(res => {
-        if (res.data.code !== 200) {
-          this.$message.error(res.data.msg)
+      window.console.log(this.selectedSupplier.listS)
+      for (var i = 0; i < this.selectedSupplier.listS.length; i++) {
+        if (this.selectedSupplier.listS[i].quanity == '' || this.selectedSupplier.listS[i].unitprice == '') {
+          this.$message.error('请添加产品数量和单价')
         } else {
-          this.$message.success(res.data.msg)
-          this.$emit('closeDialog')
+          addNewData(this.selectedSupplier).then(res => {
+            if (res.data.code !== 200) {
+              this.$message.error(res.data.msg)
+            } else {
+              this.$message.success(res.data.msg)
+              this.$emit('closeDialog')
+            }
+          })
         }
-      })
+      }
     },
     handleDelete(index, row) {
       this.innerForm.splice(index, 1)
+    },
+    checkNature(value) {
+      if (value == 1) {
+        this.banned = false
+      } else {
+        this.banned = true
+      }
     }
 
   }
