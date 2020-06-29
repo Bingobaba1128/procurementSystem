@@ -3,7 +3,7 @@
     <el-form :inline="true" :model="data" class="demo-form-inline">
 
       <el-form-item label="产地">
-        <el-input v-model="data.chanDi" placeholder="选择产地" />
+        <el-input v-model="data.chanDi" placeholder="添加产地" />
       </el-form-item>
 
       <el-form-item label="预计到货天数">
