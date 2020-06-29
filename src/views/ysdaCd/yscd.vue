@@ -34,8 +34,8 @@
 </template>
 <script>
 import { getAllYarnChanDi, deleteChanDi, getOneYarnChanDi, addNewChanDi } from '@/api/ysdaComponents'
-import editYscd from '@/views/ysdaComponents/editYscd'
-import addYscd from '@/views/ysdaComponents/addYscd'
+import editYscd from '@/views/ysdaCd/editYscd'
+import addYscd from '@/views/ysdaCd/addYscd'
 
 export default {
   components: {

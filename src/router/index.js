@@ -140,8 +140,20 @@ export const constantRoutes = [
       {
         path: '/原纱产地',
         name: 'yscd',
-        component: () => import('@/views/ysdaComponents/yscd'),
+        component: () => import('@/views/ysdaCd/yscd'),
         meta: { title: '原纱产地', icon: 'tree' }
+      }
+    ]
+  },
+  {
+    path: '/ysys',
+    component: Layout,
+    children: [
+      {
+        path: '/原纱颜色',
+        name: 'ysys',
+        component: () => import('@/views/ysdaYs/ysys'),
+        meta: { title: '原纱颜色', icon: 'tree' }
       }
     ]
   },
