@@ -54,10 +54,13 @@
       <el-col :span="3" style="margin-bottom: 20px">
         <el-button type="primary" @click="editSelected">批量调整</el-button>
       </el-col>
+      <el-col :span="3" style="margin-bottom: 20px">
+        <el-button type="primary" @click="exportExcel">导出Excel</el-button>
+      </el-col>
       <el-dialog v-if="dialogEditTableVisible" title="数据修改" :visible.sync="dialogEditTableVisible" width="95%">
         <editSelected :param="multipleSelection" @closeDialog="closeDialog" />
       </el-dialog>
-      <el-table ref="multipleTable" :data="searchResult" border stripe max-height="750" @selection-change="handleSelectionChange">
+      <el-table id="out-table" ref="multipleTable" :data="searchResult" border stripe max-height="750" @selection-change="handleSelectionChange">
         <el-table-column
           type="selection"
           width="55"
@@ -92,6 +95,8 @@ import { getInitData, getHistoryData } from '@/api/ysdjb'
 import { toUrlParam } from '@/utils/toUrlParam'
 import editSelected from '@/views/ysdjd/editSelected'
 import priceHistory from '@/views/ysdjd/priceHistory'
+import FileSaver from 'file-saver'
+import XLSX from 'xlsx'
 
 export default {
   components: {
@@ -171,6 +176,18 @@ export default {
     closeDialog() {
       this.dialogEditTableVisible = false
       this.initData()
+    },
+    exportExcel() {
+      this.downloadLoading = true
+      /* generate workbook object from table */
+      var wb = XLSX.utils.table_to_book(document.querySelector('#out-table'))
+      /* get binary string as output */
+      var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
+      try {
+        FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '原纱定价表.xlsx')
+        this.downloadLoading = false
+      } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
+      return wbout
     }
   }
 }
