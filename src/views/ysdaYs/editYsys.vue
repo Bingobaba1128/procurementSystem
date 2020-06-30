@@ -26,7 +26,6 @@
       <el-form-item>
         <el-button type="primary" @click="saveToServe">确定存入</el-button>
       </el-form-item>
-      </el-form-item>
     </el-form>
 
   </el-card>
