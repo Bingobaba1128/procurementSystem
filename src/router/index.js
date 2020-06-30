@@ -139,7 +139,7 @@ export const constantRoutes = [
     redirect: '/yssetting/yscd',
     name: 'yssetting',
     meta: { title: '原纱配置', icon: 'nested' },
-    children:[
+    children: [
       {
         path: '/原纱产地',
         name: 'yscd',
@@ -166,54 +166,18 @@ export const constantRoutes = [
       }
     ]
   },
-  // {
-  //   path: '/yscd',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: '/原纱产地',
-  //       name: 'yscd',
-  //       component: () => import('@/views/ysdaCd/yscd'),
-  //       meta: { title: '原纱产地', icon: 'nested' }
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: '/ysys',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: '/原纱颜色',
-  //       name: 'ysys',
-  //       component: () => import('@/views/ysdaYs/ysys'),
-  //       meta: { title: '原纱颜色', icon: 'nested' }
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: '/yscf',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: '/原纱成分',
-  //       name: 'yscf',
-  //       component: () => import('@/views/ysdaCf/yscf'),
-  //       meta: { title: '原纱成分', icon: 'nested' }
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: '/ysdp',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: '/原纱吊牌',
-  //       name: 'ysdp',
-  //       component: () => import('@/views/ysdaDp/ysdp'),
-  //       meta: { title: '原纱吊牌', icon: 'nested' }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/ysdjb',
+    component: Layout,
+    children: [
+      {
+        path: '/原纱定价表',
+        name: 'ysdjb',
+        component: () => import('@/views/ysdjd/index'),
+        meta: { title: '原纱定价表', icon: 'tree' }
+      }
+    ]
+  },
 
   // {
   //   path: '/nested',

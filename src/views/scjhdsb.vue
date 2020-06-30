@@ -188,7 +188,6 @@
             type="selection"
             width="55"
           />
-          <!-- </el-table> -->
         </el-table-column>
       </el-table>
 
