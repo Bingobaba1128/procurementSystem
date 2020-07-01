@@ -105,7 +105,7 @@
       <addNewForm @closeDialog="closeDialog" />
     </el-dialog>
     <el-dialog v-if="dialogEditTableVisible" title="原纱档案（修改）" :visible.sync="dialogEditTableVisible" width="95%">
-      <editForm @closeDialog="closeDialog" />
+      <editForm :param="editData" @closeDialog="closeDialog" />
     </el-dialog>
     <el-row>
       <el-table id="out-table" :data="initAllData" height="500" border stripe>

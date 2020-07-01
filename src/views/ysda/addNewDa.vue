@@ -399,19 +399,6 @@ export default {
           }
         })
       }
-
-    //   if (this.data.chengFen == '') {
-    //     this.$message.error('请添加成分名称')
-    //   } else {
-    //     addNewChengFen(this.data).then(res => {
-    //       if (res.status !== 200) {
-    //         this.$message.error(res.data.tipInfo)
-    //       } else {
-    //         this.$message.success(res.data.tipInfo)
-    //         this.$emit('closeDialog')
-    //       }
-    //     })
-    //   }
     }
   }
 }
