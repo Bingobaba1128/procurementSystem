@@ -9,7 +9,7 @@ export function getAllYarnArchives() {
   })
 }
 
-export function getOneYarnChengFen(data) {
+export function getOneRecord(data) {
   return request({
     baseURL: baseUrl,
     url: data,
@@ -17,7 +17,7 @@ export function getOneYarnChengFen(data) {
   })
 }
 
-export function deleteChengFen(data) {
+export function deleteRecord(data) {
   return request({
     baseURL: baseUrl,
     url: data,
@@ -25,19 +25,26 @@ export function deleteChengFen(data) {
   })
 }
 
-export function addNewChengFen(data) {
+export function getSettingList(set) {
   return request({
     baseURL: baseUrl,
-    url: '/api/addYarnChengFen',
-    data: data,
-    method: 'post'
+    url: '/api/' + set,
+    method: 'get'
   })
 }
+// export function addNewChengFen(data) {
+//   return request({
+//     baseURL: baseUrl,
+//     url: '/api/addYarnChengFen',
+//     data: data,
+//     method: 'post'
+//   })
+// }
 
-export function saveEditChengFen(data) {
+export function saveNewForm(data) {
   return request({
     baseURL: baseUrl,
-    url: '/api/addYarnChengFen',
+    url: '/api/addYarnArchives',
     data: data,
     method: 'post'
   })
