@@ -1,6 +1,6 @@
 <template>
   <el-card class="newFont">
-    <!-- {{param.chanDi}} -->
+    <!-- {{param.id}} -->
     <el-form :inline="true" :rules="rules" :model="param" class="demo-form-inline">
       <el-row>
         <el-col :span="8">
@@ -22,6 +22,7 @@
         </el-col>
       </el-row>
     </el-form>
+
     <el-form :inline="true" :rules="rules" :model="param" class="demo-form-inline">
       <el-row>
         <el-col :span="8">
@@ -51,8 +52,8 @@
         </el-col>
 
         <el-col :span="8">
-          <el-form-item label="分类" prop="lx" label-width="160px">
-            <el-select v-model="param.lx" placeholder="请选择">
+          <el-form-item label="分类" prop="fl" label-width="160px">
+            <el-select v-model="param.fl" placeholder="请选择">
               <el-option
                 v-for="item in fenLeiList"
                 :key="item.value"
@@ -64,6 +65,12 @@
         </el-col>
       </el-row>
     </el-form>
+    <!--
+    <el-form :inline="true" :rules="rules" :model="param" class="demo-form-inline">
+      <el-row>
+
+      </el-row>
+    </el-form> -->
 
     <el-form :inline="true" :rules="rules" :model="param" class="demo-form-inline">
       <el-row>
@@ -113,7 +120,7 @@
         <el-col :span="8">
 
           <el-form-item label="工艺停用" label-width="160px">
-            <el-select v-model="value" placeholder="请选择" @change="bindValue1(value)">
+            <el-select v-model="key" placeholder="请选择" @change="bindValue1(key)">
               <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -228,6 +235,27 @@
           </el-form-item>
         </el-col>
 
+        <el-col :span="16">
+          <el-checkbox v-model="param.tzsbz">特种纱</el-checkbox>
+          <el-checkbox v-model="param.gpmbz">高配棉</el-checkbox>
+          <el-checkbox v-model="param.oabz">OA</el-checkbox>
+          <el-checkbox v-model="param.oebz">OE</el-checkbox>
+          <el-checkbox v-model="param.sirobz">SIRO</el-checkbox>
+          <el-checkbox v-model="param.jsbz">精梳</el-checkbox>
+          <el-checkbox v-model="param.sgfbz">紧密纺</el-checkbox>
+          <el-checkbox v-model="param.zjbz">竹节纱</el-checkbox>
+          <el-checkbox v-model="param.gtlbz">弹力纱</el-checkbox>
+          <el-checkbox v-model="param.ygbz">有色纱</el-checkbox>
+          <el-checkbox v-model="param.hxsbz">化纤纱</el-checkbox>
+          <el-checkbox v-model="param.qtsbz">全天丝</el-checkbox>
+          <el-checkbox v-model="param.qtbz">其他</el-checkbox>
+        </el-col>
+
+      </el-row>
+    </el-form>
+
+    <el-form :inline="true" class="demo-form-inline" style="margin-top: 20px">
+      <el-row>
         <el-col :span="16" class="text">
           <el-form-item label="备注" label-width="160px">
             <el-input v-model="param.note" placeholder="添加备注" />
@@ -237,10 +265,55 @@
     </el-form>
 
     <el-button type="primary" @click="saveToServe">确定存入</el-button>
+
+    <el-form :inline="true" class="demo-form-inline" style="margin-top: 20px">
+      <el-row>
+        <el-col :span="8">
+          <el-form-item label="成分" label-width="160px">
+            <el-select v-model="param.chengFen" placeholder="请选择">
+              <el-option
+                v-for="item in chengFenList"
+                :key="item.chengFen"
+                :label="item.chengFen"
+                :value="item.chengFen"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="3">
+          <el-button type="primary" @click="addRow">增加行</el-button>
+
+        </el-col>
+        <el-col :span="3">
+          <el-button type="primary" @click="saveChengFen">成分存入</el-button>
+
+        </el-col>
+      </el-row>
+    </el-form>
+
+    <el-row>
+      <el-table :data="innerForm" height="500" border stripe>
+        <el-table-column type="index" label="序号" />
+        <el-table-column label="成分" prop="chengFen" />
+
+        <el-table-column label="含量" prop="hanLiang">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.hanLiang" placeholder="添加含量数据" type="number" />
+          </template>
+        </el-table-column>
+
+        <el-table-column label="操作" fixed="right" width="160">
+          <template slot-scope="scope">
+            <!-- <el-button type="text" @click="editDataM(scope.row.id)">修改</el-button> -->
+            <el-button type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-row>
   </el-card>
 </template>
 <script>
-import { getSettingList, saveNewForm } from '@/api/ysda'
+import { getSettingList, saveNewForm, addNewChengFen, getChengFen } from '@/api/ysda'
 
 export default {
   props: {
@@ -280,6 +353,7 @@ export default {
           value: '淘汰类'
         }
       ],
+      innerForm: [],
       xuYongLiangOptions: [
         {
           value: '全棉不弹力'
@@ -312,41 +386,18 @@ export default {
         }
       ],
 
-      // queryParam: {
-      //   chanDi: this.param.chanDi,
-      //   lx: this.param.lx,
-      //   name: this.param.name,
-      //   shaZhi: this.param.shaZhi,
-      //   xingHao: this.param.xingHao,
-      //   chbm: this.param.chbm,
-      //   hsjg: this.param.hsjg,
-      //   yanSe: this.param.yanSe,
-      //   dpbz: this.param.dpbz,
-      //   jspsbz: this.param.jspsbz,
-      //   qlfhdfbz: this.param.qlfhdfbz,
-      //   tybz: this.param.tybz,
-      //   gytybz: this.param.gytybz,
-      //   dsqlbz: this.param.dsqlbz,
-      //   zddsqlbz: this.param.zddsqlbz,
-      //   qlcvbz: this.param.qlcvbz,
-      //   zpsbz: this.param.zpsbz,
-      //   zpxbz: this.param.zpxbz,
-      //   ndbz: this.param.ndbz,
-      //   nxsbz: this.param.nxsbz,
-      //   dlsclbz: this.param.dlsclbz,
-      //   tgbz: this.param.tgbz,
-      //   note: this.param.note
-
-      // },
-      value: '否',
+      value: this.param.tybz == true ? '是' : '否',
+      key: this.param.gytybz == true ? '是' : '否',
       yanSeList: '',
       diaoPaiList: '',
       chanDiList: '',
+      chengFenList: '',
+      chengFenTable: '',
       rules: {
         chanDi: [
           { required: true, message: '请选择产地', trigger: 'blur' }
         ],
-        lx: [
+        fl: [
           { required: true, message: '请选择分类', trigger: 'blur' }
         ],
         name: [
@@ -363,6 +414,10 @@ export default {
         ]
       }
     }
+  },
+
+  mounted() {
+    this.initChengFen()
   },
   created() {
     this.getInitSetting()
@@ -381,6 +436,12 @@ export default {
       getSettingList('getAllYarnChanDiName').then(res => {
         this.chanDiList = res.data.data
       })
+      getSettingList('getAllYarnChengFenName').then(res => {
+        this.chengFenList = res.data.data
+      })
+      // alert(this.param)
+      //
+      // key: this.param.gytybz == true ? '是' : '否',
     },
     bindValue(val) {
       this.$set(this.param, 'tybz', val)
@@ -389,7 +450,7 @@ export default {
       this.$set(this.param, 'gytybz', val)
     },
     saveToServe() {
-      if (this.param.chanDi == '' || this.param.lx == '' || this.param.name == '' || this.param.shaZhi == '' || this.param.yanSe == '') {
+      if (this.param.chanDi == '' || this.param.fl == '' || this.param.name == '' || this.param.shaZhi == '' || this.param.yanSe == '') {
         this.$message.error('请输入必填项')
       } else {
         window.console.log(this.param)
@@ -402,6 +463,43 @@ export default {
           }
         })
       }
+    },
+    addRow() {
+      // 预验证供应商品种不为空
+      if (this.param.chengFen == '') {
+        this.$message.error('请选择成分')
+      } else {
+        var insertItem = {
+          chengFen: this.param.chengFen,
+          hanLiang: '',
+          yarnId: this.param.id,
+          addUserId: '',
+          addUsername: '',
+          addDatetime: ''
+        }
+        this.innerForm.push(insertItem)
+      }
+    },
+    initChengFen() {
+      getChengFen(this.param.id).then(res => {
+        // window.console.log(res.data)
+        if (res.data.data != null) {
+          this.innerForm = res.data.data
+        }
+      })
+    },
+    handleDelete(index, row) {
+      this.innerForm.splice(index, 1)
+    },
+    saveChengFen() {
+      addNewChengFen(this.innerForm).then(res => {
+        if (res.data.code !== 200) {
+          this.$message.error(res.data.msg)
+        } else {
+          this.$message.success(res.data.msg)
+          this.initChengFen()
+        }
+      })
     }
   }
 }

@@ -50,8 +50,8 @@
         </el-col>
 
         <el-col :span="8">
-          <el-form-item label="分类" prop="lx" label-width="160px">
-            <el-select v-model="queryParam.lx" placeholder="请选择">
+          <el-form-item label="分类" prop="fl" label-width="160px">
+            <el-select v-model="queryParam.fl" placeholder="请选择">
               <el-option
                 v-for="item in fenLeiList"
                 :key="item.value"
@@ -112,7 +112,7 @@
         <el-col :span="8">
 
           <el-form-item label="工艺停用" label-width="160px">
-            <el-select v-model="value" placeholder="请选择" @change="bindValue1(value)">
+            <el-select v-model="key" placeholder="请选择" @change="bindValue1(key)">
               <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -227,6 +227,26 @@
           </el-form-item>
         </el-col>
 
+        <el-col :span="16">
+          <el-checkbox v-model="queryParam.tzsbz">特种纱</el-checkbox>
+          <el-checkbox v-model="queryParam.gpmbz">高配棉</el-checkbox>
+          <el-checkbox v-model="queryParam.oabz">OA</el-checkbox>
+          <el-checkbox v-model="queryParam.oebz">OE</el-checkbox>
+          <el-checkbox v-model="queryParam.sirobz">SIRO</el-checkbox>
+          <el-checkbox v-model="queryParam.jsbz">精梳</el-checkbox>
+          <el-checkbox v-model="queryParam.sgfbz">紧密纺</el-checkbox>
+          <el-checkbox v-model="queryParam.zjbz">竹节纱</el-checkbox>
+          <el-checkbox v-model="queryParam.gtlbz">弹力纱</el-checkbox>
+          <el-checkbox v-model="queryParam.ygbz">有色纱</el-checkbox>
+          <el-checkbox v-model="queryParam.hxsbz">化纤纱</el-checkbox>
+          <el-checkbox v-model="queryParam.qtsbz">全天丝</el-checkbox>
+          <el-checkbox v-model="queryParam.qtbz">其他</el-checkbox>
+        </el-col>
+      </el-row>
+    </el-form>
+
+    <el-form :inline="true" class="demo-form-inline" style="margin-top: 20px">
+      <el-row>
         <el-col :span="16" class="text">
           <el-form-item label="备注" label-width="160px">
             <el-input v-model="queryParam.note" placeholder="添加备注" />
@@ -252,11 +272,11 @@ export default {
       },
       options: [
         {
-          value: 'true',
+          value: true,
           label: '是'
         },
         {
-          value: 'false',
+          value: false,
           label: '否'
         }
       ],
@@ -311,7 +331,7 @@ export default {
 
       queryParam: {
         chanDi: '',
-        lx: '',
+        fl: '',
         name: '',
         shaZhi: '',
         xingHao: '',
@@ -321,8 +341,8 @@ export default {
         dpbz: '',
         jspsbz: '',
         qlfhdfbz: '',
-        tybz: '',
-        gytybz: '',
+        tybz: false,
+        gytybz: false,
         dsqlbz: '',
         zddsqlbz: '',
         qlcvbz: '',
@@ -332,10 +352,24 @@ export default {
         nxsbz: '',
         dlsclbz: '',
         tgbz: '',
-        note: ''
-
+        note: '',
+        tzsbz: false,
+        gpmbz: false,
+        oabz: false,
+        oebz: false,
+        sirobz: false,
+        jsbz: false,
+        sgfbz: false,
+        zjbz: false,
+        gtlbz: false,
+        ygbz: false,
+        hxsbz: false,
+        qtsbz: false,
+        qtbz: false
       },
       value: '否',
+      key: '否',
+
       yanSeList: '',
       diaoPaiList: '',
       chanDiList: '',
@@ -343,7 +377,7 @@ export default {
         chanDi: [
           { required: true, message: '请选择产地', trigger: 'blur' }
         ],
-        lx: [
+        fl: [
           { required: true, message: '请选择分类', trigger: 'blur' }
         ],
         name: [
@@ -386,7 +420,7 @@ export default {
       this.$set(this.queryParam, 'gytybz', val)
     },
     saveToServe() {
-      if (this.queryParam.chanDi == '' || this.queryParam.lx == '' || this.queryParam.name == '' || this.queryParam.shaZhi == '' || this.queryParam.yanSe == '') {
+      if (this.queryParam.chanDi == '' || this.queryParam.fl == '' || this.queryParam.name == '' || this.queryParam.shaZhi == '' || this.queryParam.yanSe == '') {
         this.$message.error('请输入必填项')
       } else {
         window.console.log(this.queryParam)

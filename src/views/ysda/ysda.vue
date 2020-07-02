@@ -1,31 +1,30 @@
 <template>
   <el-card>
     <!-- 检索区 -->
-    <!-- <el-row :gutter="10">
-
-      <el-col :lg="{span:4}" class="searchCombo">
+    <el-row :gutter="10">
+      <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">产地</div>
         <el-select v-model="queryInfo.chanDi" clearable placeholder="请选择">
           <el-option
-            v-for="item in infoOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            v-for="item in chanDiList"
+            :key="item.chanDi"
+            :label="item.chanDi"
+            :value="item.chanDi"
           />
         </el-select>
       </el-col>
 
-      <el-col :span="4">
-        <el-input v-model="queryInfo.shaZhi" placeholder="请选择" clearable>
-          <template slot="prepend">支数（折算支数）</template>
-        </el-input>
+      <el-col :span="6" class="searchCombo">
+        <div class="searchHeader">支数（折算支数）</div>
+
+        <el-input v-model="queryInfo.shaZhi" placeholder="请选择" clearable type="number" />
       </el-col>
 
-      <el-col :lg="{span:4}" class="searchCombo">
+      <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">工艺停用</div>
         <el-select v-model="queryInfo.gytybz" clearable placeholder="请选择">
           <el-option
-            v-for="item in infoOptions"
+            v-for="item in options"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -33,56 +32,62 @@
         </el-select>
       </el-col>
 
-            <el-col :lg="{span:4}" class="searchCombo">
+      <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">停用</div>
         <el-select v-model="queryInfo.tybz" clearable placeholder="请选择">
           <el-option
-            v-for="item in infoOptions"
+            v-for="item in options"
             :key="item.value"
             :label="item.label"
             :value="item.value"
           />
         </el-select>
       </el-col>
-      <el-col :lg="{span:4}" class="searchCombo">
+    </el-row>
+    <el-row :gutter="10" style="margin-top: 20px">
+
+      <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">吊牌</div>
         <el-select v-model="queryInfo.dpbz" clearable placeholder="请选择">
           <el-option
-            v-for="item in infoOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            v-for="item in diaoPaiList"
+            :key="item.diaoPai"
+            :label="item.diaoPai"
+            :value="item.diaoPai"
           />
         </el-select>
       </el-col>
-      <el-col :lg="{span:4}" class="searchCombo">
+      <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">原纱颜色</div>
         <el-select v-model="queryInfo.yanSe" clearable placeholder="请选择">
           <el-option
-            v-for="item in infoOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            v-for="item in yanSeList"
+            :key="item.yanSe"
+            :label="item.yanSe"
+            :value="item.yanSe"
           />
         </el-select>
       </el-col>
-      <el-col :span="4">
-        <el-input v-model="queryInfo.name" placeholder="请输入单号" clearable>
-          <template slot="prepend">名称</template>
-        </el-input>
+      <el-col :span="6" class="searchCombo">
+        <div class="searchHeader">名称</div>
+
+        <el-input v-model="queryInfo.name" placeholder="请输入名称" clearable />
       </el-col>
-            <el-col :span="4">
-        <el-input v-model="queryInfo.xingHao" placeholder="请输入单号" clearable>
-          <template slot="prepend">型号</template>
-        </el-input>
+      <el-col :span="6" class="searchCombo">
+        <div class="searchHeader">型号</div>
+
+        <el-input v-model="queryInfo.xingHao" placeholder="请输入型号" clearable />
       </el-col>
-            <el-col :lg="{span:4}" class="searchCombo">
+    </el-row>
+    <el-row :gutter="10" style="margin-top: 20px">
+
+      <el-col :lg="{span:4}" class="searchCombo">
         <div class="searchHeader">分类</div>
-        <el-select v-model="queryInfo.state" clearable placeholder="请选择">
+        <el-select v-model="queryInfo.fl" clearable placeholder="请选择">
           <el-option
-            v-for="item in infoOptions"
+            v-for="item in fenLeiList"
             :key="item.value"
-            :label="item.label"
+            :label="item.value"
             :value="item.value"
           />
         </el-select>
@@ -90,10 +95,10 @@
       <el-col :span="2">
         <el-button type="success" @click="searchData">检索</el-button>
       </el-col>
-    </el-row> -->
+    </el-row>
 
     <!-- 列表区 -->
-    <el-row style="margin-bottom: 20px">
+    <el-row style="margin-bottom: 20px; margin-top: 20px">
       <el-col :span="2">
         <el-button type="primary" @click="addNewRecord">新增</el-button>
       </el-col>
@@ -104,14 +109,14 @@
     <el-dialog v-if="dialogAddTableVisible" title="原纱档案（新增）" :visible.sync="dialogAddTableVisible" width="95%">
       <addNewForm @closeDialog="closeDialog" />
     </el-dialog>
-    <el-dialog v-if="dialogEditTableVisible" title="原纱档案（修改）" :visible.sync="dialogEditTableVisible" width="95%">
-      <editForm :param="editData" @closeDialog="closeDialog" />
+    <el-dialog v-if="dialogEditTableVisible && editData" title="原纱档案（修改）" :visible.sync="dialogEditTableVisible" width="95%">
+      <editForm :key="editData.id" :param="editData" @closeDialog="closeDialog" />
     </el-dialog>
     <el-row>
       <el-table id="out-table" :data="initAllData" height="500" border stripe>
         <el-table-column type="index" label="序号" />
         <el-table-column label="产地" prop="chanDi" />
-        <el-table-column label="类型" prop="lx" />
+        <el-table-column label="类型" prop="fl" />
         <el-table-column label="名称" prop="name" />
         <el-table-column label="属性" prop="shuXing" />
         <el-table-column label="型号" prop="xingHao" />
@@ -122,6 +127,7 @@
             {{ statusCheck(scope.row.jspsbz) }}
           </template> -->
         </el-table-column>
+
         <el-table-column label="成分" prop="chengFen">
           <template slot-scope="scope">
             <p v-for="(item) in scope.row.chengFen" :key="item" style="margin:0px">
@@ -130,6 +136,11 @@
           </template>
         </el-table-column>
         <el-table-column label="备注" prop="note" width="160" />
+        <!-- <el-table-column label="工艺停用" prop="gytybz">
+          <template slot-scope="scope">
+            {{ statusCheck(scope.row.gytybz) }}
+          </template>
+        </el-table-column> -->
         <el-table-column label="停用标志" prop="tybz">
           <template slot-scope="scope">
             {{ statusCheck(scope.row.tybz) }}
@@ -144,12 +155,13 @@
         <el-table-column label="断裂伸长率标准" prop="dlsclbz" />
         <el-table-column label="条干（CV）标准" prop="tgbz" />
         <el-table-column label="存货编码" prop="chbm" />
-        <el-table-column label="操作" width="160">
+        <el-table-column label="操作" fixed="right" width="160">
           <template slot-scope="scope">
             <el-button type="text" @click="editDataM(scope.row.id)">修改</el-button>
             <el-button type="text" @click="deleteData(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
+
       </el-table>
     </el-row>
 
@@ -157,11 +169,11 @@
 </template>
 
 <script>
-import { baseUrl } from '@/api/apiUrl'
-import { toUrlParam } from '@/utils/toUrlParam'
-import { getAllYarnArchives, deleteRecord, getOneRecord } from '@/api/ysda'
+import { getAllYarnArchives, deleteRecord, getOneRecord, getSettingList, searchBycCondition } from '@/api/ysda'
 import addNewForm from '@/views/ysda/addNewDa'
 import editForm from '@/views/ysda/editForm'
+import { baseUrl } from '@/api/apiUrl'
+import { toUrlParam } from '@/utils/toUrlParam'
 
 import FileSaver from 'file-saver'
 import XLSX from 'xlsx'
@@ -183,25 +195,42 @@ export default {
         yanSe: '',
         dpbz: '',
         name: '',
-        xingHao: ''
+        xingHao: '',
+        fl: ''
       },
-      infoOptions: [
+      options: [
         {
-          value: '1',
-          label: '通过信息'
+          value: true,
+          label: '是'
         },
         {
-          value: '0',
-          label: '未通过信息'
+          value: false,
+          label: '否'
+        }
+      ],
+      fenLeiList: [
+        {
+          value: 'T类'
         },
         {
-          value: '2',
-          label: '全部信息'
+          value: '开发类'
+        },
+        {
+          value: '主力类'
+        },
+        {
+          value: '常备类'
+        },
+        {
+          value: '淘汰类'
         }
       ],
       dialogAddTableVisible: false,
       dialogEditTableVisible: false,
-      editData: ''
+      editData: '',
+      yanSeList: '',
+      diaoPaiList: '',
+      chanDiList: ''
     }
   },
 
@@ -215,7 +244,16 @@ export default {
     initData() {
       getAllYarnArchives().then(res => {
         this.initAllData = res.data.data
-        window.console.log(this.initAllData)
+        // window.console.log(this.initAllData)
+      })
+      getSettingList('getAllYarnYanSeName').then(res => {
+        this.yanSeList = res.data.data
+      })
+      getSettingList('getAllYarnDiaoPaiName').then(res => {
+        this.diaoPaiList = res.data.data
+      })
+      getSettingList('getAllYarnChanDiName').then(res => {
+        this.chanDiList = res.data.data
       })
     },
     statusCheck(val) {
@@ -229,6 +267,7 @@ export default {
       var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
       try {
         FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '原纱档案.xlsx')
+        this.initData()
         this.downloadLoading = false
       } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
       return wbout
@@ -243,8 +282,6 @@ export default {
       this.initData()
     },
     deleteData(id) {
-      // alert(id)
-
       var url = '/api/deleteYarn/' + id
       deleteRecord(url).then(res => {
         if (res.status !== 200) {
@@ -265,8 +302,19 @@ export default {
           this.$message.error(res.data.tipInfo)
         } else {
           this.editData = res.data.data
-          window.console.log(this.editData)
+          // alert(this.editData.id)
+          // var value = this.editData.tybz == true ? '是' : '否'
+          // this.$set(this.editData, 'value', value)
+          // alert(this.editData.value)
         }
+      })
+    },
+    searchData() {
+      window.console.log(this.queryInfo)
+      var url = baseUrl + '/api/getAllYarnArchives?'
+      var urlParam = toUrlParam(url, this.queryInfo)
+      searchBycCondition(urlParam).then(res => {
+        this.initAllData = res.data.data
       })
     }
   }
@@ -280,5 +328,21 @@ export default {
 
 .jingsha .el-dialog {
   width: 20%;
+}
+.searchCombo {
+  display: flex;
+}
+.searchHeader {
+  width:auto;
+    display: flex !important;
+    align-items: center;
+    background-color: #F5F7FA;
+    color: #909399;
+    vertical-align: middle;
+    display: table-cell;
+    position: relative;
+    border: 1px solid #DCDFE6;
+    padding: 0 20px;
+    white-space: nowrap;
 }
 </style>
