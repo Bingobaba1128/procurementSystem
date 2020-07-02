@@ -178,7 +178,30 @@ export const constantRoutes = [
       }
     ]
   },
-
+  {
+    path: '/gysda',
+    component: Layout,
+    children: [
+      {
+        path: '/供应商档案',
+        name: 'gysda',
+        component: () => import('@/views/gysda/gysda'),
+        meta: { title: '供应商档案', icon: 'tree' }
+      }
+    ]
+  },
+  {
+    path: '/kczzljz',
+    component: Layout,
+    children: [
+      {
+        path: '/原纱库存周转量基准',
+        name: 'kczzljz',
+        component: () => import('@/views/kczzljz/kczzljz'),
+        meta: { title: '原纱库存周转量基准', icon: 'tree' }
+      }
+    ]
+  },
   // {
   //   path: '/nested',
   //   component: Layout,

@@ -256,7 +256,7 @@
 
     <el-form :inline="true" class="demo-form-inline" style="margin-top: 20px">
       <el-row>
-        <el-col :span="16" class="text">
+        <el-col :span="18" class="text">
           <el-form-item label="备注" label-width="160px">
             <el-input v-model="param.note" placeholder="添加备注" />
           </el-form-item>
@@ -524,4 +524,5 @@ export default {
 .text >>> .el-form-item__content{
     width: 70%;
 }
+
 </style>
