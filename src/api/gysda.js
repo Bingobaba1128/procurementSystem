@@ -32,3 +32,11 @@ export function getOneRecord(data) {
     method: 'get'
   })
 }
+
+export function searchData(data) {
+  return request({
+    baseURL: baseUrl,
+    url: data,
+    method: 'get'
+  })
+}

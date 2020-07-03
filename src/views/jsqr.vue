@@ -56,7 +56,7 @@
         <el-table-column label="生产单号" prop="productionNo" />
         <el-table-column label="布编" prop="clothId" />
         <el-table-column label="浆长" prop="jiaoZhouLength" />
-        <el-table-column label="测试" prop="shaZhi" />
+        <!-- <el-table-column label="测试" prop="shaZhi" /> -->
 
         <el-table-column label="经纱" class="jingsha">
           <template slot-scope="scope">

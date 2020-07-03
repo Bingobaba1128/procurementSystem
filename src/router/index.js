@@ -109,18 +109,18 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/yshtjfpgl',
-    component: Layout,
-    children: [
-      {
-        path: '/原纱合同及发票管理',
-        name: 'yshtfp',
-        component: () => import('@/views/yshtfp'),
-        meta: { title: '原纱合同及发票管理', icon: 'tree' }
-      }
-    ]
-  },
+  // {
+  //   path: '/yshtjfpgl',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: '/原纱合同及发票管理',
+  //       name: 'yshtfp',
+  //       component: () => import('@/views/yshtfp'),
+  //       meta: { title: '原纱合同及发票管理', icon: 'tree' }
+  //     }
+  //   ]
+  // },
   {
     path: '/ysda',
     component: Layout,
@@ -199,6 +199,18 @@ export const constantRoutes = [
         name: 'kczzljz',
         component: () => import('@/views/kczzljz/kczzljz'),
         meta: { title: '原纱库存周转量基准', icon: 'tree' }
+      }
+    ]
+  },
+  {
+    path: '/yszlbz',
+    component: Layout,
+    children: [
+      {
+        path: '/原纱重量标准',
+        name: 'yszlbz',
+        component: () => import('@/views/yszlbz/yszlbz'),
+        meta: { title: '原纱重量标准', icon: 'tree' }
       }
     ]
   },

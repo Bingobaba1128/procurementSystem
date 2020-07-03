@@ -2,12 +2,12 @@
   <el-card>
     <!-- 检索区 -->
     <el-row :gutter="10">
-      <!-- <el-col :span="6" class="searchCombo">
+      <el-col :span="7" class="searchCombo">
         <div class="searchHeader">供应商名称</div>
-        <el-input v-model="queryInfo.shaZhi" placeholder="请填写供应商名称" clearable/>
-      </el-col> -->
+        <el-input v-model="queryInfo.Name" placeholder="请填写供应商名称" clearable />
+      </el-col>
       <el-col :span="2">
-        <el-button>检索</el-button>
+        <el-button type="success" @click="searchSupplier">检索</el-button>
       </el-col>
       <el-col :span="2">
         <el-button type="primary" @click="addNewRecord">新增</el-button>
@@ -54,7 +54,7 @@
 <script>
 import { baseUrl } from '@/api/apiUrl'
 import { toUrlParam } from '@/utils/toUrlParam'
-import { loadData, deleteRecord, getOneRecord } from '@/api/gysda'
+import { loadData, deleteRecord, getOneRecord, searchData } from '@/api/gysda'
 import addNewForm from '@/views/gysda/addNewForm'
 import editForm from '@/views/gysda/eidtNewForm'
 
@@ -68,7 +68,7 @@ export default {
     return {
       initAllData: '',
       queryInfo: {
-
+        Name: ''
       },
       dialogAddTableVisible: false,
       dialogEditTableVisible: false,
@@ -130,11 +130,9 @@ export default {
         }
       })
     },
-    searchData() {
-      window.console.log(this.queryInfo)
-      var url = baseUrl + '/api/getAllYarnArchives?'
-      var urlParam = toUrlParam(url, this.queryInfo)
-      searchBycCondition(urlParam).then(res => {
+    searchSupplier() {
+      var url = '/api/supplier/getTotalSupplier?supplierType=1&Name=' + this.queryInfo.Name
+      searchData(url).then(res => {
         this.initAllData = res.data.data
       })
     }

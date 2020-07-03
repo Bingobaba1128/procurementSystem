@@ -3,7 +3,7 @@
     <el-row :gutter="10">
 
       <!-- 产地选择 -->
-      <el-col :span="5" class="searchCombo">
+      <el-col :span="4" class="searchCombo">
         <div class="searchHeader">产地</div>
         <el-select v-model="queryInfo.chanDi" clearable placeholder="请选择">
           <el-option
@@ -16,22 +16,31 @@
       </el-col>
 
       <!-- 支数选择 -->
-      <el-col :span="5">
+      <el-col :span="4">
         <el-input v-model="queryInfo.shaZhi" clearable type="number">
           <template slot="prepend">支数</template>
         </el-input>
       </el-col>
 
       <!-- 名称 -->
-      <el-col :span="5">
+      <el-col :span="4">
         <el-input v-model="queryInfo.name" clearable>
           <template slot="prepend">名称</template>
         </el-input>
       </el-col>
 
       <!-- 实际价格 -->
-      <el-col :span="3">
-        <el-checkbox v-model="queryInfo.state">已设置周转量</el-checkbox>
+      <el-col :span="6" class="searchCombo">
+        <div class="searchHeader">已设置周转量</div>
+
+        <el-select v-model="queryInfo.state" clearable placeholder="请选择">
+          <el-option
+            v-for="item in zhouZhuanList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-col>
 
       <!-- 按钮筛选 -->
@@ -117,8 +126,15 @@ export default {
       multipleSelection: [],
       dialogEditTableVisible: false,
       dialogHistoryVisible: false,
-      chanDiList: ''
-
+      chanDiList: '',
+      zhouZhuanList: [
+        { value: '1',
+          label: '是' },
+        { value: '0',
+          label: '否' },
+        { value: '2',
+          label: '全部' }
+      ]
     }
   },
   created() {

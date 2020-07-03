@@ -9,11 +9,7 @@
         <el-table-column label="产地" prop="chanDi" />
         <el-table-column label="名称" prop="name" />
         <el-table-column label="型号" prop="xingHao" />
-        <el-table-column label="支数（折算支数）" prop="shaZhi" />
-
         <el-table-column label="采购价格（元/吨）" prop="cgjg" />
-        <el-table-column label="设置日期" prop="setDate" />
-        <el-table-column label="备注" prop="remarks" />
         <el-table-column label="记录人" prop="recordMan" />
 
         <el-table-column label="记录时间" prop="recordDate" />
