@@ -1,7 +1,7 @@
 <template>
   <el-card>
     <el-col :span="3">
-      <el-button type="primary" @click="addNewData">新增</el-button>
+      <el-button type="primary" plain @click="addNewData">新增</el-button>
     </el-col>
     <el-row style="margin-top: 40px">
       <el-table :data="initFormData" border stripe max-height="750">

@@ -42,9 +42,7 @@
 
       <!-- 按钮筛选 -->
       <el-col :span="3">
-        <el-button type="success" @click="searchData">筛选</el-button>
-        <!-- <el-button type="success" @click="getReplaceJs(jsData.jingsha,jsData.shaZhi)">筛选</el-button> -->
-
+        <el-button type="primary" icon="el-icon-search" @click="searchData">检索</el-button>
       </el-col>
     </el-row>
 
@@ -52,16 +50,16 @@
     <el-row>
       <el-table :data="jsData" border stripe>
         <el-table-column type="index" label="序号" />
-        <el-table-column label="下单日期" prop="doTime" />
-        <el-table-column label="生产单号" prop="productionNo" />
-        <el-table-column label="布编" prop="clothId" />
-        <el-table-column label="织长" prop="huiPiLength" />
-        <el-table-column label="织缩率" prop="zhiBuZhiChengLv">
+        <el-table-column label="下单日期" prop="doTime" width="120" />
+        <el-table-column label="生产单号" prop="productionNo" width="120" />
+        <el-table-column label="布编" prop="clothId" width="120" />
+        <el-table-column label="织长" prop="huiPiLength" width="120" />
+        <el-table-column label="织缩率" prop="zhiBuZhiChengLv" width="120">
           <template slot-scope="scope">
             {{ scope.row.zhiBuZhiChengLv }}%
           </template>
         </el-table-column>
-        <el-table-column label="纬纱">
+        <el-table-column label="纬纱" width="220">
           <template slot-scope="scope">
             <el-button type="text" @click="showReplaceJS(scope.row.jingSha,scope.row.shaZhi,scope.row.id)"> {{ scope.row.jingSha }} <i class="el-icon-arrow-down el-icon--right" /> </el-button>
             <el-dialog title="选择替换的纬纱" :visible.sync="dialogReplaceJSVisible">
@@ -85,29 +83,29 @@
             </el-dialog>
           </template>
         </el-table-column>
-        <el-table-column label="需用量" prop="xuYaoLiang" />
-        <el-table-column label="生产安排单备注" prop="remarks" />
-        <el-table-column label="计划轴期" prop="jiaoZhouDate">
+        <el-table-column label="需用量" prop="xuYaoLiang" width="120" />
+        <el-table-column label="生产安排单备注" prop="remarks" width="120" />
+        <el-table-column label="计划轴期" prop="jiaoZhouDate" width="120">
           <template slot-scope="scope">
             <p v-for="(item) in scope.row.jiaoZhouDate" :key="item" style="margin:0px">
               {{ item }}
             </p>
           </template>
         </el-table-column>
-        <el-table-column label="计划坯期" prop="huiPiDate">
+        <el-table-column label="计划坯期" prop="huiPiDate" width="120">
           <template slot-scope="scope">
             <p v-for="(item) in scope.row.huiPiDate" :key="item" style="margin:0px">
               {{ item }}
             </p>
           </template>
         </el-table-column>
-        <el-table-column label="参考百米用纬" prop="weiShaBmysl" />
+        <el-table-column label="参考百米用纬" prop="weiShaBmysl" width="120" />
 
-        <el-table-column label="客户" prop="clientName" />
-        <el-table-column label="业务员" prop="saleManName" />
-        <el-table-column label="备注">
+        <el-table-column label="客户" prop="clientName" width="120" />
+        <el-table-column label="业务员" prop="saleManName" width="120" />
+        <el-table-column label="备注" width="120">
           <template slot-scope="scope">
-            <el-button type="text" @click="editNote(scope.row.id)"> 备注 </el-button>
+            <el-button type="text" @click="editNote(scope.row.id)"> 编辑备注 </el-button>
             <el-dialog title="编辑您的备注" :visible.sync="dialogNoteVisible">
               已提交备注： {{ showCurrentNote }}
               <el-input
@@ -124,17 +122,17 @@
             </el-dialog>
           </template>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="120">
           <template slot-scope="scope">
-            <el-button type="success" @click="updateInfo(scope.row.id)">{{ formateUpload(scope.row.state) }}</el-button>
+            <el-button type="text" @click="updateInfo(scope.row.id)">{{ formateUpload(scope.row.state) }}</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="工艺变更申请">
+        <el-table-column label="工艺变更申请" width="120">
           <template slot-scope="scope">
             <el-button type="text" :disabled="scope.row.state | statusFilter" @click="showPdf(scope.row.id)"> PDF </el-button>
           </template>
         </el-table-column>
-        <el-table-column label="状态">
+        <el-table-column label="状态" width="120">
           <template slot-scope="scope">
             <span>{{ formatStatus(scope.row.state) }}</span>
           </template>

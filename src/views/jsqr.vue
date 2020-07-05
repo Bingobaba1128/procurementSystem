@@ -42,7 +42,7 @@
 
       <!-- 按钮筛选 -->
       <el-col :span="3">
-        <el-button type="success" @click="searchData">筛选</el-button>
+        <el-button type="primary" icon="el-icon-search" @click="searchData">检索</el-button>
         <!-- <el-button type="success" @click="getReplaceJs(jsData.jingsha,jsData.shaZhi)">筛选</el-button> -->
 
       </el-col>
@@ -52,13 +52,13 @@
     <el-row>
       <el-table :data="jsData" border stripe>
         <el-table-column type="index" label="序号" />
-        <el-table-column label="下单日期" prop="doTime" />
-        <el-table-column label="生产单号" prop="productionNo" />
-        <el-table-column label="布编" prop="clothId" />
-        <el-table-column label="浆长" prop="jiaoZhouLength" />
+        <el-table-column label="下单日期" prop="doTime" width="120" />
+        <el-table-column label="生产单号" prop="productionNo" width="120" />
+        <el-table-column label="布编" prop="clothId" width="120" />
+        <el-table-column label="浆长" prop="jiaoZhouLength" width="120" />
         <!-- <el-table-column label="测试" prop="shaZhi" /> -->
 
-        <el-table-column label="经纱" class="jingsha">
+        <el-table-column label="经纱" class="jingsha" width="160">
           <template slot-scope="scope">
             <el-button type="text" @click="showReplaceJS(scope.row.jingSha,scope.row.shaZhi,scope.row.id)"> {{ scope.row.jingSha }} <i class="el-icon-arrow-down el-icon--right" /> </el-button>
             <el-dialog title="选择替换的经纱" :visible.sync="dialogReplaceJSVisible">
@@ -82,18 +82,18 @@
             </el-dialog>
           </template>
         </el-table-column>
-        <el-table-column label="根数" prop="touFen" />
+        <el-table-column label="根数" prop="touFen" width="120" />
 
-        <el-table-column label="需用量" prop="xuYaoLiang" />
-        <el-table-column label="生产安排单备注" prop="remarks" />
-        <el-table-column label="计划轴期" prop="jiaoZhouDate">
+        <el-table-column label="需用量" prop="xuYaoLiang" width="120" />
+        <el-table-column label="生产安排单备注" prop="remarks" width="120" />
+        <el-table-column label="计划轴期" prop="jiaoZhouDate" width="120">
           <template slot-scope="scope">
             <p v-for="(item) in scope.row.jiaoZhouDate" :key="item" style="margin:0px">
               {{ item }}
             </p>
           </template>
         </el-table-column>
-        <el-table-column label="计划坯期" prop="huiPiDate">
+        <el-table-column label="计划坯期" prop="huiPiDate" width="120">
           <template slot-scope="scope">
             <p v-for="(item) in scope.row.huiPiDate" :key="item" style="margin:0px">
               {{ item }}
@@ -101,11 +101,11 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="客户" prop="clientName" />
-        <el-table-column label="业务员" prop="saleManName" />
-        <el-table-column label="备注">
+        <el-table-column label="客户" prop="clientName" width="120" />
+        <el-table-column label="业务员" prop="saleManName" width="120" />
+        <el-table-column label="备注" width="120">
           <template slot-scope="scope">
-            <el-button type="text" @click="editNote(scope.row.id)"> 备注 </el-button>
+            <el-button type="text" @click="editNote(scope.row.id)"> 编辑备注 </el-button>
             <el-dialog title="编辑您的备注" :visible.sync="dialogNoteVisible">
               已提交备注： {{ showCurrentNote }}
               <el-input
@@ -122,12 +122,12 @@
             </el-dialog>
           </template>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="120">
           <template slot-scope="scope">
-            <el-button type="success" @click="updateInfo(scope.row.id)">{{ formateUpload(scope.row.state) }}</el-button>
+            <el-button type="text" @click="updateInfo(scope.row.id)">{{ formateUpload(scope.row.state) }}</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="工艺变更申请">
+        <el-table-column label="工艺变更申请" width="120">
           <template slot-scope="scope">
             <el-button type="text" if-v="" :disabled="scope.row.state | statusFilter" @click="showPdf(scope.row.id)"> PDF </el-button>
           </template>

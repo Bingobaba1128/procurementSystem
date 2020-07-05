@@ -6,11 +6,11 @@
         <div class="searchHeader">供应商名称</div>
         <el-input v-model="queryInfo.Name" placeholder="请填写供应商名称" clearable />
       </el-col>
-      <el-col :span="2">
-        <el-button type="success" @click="searchSupplier">检索</el-button>
+      <el-col :span="3">
+        <el-button type="primary" icon="el-icon-search" @click="searchSupplier">检索</el-button>
       </el-col>
-      <el-col :span="2">
-        <el-button type="primary" @click="addNewRecord">新增</el-button>
+      <el-col :span="3">
+        <el-button type="primary" plain @click="addNewRecord">新增</el-button>
       </el-col>
     </el-row>
 

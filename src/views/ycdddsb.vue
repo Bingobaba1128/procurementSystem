@@ -4,7 +4,7 @@
     <el-row :gutter="15">
 
       <!-- 备纱单日期 -->
-      <el-col :lg="{span:4}" class="searchCombo">
+      <el-col :lg="{span:7}" class="searchCombo">
         <div class="searchHeader">备纱单日期</div>
         <el-date-picker
           v-model="queryInfo.beiShaDate"
@@ -15,7 +15,7 @@
       </el-col>
 
       <!-- 状态 -->
-      <el-col :lg="{span:4}" class="searchCombo">
+      <el-col :lg="{span:5}" class="searchCombo">
         <div class="searchHeader">状态</div>
         <el-select v-model="queryInfo.state" placeholder="请选择">
           <el-option
@@ -28,7 +28,7 @@
       </el-col>
       <!-- 按钮筛选 -->
       <el-col :lg="{span:6}">
-        <el-button type="success" @click="searchData">筛选</el-button>
+        <el-button type="primary" icon="el-icon-search" @click="searchData">检索</el-button>
       </el-col>
       <!-- <el-col :lg="{span:2}" class="searchCombo">
         <el-button type="success" icon="el-icon-download" @click="exportExcel">导出</el-button>
@@ -73,40 +73,43 @@
           />
         </el-table-column>
         <el-table-column style="text-align:center" label="备纱信息" width="1200">
-          <el-table-column label="经纱/纬纱" prop="jingOrWei">
+          <el-table-column label="经纱/纬纱" prop="jingOrWei" width="120">
             <template slot-scope="scope">
               <span>{{ formatStatus(scope.row.jingOrWei) }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="经纬纱名称" prop="name" />
-          <el-table-column label="长度">
+          <el-table-column label="经纬纱名称" prop="name" width="120" />
+          <el-table-column label="长度" width="120">
             <template slot-scope="scope">
               <el-input
                 v-model="scope.row.length"
                 placeholder="请输入内容"
+                type="number"
                 clearable
               />
             </template>
           </el-table-column>
-          <el-table-column label="百米用量" prop="yongLiangBybm">
+          <el-table-column label="百米用量" prop="yongLiangBybm" width="120">
             <template slot-scope="scope">
               <el-input
                 v-model="scope.row.yongLiangBybm"
                 placeholder="请输入内容"
+                type="number"
                 clearable
               />
             </template>
           </el-table-column>
-          <el-table-column label="预计备纱" prop="yuJiBeiSha">
+          <el-table-column label="预计备纱" prop="yuJiBeiSha" width="120">
             <template slot-scope="scope">
               <el-input
                 v-model="scope.row.yuJiBeiSha"
                 placeholder="请输入内容"
+                type="number"
                 clearable
               />
             </template>
           </el-table-column>
-          <el-table-column label="备纱明细" prop="beiSahRemarks">
+          <el-table-column label="备纱明细" prop="beiSahRemarks" width="180">
             <template slot-scope="scope">
               <el-input
                 v-model="scope.row.beiSahRemarks"
@@ -115,7 +118,7 @@
               />
             </template>
           </el-table-column>
-          <el-table-column label="备注">
+          <el-table-column label="备注" width="180">
             <template slot-scope="scope">
               <el-input
                 v-model="scope.row.remarks"
@@ -127,7 +130,7 @@
 
         </el-table-column>
 
-        <el-table-column label="状态">
+        <el-table-column label="状态" width="120">
           <template slot-scope="scope">
             <span>{{ formatStatus1(scope.row.state) }}</span>
           </template>
@@ -238,13 +241,18 @@ export default {
       return data
     },
     searchData() {
-      var url = baseUrl + '/LoadYuCeDingDan?'
-      var urlParam = toUrlParam(url, this.queryInfo)
-      // window.console.log(urlParam)
-      searchData(urlParam).then(res => {
-        this.initOData = res.data.data
-        this.initData = this.mergeTableRow(this.initOData, ['yuCeNo', 'beiShaDate', 'yuCeDate', 'variety', 'yuCeQuanity', 'yeWuZu', 'state'])
-      })
+      window.console.log(this.queryInfo)
+      if (this.queryInfo.beiShaDate == '' || this.queryInfo.beiShaDate == null) {
+        this.$message.error('请输入备纱单日期')
+      } {
+        var url = baseUrl + '/LoadYuCeDingDan?'
+        var urlParam = toUrlParam(url, this.queryInfo)
+        // window.console.log(urlParam)
+        searchData(urlParam).then(res => {
+          this.initOData = res.data.data
+          this.initData = this.mergeTableRow(this.initOData, ['yuCeNo', 'beiShaDate', 'yuCeDate', 'variety', 'yuCeQuanity', 'yeWuZu', 'state'])
+        })
+      }
     },
     formatStatus1(val) {
       return val == 0 ? '未安排' : val == 1 ? '已安排' : ''

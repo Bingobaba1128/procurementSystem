@@ -30,7 +30,7 @@
     <el-row :gutter="15" style="margin-top:20px">
 
       <!-- 下单日期 -->
-      <el-col :lg="{span:6}" class="searchCombo">
+      <el-col :lg="{span:7}" class="searchCombo">
         <div class="searchHeader">下单日期</div>
         <el-date-picker
           v-model="queryInfo.orderDate"
@@ -54,7 +54,7 @@
         </el-select>
       </el-col>
       <!-- 购纱计划 -->
-      <el-col :lg="{span:4}" class="searchCombo">
+      <el-col :lg="{span:5}" class="searchCombo">
         <div class="searchHeader">购纱计划</div>
         <el-select v-model="queryInfo.queRenComplete" placeholder="请选择">
           <el-option
@@ -89,22 +89,27 @@
       </el-col> -->
       <!-- 检索按钮 -->
       <el-col :lg="{span:2}" class="searchCombo">
-        <el-button type="success" icon="el-icon-search" @click="print">检索</el-button>
+        <el-button type="primary" icon="el-icon-search" @click="searchData">检索</el-button>
       </el-col>
-      <el-col :lg="{span:2}" class="searchCombo">
-        <el-button type="success" :loading="downloadLoading" icon="el-icon-download" @click="exportExcel">导出</el-button>
-      </el-col>
-      <el-col :lg="{span:4}" class="searchCombo">
+
+      <el-col :lg="{span:4}" class="searchCombo" style="margin-left: 20px">
         <div style="display:flex; flex-direction:column; width:100%">
           <div class="searchHeader">需用量合计：{{ totalNeeded }}</div>
           <div class="searchHeader">订购量合计：{{ totalOrderAmount }}</div>
         </div>
       </el-col>
     </el-row>
-
+    <el-row style="margin-top: 20px">
+      <el-col :lg="{span:2}" class="searchCombo">
+        <el-button type="primary" :loading="downloadLoading" icon="el-icon-download" plain @click="exportExcel">导出</el-button>
+      </el-col>
+      <el-col :lg="{span:2}" class="searchCombo">
+        <el-button type="primary" plain @click="clickToShow">批量保存</el-button>
+      </el-col>
+    </el-row>
     <!-- 列表区 -->
     <el-row>
-      <el-table id="out-table" ref="multipleTable" :data="getInitData" border stripe tooltip-effect="dark" :span-method="objectSpanMethod" @selection-change="handleSelectionChange">
+      <el-table ref="multipleTable" :data="getInitData" border stripe tooltip-effect="dark" :span-method="objectSpanMethod" @selection-change="handleSelectionChange">
 
         <el-table-column type="index" label="序号" />
 
@@ -149,9 +154,9 @@
           </el-table-column>
           <el-table-column label="经纬纱名称" prop="jingSha" />
 
-          <el-table-column label="需用量(KG)" prop="" width="160">
+          <el-table-column label="需用量(KG)" prop="xuYaoLiang" width="160">
             <template slot-scope="scope">
-              <input v-model="scope.row.xuYaoLiang" placeholder="scope.row.xuYaoLiang">
+              <input v-model="scope.row.xuYaoLiang" placeholder="scope.row.xuYaoLiang" type="number">
             </template>
           </el-table-column>
 
@@ -159,9 +164,9 @@
           <el-table-column label="最低周转量" prop="zhouZhuanLiang" />
           <el-table-column label="消化量(KG)" prop="xiaoHuaLiang" />
           <el-table-column label="总需量" prop="totalXuYaoLiang" />
-          <el-table-column label="订购量(KG)" prop="">
+          <el-table-column label="订购量(KG)" prop="dingGouLiang">
             <template slot-scope="scope">
-              <input v-model="scope.row.dingGouLiang" placeholder="0">
+              <input v-model="scope.row.dingGouLiang" placeholder="0" type="number">
             </template>
           </el-table-column>
           <el-table-column label="备纱情况" prop="beiShaQingKuang" />
@@ -191,8 +196,46 @@
         </el-table-column>
       </el-table>
 
+      <el-table id="out-table" ref="multipleTable" style="display:none" :data="getInitData" border stripe tooltip-effect="dark" :span-method="objectSpanMethod" @selection-change="handleSelectionChange">
+
+        <el-table-column type="index" label="序号" />
+        <el-table-column label="下单日期" prop="doTime" />
+        <el-table-column label="布编" prop="clothId" />
+        <el-table-column label="浆纱单号" prop="productionNo" />
+        <el-table-column label="浆长(米)" prop="jiaoZhouLength" />
+        <el-table-column label="坯布长(米)" prop="huiPiLength" />
+        <el-table-column label="生产安排单" prop="produceRequestNo" />
+        <el-table-column label="浆染厂" prop="jiangRanChang" />
+        <el-table-column label="织造厂" prop="zhiZaoChang" />
+        <el-table-column label="交轴日期" prop="jiaoZhouDate" width="100" />
+        <el-table-column label="坯布交期" prop="huiPiDate" width="100" />
+        <el-table-column label="成品交期" prop="chengPinDate" width="100" />
+        <el-table-column label="经纬纱信息" width="1900">
+          <el-table-column label="经/纬纱">
+            <template slot-scope="scope">
+              <span>{{ formatStatus(scope.row.jingOrWei) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="经纬纱名称" prop="jingSha" />
+          <el-table-column label="需用量(KG)" prop="xuYaoLiang" width="160" />
+          <el-table-column label="库存(KG)" prop="kuCun" />
+          <el-table-column label="最低周转量" prop="zhouZhuanLiang" />
+          <el-table-column label="消化量(KG)" prop="xiaoHuaLiang" />
+          <el-table-column label="总需量" prop="totalXuYaoLiang" />
+          <el-table-column label="订购量(KG)" prop="dingGouLiang" />
+          <el-table-column label="备纱情况" prop="beiShaQingKuang" />
+          <el-table-column label="证书情况" prop="zhengShuQingKuang" />
+          <el-table-column label="纱期" prop="shaQi" />
+          <el-table-column label="备注" prop="remarks" width="350" />
+          <el-table-column label="购纱计划状态" prop="queRenComplete" width="350">
+            <template slot-scope="scope">
+              <span>{{ formatConfirmStatus(scope.row.queRenComplete) }}</span>
+            </template>
+          </el-table-column>
+        </el-table-column>
+      </el-table>
+
     </el-row>
-    <el-button type="success" @click="clickToShow()">确定保存</el-button>
   </el-card>
 </template>
 
@@ -288,10 +331,6 @@ export default {
         this.getInitOData = res.data.data
         // 合并的地方
         this.getInitData = this.mergeTableRow(this.getInitOData, ['doTime', 'clothId', 'productionNo', 'jiaoZhouLength', 'huiPiLength', 'produceRequestNo', 'jiangRanChang', 'zhiZaoChang', 'jiaoZhouDate', 'huiPiDate', 'chengPinDate'])
-
-        // window.console.log('dengke pass to me')
-
-        // window.console.log(this.getInitData)
       })
     },
     // 给合并提供样式
@@ -356,20 +395,22 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val
     },
-    print() {
-      window.console.log(this.queryInfo)
-      this.initData(this.queryInfo)
-      searchTotalAmount()
-      searchTotalAmount().then(res => {
-        this.totalNeeded = res.data.data.totalXuYaoLiang
-        this.totalOrderAmount = res.data.data.totalDingGouLiang
-        window.console.log(this.totalNeeded)
-        window.console.log(res.data.data)
-      })
+    searchData() {
+      // window.console.log(this.queryInfo)
+      if (this.queryInfo.orderDate == '') {
+        this.$message.error('请添加下单日期')
+      } else {
+        this.initData(this.queryInfo)
+        // searchTotalAmount()
+        searchTotalAmount().then(res => {
+          this.totalNeeded = res.data.data.totalXuYaoLiang
+          this.totalOrderAmount = res.data.data.totalDingGouLiang
+          window.console.log(this.totalNeeded)
+          window.console.log(res.data.data)
+        })
+      }
     },
     clickToShow() {
-      window.console.log('dengkeeeeeeeeeeee')
-      window.console.log(this.multipleSelection)
       updatePlanData(this.multipleSelection).then(res => {
         if (res.data.code !== 200) {
           this.$message.error(res.data.msg)

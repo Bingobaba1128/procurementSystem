@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import baseUrl from '@/api/apiUrl'
+import { baseUrl } from '@/api/apiUrl'
 
 export function loadWSData(data) {
   return request({

@@ -46,16 +46,16 @@
 
       <!-- 按钮筛选 -->
       <el-col :span="2">
-        <el-button type="success" @click="searchData">检索</el-button>
+        <el-button type="primary" icon="el-icon-search" @click="searchData">检索</el-button>
       </el-col>
     </el-row>
 
     <el-row :gutter="10" style="margin-top: 20px">
       <el-col :span="3" style="margin-bottom: 20px">
-        <el-button type="primary" @click="editSelected">批量调整</el-button>
+        <el-button type="primary" plain @click="editSelected">批量调整</el-button>
       </el-col>
       <el-col :span="3" style="margin-bottom: 20px">
-        <el-button type="primary" @click="exportExcel">导出Excel</el-button>
+        <el-button type="primary" plain @click="exportExcel">导出Excel</el-button>
       </el-col>
       <el-dialog v-if="dialogEditTableVisible" title="数据修改" :visible.sync="dialogEditTableVisible" width="95%">
         <editSelected :param="multipleSelection" @closeDialog="closeDialog" />
@@ -178,17 +178,42 @@ export default {
       this.dialogEditTableVisible = false
       this.initData()
     },
+    // exportExcel() {
+    //   this.downloadLoading = true
+    //   /* generate workbook object from table */
+    //   var wb = XLSX.utils.table_to_book(document.querySelector('#out-table'))
+    //   /* get binary string as output */
+    //   var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
+    //   try {
+    //     FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '原纱定价表.xlsx')
+    //     this.downloadLoading = false
+    //   } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
+    //   return wbout
+    // }
     exportExcel() {
       this.downloadLoading = true
-      /* generate workbook object from table */
-      var wb = XLSX.utils.table_to_book(document.querySelector('#out-table'))
-      /* get binary string as output */
-      var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
-      try {
-        FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '原纱定价表.xlsx')
+      require.ensure([], () => {
+        const { export_json_to_excel } = require('@/vendor/Export2Excel')
+        const tHeader = ['产地', '名称', '属性', '型号', '支数（折算支数）', '实际价格（元/吨）', '核算价格（元/吨）', '设置日期', '备注']
+        const filterVal = ['chanDi', 'name', 'shuXing', 'xingHao', 'shaZhi', 'sjjg', 'hsjg', 'setDate', 'sjjgbz']
+        var list = ''
+        if (this.multipleSelection.length == 0) {
+          list = this.searchResult
+        } else {
+          list = this.multipleSelection
+        }
+        const data = this.formatJson(filterVal, list)
+        export_json_to_excel(tHeader, data, '原纱定价表')
         this.downloadLoading = false
-      } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
-      return wbout
+      })
+    },
+    formatJson(filterVal, list) {
+      return list.map(v => {
+        return filterVal.map(j => {
+          return v[j]
+        })
+      }
+      )
     }
   }
 }

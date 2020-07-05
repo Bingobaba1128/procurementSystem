@@ -93,17 +93,17 @@
         </el-select>
       </el-col>
       <el-col :span="2">
-        <el-button type="success" @click="searchData">检索</el-button>
+        <el-button type="primary" icon="el-icon-search" @click="searchData">检索</el-button>
       </el-col>
     </el-row>
 
     <!-- 列表区 -->
     <el-row style="margin-bottom: 20px; margin-top: 20px">
       <el-col :span="2">
-        <el-button type="primary" @click="addNewRecord">新增</el-button>
+        <el-button type="primary" plain @click="addNewRecord">新增</el-button>
       </el-col>
       <el-col :span="2">
-        <el-button type="primary" @click="exportExcel">导出Excel</el-button>
+        <el-button type="primary" plain @click="handleExport">导出Excel</el-button>
       </el-col>
     </el-row>
     <el-dialog v-if="dialogAddTableVisible" title="原纱档案（新增）" :visible.sync="dialogAddTableVisible" width="95%">
@@ -136,16 +136,8 @@
           </template>
         </el-table-column>
         <el-table-column label="备注" prop="note" width="160" />
-        <!-- <el-table-column label="工艺停用" prop="gytybz">
-          <template slot-scope="scope">
-            {{ statusCheck(scope.row.gytybz) }}
-          </template>
-        </el-table-column> -->
-        <el-table-column label="停用标志" prop="tybz">
-          <template slot-scope="scope">
-            {{ statusCheck(scope.row.tybz) }}
-          </template>
-        </el-table-column>
+
+        <el-table-column label="停用标志" prop="tybz" />
         <el-table-column label="单纱强力标准" prop="dsqlbz" />
         <el-table-column label="最低单纱强力标准" prop="zddsqlbz" />
         <el-table-column label="强力CV标准" prop="qlcvbz" />
@@ -175,9 +167,6 @@ import editForm from '@/views/ysda/editForm'
 import { baseUrl } from '@/api/apiUrl'
 import { toUrlParam } from '@/utils/toUrlParam'
 
-import FileSaver from 'file-saver'
-import XLSX from 'xlsx'
-
 export default {
   components: {
     addNewForm,
@@ -200,12 +189,16 @@ export default {
       },
       options: [
         {
-          value: true,
+          value: '是',
           label: '是'
         },
         {
-          value: false,
+          value: '否',
           label: '否'
+        },
+        {
+          value: '全部',
+          label: '全部'
         }
       ],
       fenLeiList: [
@@ -244,7 +237,9 @@ export default {
     initData() {
       getAllYarnArchives().then(res => {
         this.initAllData = res.data.data
-        // window.console.log(this.initAllData)
+        for (var i = 0; i < this.initAllData.length; i++) {
+          this.$set(this.initAllData[i], 'tybz', this.statusCheck(this.initAllData[i].tybz))
+        }
       })
       getSettingList('getAllYarnYanSeName').then(res => {
         this.yanSeList = res.data.data
@@ -259,18 +254,42 @@ export default {
     statusCheck(val) {
       return val == false ? '否' : '是'
     },
-    exportExcel() {
+    // exportExcel() {
+    //   this.downloadLoading = true
+    //   /* generate workbook object from table */
+
+    //   var wb = XLSX.utils.table_to_book(document.querySelector('#out-table'))
+    //   window.console.log(wb)
+
+    //   /* get binary string as output */
+    //   var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
+    //   try {
+    //     FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '原纱档案.xlsx')
+    //     // this.initData()
+    //     this.downloadLoading = false
+    //   } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
+    //   return wbout
+    // },
+
+    handleExport() {
       this.downloadLoading = true
-      /* generate workbook object from table */
-      var wb = XLSX.utils.table_to_book(document.querySelector('#out-table'))
-      /* get binary string as output */
-      var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
-      try {
-        FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '原纱档案.xlsx')
-        this.initData()
+      require.ensure([], () => {
+        const { export_json_to_excel } = require('@/vendor/Export2Excel')
+        const tHeader = ['产地', '类型', '名称', '属性', '型号', '支数（折算支数）', '核算价格（万元/吨）', '成分', '备注', '停用标志', '单纱强力标准', '最低单纱强力标准', '强力CV标准', '支偏上限标准', '捻度标准', '捻系数标准', '断裂伸长率标准', '条干（CV）标准', '存货编码']
+        const filterVal = ['chanDi', 'fl', 'name', 'shuXing', 'xingHao', 'shaZhi', 'hsjg', 'chengFen', 'note', 'tybz', 'dsqlbz', 'zddsqlbz', 'qlcvbz', 'zpsbz', 'ndbz', 'nxsbz', 'dlsclbz', 'tgbz', 'chbm']
+        const list = this.initAllData
+        const data = this.formatJson(filterVal, list)
+        export_json_to_excel(tHeader, data, '原纱档案')
         this.downloadLoading = false
-      } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
-      return wbout
+      })
+    },
+    formatJson(filterVal, list) {
+      return list.map(v => {
+        return filterVal.map(j => {
+          return v[j]
+        })
+      }
+      )
     },
     addNewRecord() {
       this.dialogAddTableVisible = true

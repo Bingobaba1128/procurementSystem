@@ -4,7 +4,7 @@
 
       <!-- 日期选择 -->
 
-      <el-col :lg="{span:5}" class="searchCombo">
+      <el-col :lg="{span:7}" class="searchCombo">
         <div class="searchHeader">日期</div>
         <el-date-picker
           v-model="queryInfo.orderDate"
@@ -17,14 +17,14 @@
       </el-col>
 
       <!-- 单号选择 -->
-      <el-col :span="4">
+      <el-col :span="5">
         <el-input v-model="queryInfo.yuanShaPurchaseNo" placeholder="请输入单号" clearable>
           <template slot="prepend">单号</template>
         </el-input>
       </el-col>
 
       <!-- 供应商选择 -->
-      <el-col :span="4">
+      <el-col :span="5">
         <el-input v-model="queryInfo.name" placeholder="请选择" clearable>
           <template slot="prepend">供应商</template>
         </el-input>
@@ -32,7 +32,7 @@
 
       <!-- 信息条件筛选 -->
 
-      <el-col :lg="{span:4}" class="searchCombo">
+      <el-col :lg="{span:5}" class="searchCombo">
         <div class="searchHeader">信息条件</div>
         <el-select v-model="queryInfo.state" clearable placeholder="请选择">
           <el-option
@@ -46,12 +46,9 @@
 
       <!-- 按钮筛选 -->
       <el-col :span="2">
-        <el-button type="success" @click="searchData">检索</el-button>
+        <el-button type="primary" icon="el-icon-search" @click="searchData">检索</el-button>
       </el-col>
-      <!-- 新增 -->
-      <el-col :span="2">
-        <el-button type="primary" @click="addNewYS">新增</el-button>
-      </el-col>
+
       <el-dialog v-if="dialogAddNewTableVisible" title="原纱订货单（申请）" :visible.sync="dialogAddNewTableVisible" width="95%">
         <addNewForm @closeDialog="closeDialog" />
       </el-dialog>
@@ -59,16 +56,23 @@
         <editTable :param="editOriginData" @closeDialog="closeDialog" />
       </el-dialog>
 
-      <!-- 计划新增 -->
-      <el-col :span="2">
-        <el-button type="primary" @click="addPlanNewForm">计划新增</el-button>
-      </el-col>
       <el-dialog v-if="dialogAddPlanNewTableVisible" title="原纱订货单（计划申请）" :visible.sync="dialogAddPlanNewTableVisible" width="95%">
         <addPlanNew @closeDialog="closeDialog" />
       </el-dialog>
       <el-dialog v-if="dialogEditPlanTableVisible" title="计划原纱订货单（修改）" :visible.sync="dialogEditPlanTableVisible" width="95%">
         <editPlanTable :param="editOriginData" @closeDialog="closeDialog" />
       </el-dialog>
+    </el-row>
+
+    <el-row style="margin-top: 20px">
+      <!-- 新增 -->
+      <el-col :span="2">
+        <el-button type="primary" plain @click="addNewYS">新增</el-button>
+      </el-col>
+      <!-- 计划新增 -->
+      <el-col :span="2">
+        <el-button type="primary" plain @click="addPlanNewForm">计划新增</el-button>
+      </el-col>
     </el-row>
 
     <el-row>

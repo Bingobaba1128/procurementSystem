@@ -171,10 +171,10 @@ export const constantRoutes = [
     component: Layout,
     children: [
       {
-        path: '/原纱定价表',
+        path: '/原纱定单表',
         name: 'ysdjb',
         component: () => import('@/views/ysdjd/index'),
-        meta: { title: '原纱定价表', icon: 'tree' }
+        meta: { title: '原纱定单表', icon: 'tree' }
       }
     ]
   },

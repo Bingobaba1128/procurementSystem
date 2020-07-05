@@ -84,11 +84,11 @@
         <el-input v-model="queryInfo.meiBaoGeShu2" placeholder="请输入最高个数" clearable type="number" />
 
       </el-col>
-      <el-col :span="2">
-        <el-button type="success" @click="searchData">检索</el-button>
+      <el-col :span="3">
+        <el-button type="primary" icon="el-icon-search" @click="searchData">检索</el-button>
       </el-col>
-      <el-col :span="2">
-        <el-button type="success" @click="saveToServe">批量存入</el-button>
+      <el-col :span="3">
+        <el-button type="primary" plain @click="saveToServe">批量存入</el-button>
       </el-col>
     </el-row>
 
