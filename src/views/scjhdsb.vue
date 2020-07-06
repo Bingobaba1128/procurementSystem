@@ -321,16 +321,23 @@ export default {
 
   created() {
     this.DateFormat()
-    this.initData(this.pageSetting)
+    // this.initData(this.pageSetting)
   },
   methods: {
     initData(setting) {
       var url = baseUrl + '/LoadPlanList?'
       var urlParam = toUrlParam(url, setting)
       loadSJDSBData(urlParam).then(res => {
-        this.getInitOData = res.data.data
+        if(res.data.code !== 200){
+          this.$message.error(res.data.msg)
+        } else{
+       this.getInitOData = res.data.data
+          this.totalNeeded = this.getInitOData[0].xyl
+          this.totalOrderAmount = this.getInitOData[0].dgl
         // 合并的地方
         this.getInitData = this.mergeTableRow(this.getInitOData, ['doTime', 'clothId', 'productionNo', 'jiaoZhouLength', 'huiPiLength', 'produceRequestNo', 'jiangRanChang', 'zhiZaoChang', 'jiaoZhouDate', 'huiPiDate', 'chengPinDate'])
+        }
+ 
       })
     },
     // 给合并提供样式
@@ -361,7 +368,7 @@ export default {
               colspan: 1
             }
           }
-          window.console.log(v[m + '-span'])
+          // window.console.log(v[m + '-span'])
           return v
         })
       })
@@ -402,12 +409,10 @@ export default {
       } else {
         this.initData(this.queryInfo)
         // searchTotalAmount()
-        searchTotalAmount().then(res => {
-          this.totalNeeded = res.data.data.totalXuYaoLiang
-          this.totalOrderAmount = res.data.data.totalDingGouLiang
-          window.console.log(this.totalNeeded)
-          window.console.log(res.data.data)
-        })
+        // searchTotalAmount().then(res => {
+        //   this.totalNeeded = res.data.data.totalXuYaoLiang
+        //   this.totalOrderAmount = res.data.data.totalDingGouLiang
+        // })
       }
     },
     clickToShow() {
@@ -416,7 +421,7 @@ export default {
           this.$message.error(res.data.msg)
         } else {
           this.$message.success(res.data.msg)
-          this.initData(this.pageSetting)
+          this.initData(this.queryInfo)
         }
       })
     },
@@ -442,80 +447,6 @@ export default {
       } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
       return wbout
     }
-    // handleDownload() {
-    //   this.downloadLoading = true
-    //   import('@/vendor/Export2Excel').then(excel => {
-    //     const multiHeader = [
-    //       [
-    //         '序号',
-    //         '下单日期',
-    //         '布编',
-    //         '浆纱单号',
-    //         '浆长(米)',
-    //         '坯布长',
-    //         '生产安排单',
-    //         '浆染厂',
-    //         '织造厂',
-    //         '交轴日期',
-    //         '坯布交期',
-    //         '成品交期',
-    //         '',
-    //         '',
-    //         '',
-    //         '',
-    //         '',
-    //         '',
-    //         '',
-    //         '',
-    //         '',
-    //         '',
-    //         '',
-    //         ''
-    //       ]
-    //     ]
-    //     const multiHeader2 = [
-    //       [
-    //         '',
-    //         '',
-    //         '',
-    //         '',
-    //         '',
-    //         '',
-    //         '',
-    //         '',
-    //         '',
-    //         '',
-    //         '',
-    //         '',
-    //         '经/纬纱',
-    //         '经纬纱名称',
-    //         '需用量（Kg）',
-    //         '库存（Kg）',
-    //         '最低周转量',
-    //         '消化量（Kg）',
-    //         '总需量',
-    //         '订购量（Kg）',
-    //         '备纱情况',
-    //         '证书情况',
-    //         '纱期',
-    //         '备注',
-    //         '购纱计划状态'
-    //       ]
-    //     ]
-
-    //     const data = this.getInitData
-
-    //     excel.export_json_to_excel({
-
-    //       multiHeader,
-    //       header: multiHeader2,
-    //       data,
-    //       // merges,
-    //       filename: 'table-list'
-    //     })
-    //     this.downloadLoading = false
-    //   })
-    // }
   }
 }
 </script>

@@ -70,7 +70,7 @@
                       :key="item.id"
                       :label="item.name"
                       :value="item.name"
-                      @click.native="onChange(item.gongYingShang)"
+                      @click.native="onChange(item.gongYingShang,item.yarnId)"
                     />
                   </el-select>
                 </el-form-item>
@@ -303,10 +303,13 @@ export default {
       this.dialogReplaceJSVisible = false
     },
     //
-    onChange(val) {
+    onChange(val, id) {
       for (var i = 0; i < this.jsData.length; i++) {
         if (this.jsData[i].id === this.selectedID) {
           this.$set(this.jsData[i], 'jingShaDangAnD', val)
+          
+          this.$set(this.jsData[i], 'yarnIdD', id)
+
         }
       }
     },

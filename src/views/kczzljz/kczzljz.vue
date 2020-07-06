@@ -97,11 +97,8 @@
 import { loadData, deleteOData } from '@/api/kczzljz'
 import { toUrlParam } from '@/utils/toUrlParam'
 import editSelected from '@/views/kczzljz/editSelected'
-import priceHistory from '@/views/ysdjd/priceHistory'
+import priceHistory from '@/views/ysdjb/priceHistory'
 import { getSettingList } from '@/api/ysda'
-
-import FileSaver from 'file-saver'
-import XLSX from 'xlsx'
 
 export default {
   components: {

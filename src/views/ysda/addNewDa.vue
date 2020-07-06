@@ -16,7 +16,7 @@
 
         <el-col :span="8">
           <el-form-item label="核算价格（万元/吨）" prop="hsjg" label-width="160px">
-            <el-input v-model="queryParam.hsjg" placeholder="添加成分" type="number" />
+            <el-input v-model="queryParam.hsjg" placeholder="添加价格" type="number" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -219,15 +219,7 @@
     </el-form>
     <el-form :inline="true" :rules="rules" :model="queryParam" class="demo-form-inline">
       <el-row>
-        <el-col :span="8">
-
-          <el-form-item label="条干（CV）（标准）" label-width="160px">
-            <el-input v-model="queryParam.tgbz" placeholder="添加条干" type="number" />
-
-          </el-form-item>
-        </el-col>
-
-        <el-col :span="16">
+        <el-col :span="24">
           <el-checkbox v-model="queryParam.tzsbz">特种纱</el-checkbox>
           <el-checkbox v-model="queryParam.gpmbz">高配棉</el-checkbox>
           <el-checkbox v-model="queryParam.oabz">OA</el-checkbox>
@@ -242,6 +234,27 @@
           <el-checkbox v-model="queryParam.qtsbz">全天丝</el-checkbox>
           <el-checkbox v-model="queryParam.qtbz">其他</el-checkbox>
         </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="8">
+          <el-form-item label="条干（CV）（标准）" label-width="160px">
+            <el-input v-model="queryParam.tgbz" placeholder="添加条干" type="number" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="供应商" label-width="160px">
+            <el-select v-model="queryParam.gysName" placeholder="请选择">
+              <el-option
+                v-for="item in gongYingList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+                @click.native="saveName(item.id,item.name)"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+
       </el-row>
     </el-form>
 
@@ -260,6 +273,7 @@
 </template>
 <script>
 import { getSettingList, saveNewForm } from '@/api/ysda'
+import { loadData } from '@/api/gysda'
 
 export default {
 
@@ -373,6 +387,8 @@ export default {
       yanSeList: '',
       diaoPaiList: '',
       chanDiList: '',
+      gongYingList: '',
+
       rules: {
         chanDi: [
           { required: true, message: '请选择产地', trigger: 'blur' }
@@ -399,9 +415,6 @@ export default {
     this.getInitSetting()
   },
   methods: {
-    // saveValue(val) {
-    //   this.$set(this.data, 'tybz', val)
-    // },
     getInitSetting() {
       getSettingList('getAllYarnYanSeName').then(res => {
         this.yanSeList = res.data.data
@@ -411,6 +424,10 @@ export default {
       })
       getSettingList('getAllYarnChanDiName').then(res => {
         this.chanDiList = res.data.data
+      })
+      loadData().then(res => {
+        this.gongYingList = res.data.data
+        window.console.log(this.gongYingList)
       })
     },
     bindValue(val) {
@@ -433,6 +450,10 @@ export default {
           }
         })
       }
+    },
+    saveName(val1, val2){
+      this.$set(this.queryParam, 'gysId', val1)
+      this.$set(this.queryParam, 'gysName', val2)
     }
   }
 }

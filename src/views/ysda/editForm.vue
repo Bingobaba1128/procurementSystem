@@ -227,15 +227,7 @@
     </el-form>
     <el-form :inline="true" :rules="rules" :model="param" class="demo-form-inline">
       <el-row>
-        <el-col :span="8">
-
-          <el-form-item label="条干（CV）（标准）" label-width="160px">
-            <el-input v-model="param.tgbz" placeholder="添加条干" type="number" />
-
-          </el-form-item>
-        </el-col>
-
-        <el-col :span="16">
+        <el-col :span="24">
           <el-checkbox v-model="param.tzsbz">特种纱</el-checkbox>
           <el-checkbox v-model="param.gpmbz">高配棉</el-checkbox>
           <el-checkbox v-model="param.oabz">OA</el-checkbox>
@@ -249,7 +241,31 @@
           <el-checkbox v-model="param.hxsbz">化纤纱</el-checkbox>
           <el-checkbox v-model="param.qtsbz">全天丝</el-checkbox>
           <el-checkbox v-model="param.qtbz">其他</el-checkbox>
+        </el-col>        
+      </el-row>
+      <el-row>
+        <el-col :span="8">
+
+          <el-form-item label="条干（CV）（标准）" label-width="160px">
+            <el-input v-model="param.tgbz" placeholder="添加条干" type="number" />
+
+          </el-form-item>
         </el-col>
+        <el-col :span="8">
+          <el-form-item label="供应商" label-width="160px">
+            <el-select v-model="param.gysName" placeholder="请选择">
+              <el-option
+                v-for="item in gongYingList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+                @click.native="saveName(item.id,item.name)"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+
+
 
       </el-row>
     </el-form>
@@ -314,6 +330,8 @@
 </template>
 <script>
 import { getSettingList, saveNewForm, addNewChengFen, getChengFen } from '@/api/ysda'
+import { loadData } from '@/api/gysda'
+
 
 export default {
   props: {
@@ -393,6 +411,7 @@ export default {
       chanDiList: '',
       chengFenList: '',
       chengFenTable: '',
+      gongYingList: '',
       rules: {
         chanDi: [
           { required: true, message: '请选择产地', trigger: 'blur' }
@@ -438,6 +457,9 @@ export default {
       })
       getSettingList('getAllYarnChengFenName').then(res => {
         this.chengFenList = res.data.data
+      })
+      loadData().then(res => {
+        this.gongYingList = res.data.data
       })
       // alert(this.param)
       //
@@ -500,6 +522,10 @@ export default {
           this.initChengFen()
         }
       })
+    },
+        saveName(val1, val2){
+      this.$set(this.param, 'gysId', val1)
+      this.$set(this.param, 'gysName', val2)
     }
   }
 }

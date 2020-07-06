@@ -10,7 +10,7 @@ export function loadSJDSBData(data) {
 
 export function updatePlanData(data) {
   return request({
-    baseURL: 'http://120.78.186.60:8097/addPlanBuChong',
+    baseURL: 'http://192.168.5.103:8097/addPlanBuChong',
     method: 'post',
     data
   })
@@ -18,7 +18,7 @@ export function updatePlanData(data) {
 
 export function searchTotalAmount() {
   return request({
-    baseURL: 'http://120.78.186.60:8097',
+    baseURL: 'http://192.168.5.103:8097',
     url: '/searchTotal',
     method: 'get'
   })

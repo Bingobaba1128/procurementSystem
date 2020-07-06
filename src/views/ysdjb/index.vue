@@ -17,10 +17,16 @@
       </el-col>
 
       <!-- 产地选择 -->
-      <el-col :span="4">
-        <el-input v-model="queryInfo.chanDi" placeholder="请输入产地" clearable>
-          <template slot="prepend">产地</template>
-        </el-input>
+      <el-col :span="4" class="searchCombo">
+        <div class="searchHeader">产地</div>
+        <el-select v-model="queryInfo.chanDi" clearable placeholder="请选择">
+          <el-option
+            v-for="item in chanDiList"
+            :key="item.chanDi"
+            :label="item.chanDi"
+            :value="item.chanDi"
+          />
+        </el-select>
       </el-col>
 
       <!-- 支数选择 -->
@@ -93,11 +99,10 @@
 <script>
 import { getInitData, getHistoryData } from '@/api/ysdjb'
 import { toUrlParam } from '@/utils/toUrlParam'
-import editSelected from '@/views/ysdjd/editSelected'
-import priceHistory from '@/views/ysdjd/priceHistory'
+import editSelected from '@/views/ysdjb/editSelected'
+import priceHistory from '@/views/ysdjb/priceHistory'
+import { getSettingList} from '@/api/ysda'
 
-import FileSaver from 'file-saver'
-import XLSX from 'xlsx'
 
 export default {
   components: {
@@ -122,7 +127,8 @@ export default {
       multipleSelection: [],
       dialogEditTableVisible: false,
       dialogHistoryVisible: false,
-      historyData: ''
+      historyData: '',
+      chanDiList: ''
     }
   },
   created() {
@@ -134,6 +140,9 @@ export default {
       var urlParam = toUrlParam(url, this.pageSetting)
       getInitData(urlParam).then(res => {
         this.searchResult = res.data.data
+      })
+            getSettingList('getAllYarnChanDiName').then(res => {
+        this.chanDiList = res.data.data
       })
     },
     searchData() {

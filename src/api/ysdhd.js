@@ -36,7 +36,7 @@ export function loadFeature(data) {
 export function addNewData(data) {
   return request({
     baseURL: '',
-    url: 'http://120.78.186.60:8097/addPurchaseByNoPlan',
+    url: 'http://192.168.5.103:8097/addPurchaseByNoPlan',
     method: 'post',
     data
   })
