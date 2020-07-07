@@ -76,8 +76,8 @@
       <el-row>
         <el-col :span="8">
 
-          <el-form-item label="型号" label-width="160px">
-            <el-input v-model="param.xingHao" placeholder="添加型号" />
+          <el-form-item label="编码"  prop="otherName" label-width="160px">
+            <el-input v-model="param.otherName" placeholder="添加编码" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -226,24 +226,13 @@
       </el-row>
     </el-form>
     <el-form :inline="true" :rules="rules" :model="param" class="demo-form-inline">
-      <el-row>
-        <el-col :span="24">
-          <el-checkbox v-model="param.tzsbz" border>特种纱</el-checkbox>
-          <el-checkbox v-model="param.gpmbz" border>高配棉</el-checkbox>
-          <el-checkbox v-model="param.oabz" border>OA</el-checkbox>
-          <el-checkbox v-model="param.oebz" border>OE</el-checkbox>
-          <el-checkbox v-model="param.sirobz" border>SIRO</el-checkbox>
-          <el-checkbox v-model="param.jsbz" border>精梳</el-checkbox>
-          <el-checkbox v-model="param.sgfbz" border>紧密纺</el-checkbox>
-          <el-checkbox v-model="param.zjbz" border>竹节纱</el-checkbox>
-          <el-checkbox v-model="param.gtlbz" border>弹力纱</el-checkbox>
-          <el-checkbox v-model="param.ygbz" border>有色纱</el-checkbox>
-          <el-checkbox v-model="param.hxsbz" border>化纤纱</el-checkbox>
-          <el-checkbox v-model="param.qtsbz" border>全天丝</el-checkbox>
-          <el-checkbox v-model="param.qtbz" border>其他</el-checkbox>
+            <el-row>
+                <el-col :span="8">
+
+          <el-form-item label="型号" label-width="160px">
+            <el-input v-model="param.xingHao" placeholder="添加型号" />
+          </el-form-item>
         </el-col>
-      </el-row>
-      <el-row style="margin-top:20px">
         <el-col :span="8">
 
           <el-form-item label="条干（CV）（标准）" label-width="160px">
@@ -266,6 +255,24 @@
         </el-col>
 
       </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-checkbox v-model="param.tzsbz" border>特种纱</el-checkbox>
+          <el-checkbox v-model="param.gpmbz" border>高配棉</el-checkbox>
+          <el-checkbox v-model="param.oabz" border>OA</el-checkbox>
+          <el-checkbox v-model="param.oebz" border>OE</el-checkbox>
+          <el-checkbox v-model="param.sirobz" border>SIRO</el-checkbox>
+          <el-checkbox v-model="param.jsbz" border>精梳</el-checkbox>
+          <el-checkbox v-model="param.sgfbz" border>紧密纺</el-checkbox>
+          <el-checkbox v-model="param.zjbz" border>竹节纱</el-checkbox>
+          <el-checkbox v-model="param.gtlbz" border>弹力纱</el-checkbox>
+          <el-checkbox v-model="param.ygbz" border>有色纱</el-checkbox>
+          <el-checkbox v-model="param.hxsbz" border>化纤纱</el-checkbox>
+          <el-checkbox v-model="param.qtsbz" border>全天丝</el-checkbox>
+          <el-checkbox v-model="param.qtbz" border>其他</el-checkbox>
+        </el-col>
+      </el-row>
+
     </el-form>
 
     <el-form :inline="true" class="demo-form-inline" style="margin-top: 20px">
@@ -410,6 +417,7 @@ export default {
       chengFenList: '',
       chengFenTable: '',
       gongYingList: '',
+
       rules: {
         chanDi: [
           { required: true, message: '请选择产地', trigger: 'blur' }
@@ -428,6 +436,9 @@ export default {
         ],
         hsjg: [
           { required: true, message: '请输入价格', trigger: 'blur' }
+        ],
+                        otherName: [
+          { required: true, message: '请输入编码', trigger: 'blur' }
         ]
       }
     }

@@ -26,7 +26,7 @@ export function insteadOfJing(data) {
 
 export function updateJSData(data) {
   return request({
-    baseURL: 'http://192.168.5.103:8097/addJingWei',
+    baseURL: 'http://120.78.186.60:8097/addJingWei',
     method: 'post',
     data
   })

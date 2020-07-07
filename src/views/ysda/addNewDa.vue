@@ -68,8 +68,8 @@
       <el-row>
         <el-col :span="8">
 
-          <el-form-item label="型号" label-width="160px">
-            <el-input v-model="queryParam.xingHao" placeholder="添加型号" />
+          <el-form-item label="编码" prop="otherName" label-width="160px">
+            <el-input v-model="queryParam.otherName" placeholder="添加编码" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -218,26 +218,16 @@
       </el-row>
     </el-form>
     <el-form :inline="true" :rules="rules" :model="queryParam" class="demo-form-inline">
-      <el-row style="display: flex; justify-content:center">
-        <el-checkbox v-model="queryParam.tzsbz" border>特种纱</el-checkbox>
-        <el-checkbox v-model="queryParam.gpmbz" border>高配棉</el-checkbox>
-        <el-checkbox v-model="queryParam.oabz" border>OA</el-checkbox>
-        <el-checkbox v-model="queryParam.oebz" border>OE</el-checkbox>
-        <el-checkbox v-model="queryParam.sirobz" border>SIRO</el-checkbox>
-        <el-checkbox v-model="queryParam.jsbz" border>精梳</el-checkbox>
-        <el-checkbox v-model="queryParam.sgfbz" border>紧密纺</el-checkbox>
-        <el-checkbox v-model="queryParam.zjbz" border>竹节纱</el-checkbox>
-        <el-checkbox v-model="queryParam.gtlbz" border>弹力纱</el-checkbox>
-        <el-checkbox v-model="queryParam.ygbz" border>有色纱</el-checkbox>
-        <el-checkbox v-model="queryParam.hxsbz" border>化纤纱</el-checkbox>
-        <el-checkbox v-model="queryParam.qtsbz" border>全天丝</el-checkbox>
-        <el-checkbox v-model="queryParam.qtbz" border>其他</el-checkbox>
-      </el-row>
-
-      <el-row style="margin-top: 20px">
+      <el-row >
         <el-col :span="8">
           <el-form-item label="条干（CV）（标准）" label-width="160px">
             <el-input v-model="queryParam.tgbz" placeholder="添加条干" type="number" />
+          </el-form-item>
+        </el-col>
+                <el-col :span="8">
+
+          <el-form-item label="型号" label-width="160px">
+            <el-input v-model="queryParam.xingHao" placeholder="添加型号" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -255,6 +245,23 @@
         </el-col>
 
       </el-row>
+      <el-row style="display: flex; justify-content:center">
+        <el-checkbox v-model="queryParam.tzsbz" border>特种纱</el-checkbox>
+        <el-checkbox v-model="queryParam.gpmbz" border>高配棉</el-checkbox>
+        <el-checkbox v-model="queryParam.oabz" border>OA</el-checkbox>
+        <el-checkbox v-model="queryParam.oebz" border>OE</el-checkbox>
+        <el-checkbox v-model="queryParam.sirobz" border>SIRO</el-checkbox>
+        <el-checkbox v-model="queryParam.jsbz" border>精梳</el-checkbox>
+        <el-checkbox v-model="queryParam.sgfbz" border>紧密纺</el-checkbox>
+        <el-checkbox v-model="queryParam.zjbz" border>竹节纱</el-checkbox>
+        <el-checkbox v-model="queryParam.gtlbz" border>弹力纱</el-checkbox>
+        <el-checkbox v-model="queryParam.ygbz" border>有色纱</el-checkbox>
+        <el-checkbox v-model="queryParam.hxsbz" border>化纤纱</el-checkbox>
+        <el-checkbox v-model="queryParam.qtsbz" border>全天丝</el-checkbox>
+        <el-checkbox v-model="queryParam.qtbz" border>其他</el-checkbox>
+      </el-row>
+
+
     </el-form>
 
     <el-form :inline="true" class="demo-form-inline" style="margin-top: 20px">
@@ -378,7 +385,8 @@ export default {
         ygbz: false,
         hxsbz: false,
         qtsbz: false,
-        qtbz: false
+        qtbz: false,
+        otherName: ''
       },
       value: '否',
       key: '否',
@@ -406,6 +414,9 @@ export default {
         ],
         hsjg: [
           { required: true, message: '请输入价格', trigger: 'blur' }
+        ],
+                otherName: [
+          { required: true, message: '请输入编码', trigger: 'blur' }
         ]
       }
     }
