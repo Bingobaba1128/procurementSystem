@@ -196,6 +196,15 @@
           />
         </el-table-column>
       </el-table>
+      <el-row style="margin-top:20px">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="totalSize*10"
+          :current-page="pageSetting.pageNumber"
+          @current-change="handleCurrentChange"
+        />
+      </el-row>
 
       <el-table id="out-table" ref="multipleTable" style="display:none" :data="getInitData" border stripe tooltip-effect="dark" :span-method="objectSpanMethod" @selection-change="handleSelectionChange">
 
@@ -317,7 +326,8 @@ export default {
       getInitData: '',
       checkedBox: [],
       systemDate: '',
-      downloadLoading: false
+      downloadLoading: false,
+      totalSize: ''
     }
   },
 
@@ -334,6 +344,8 @@ export default {
           this.$message.error(res.data.msg)
         } else {
           this.getInitOData = res.data.data
+          this.totalSize = this.getInitOData[0].pageQuanity
+
           this.totalNeeded = this.getInitOData[0].xyl
           this.totalOrderAmount = this.getInitOData[0].dgl
           // 合并的地方
@@ -383,7 +395,10 @@ export default {
         return row[span]
       }
     },
-
+    handleCurrentChange(val) {
+      this.pageSetting.pageNumber = val
+      this.initData()
+    },
     formatStatus(val) {
       return val == 0 ? '纬' : val == 1 ? '经' : ''
     },

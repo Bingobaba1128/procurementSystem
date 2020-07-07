@@ -126,6 +126,15 @@
         </el-table-column>
 
       </el-table>
+      <el-row style="margin-top:20px">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="totalSize*10"
+          :current-page="pageSetting.pageNumber"
+          @current-change="handleCurrentChange"
+        />
+      </el-row>
     </el-row>
 
   </el-card>
@@ -197,7 +206,8 @@ export default {
         pageNumber: 1,
         pageSize: 10
       },
-      multipleSelection: []
+      multipleSelection: [],
+      totalSize: ''
     }
   },
 
@@ -213,6 +223,7 @@ export default {
       var urlParam = toUrlParam(url, this.pageSetting)
       getAllData(urlParam).then(res => {
         this.initAllData = res.data.data
+        this.totalSize = this.initAllData[0].pageQuanity
       })
       getSettingList('getAllYarnYanSeName').then(res => {
         this.yanSeList = res.data.data
@@ -276,6 +287,10 @@ export default {
     },
     triggerGeShu2() {
       this.queryInfo.meiBaoGeShu2 = this.queryInfo.meiBaoGeShu1
+    },
+    handleCurrentChange(val) {
+      this.pageSetting.pageNumber = val
+      this.initData()
     }
   }
 }

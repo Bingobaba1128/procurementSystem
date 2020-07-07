@@ -240,43 +240,43 @@ export default {
         for (var i = 0; i < this.initAllData.length; i++) {
           window.console.log(this.initAllData[i])
           let str = ''
-          if(this.initAllData[i].tzsbz){
+          if (this.initAllData[i].tzsbz) {
             str += '特种纱,'
           }
-          if(this.initAllData[i].gpmbz){
+          if (this.initAllData[i].gpmbz) {
             str += '高配棉,'
           }
-          if(this.initAllData[i].oabz){
+          if (this.initAllData[i].oabz) {
             str += 'OA,'
           }
-          if(this.initAllData[i].oebz){
+          if (this.initAllData[i].oebz) {
             str += 'OE,'
           }
-          if(this.initAllData[i].sirobz){
+          if (this.initAllData[i].sirobz) {
             str += 'SIRO,'
           }
-          if(this.initAllData[i].jsbz){
+          if (this.initAllData[i].jsbz) {
             str += '精梳,'
           }
-          if(this.initAllData[i].sgfbz){
+          if (this.initAllData[i].sgfbz) {
             str += '紧密纺,'
           }
-          if(this.initAllData[i].zjbz){
+          if (this.initAllData[i].zjbz) {
             str += '竹节纱,'
           }
-          if(this.initAllData[i].gtlbz){
+          if (this.initAllData[i].gtlbz) {
             str += '弹力纱,'
           }
-          if(this.initAllData[i].ygbz){
+          if (this.initAllData[i].ygbz) {
             str += '有色纱,'
           }
-          if(this.initAllData[i].hxsbz){
+          if (this.initAllData[i].hxsbz) {
             str += '化纤纱,'
           }
-          if(this.initAllData[i].qtsbz){
+          if (this.initAllData[i].qtsbz) {
             str += '全天丝,'
           }
-          if(this.initAllData[i].qtbz){
+          if (this.initAllData[i].qtbz) {
             str += '其他,'
           }
           this.$set(this.initAllData[i], 'shuXingList', str)

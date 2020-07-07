@@ -102,6 +102,15 @@
         <el-table-column label="审核" prop="" />
 
       </el-table>
+      <el-row style="margin-top:20px">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="totalSize * 10"
+          :current-page="pageSetting.pageNumber"
+          @current-change="handleCurrentChange"
+        />
+      </el-row>
     </el-row>
   </el-card>
 </template>
@@ -156,7 +165,8 @@ export default {
       dialogEditTableVisible: false,
       dialogEditPlanTableVisible: false,
       editOriginData: '',
-      flag: false
+      flag: false,
+      totalSize: ''
     }
   },
   mounted() {
@@ -172,6 +182,7 @@ export default {
           // this.$message.error(res.data.msg)
         } else {
           this.initOriginData = res.data.data
+          this.totalSize = this.initOriginData[0].pageQuanity
         }
         // this.jsData = res.data.data
 
@@ -257,6 +268,10 @@ export default {
       this.dialogAddNewTableVisible = false
       this.dialogAddPlanNewTableVisible = false
       this.dialogEditPlanTableVisible = false
+      this.initData()
+    },
+    handleCurrentChange(val) {
+      this.pageSetting.pageNumber = val
       this.initData()
     }
   }

@@ -142,6 +142,15 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-row style="margin-top:20px">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="totalSize*10"
+          :current-page="pageSetting.pageNumber"
+          @current-change="handleCurrentChange"
+        />
+      </el-row>
     </el-row>
   </el-card>
 </template>
@@ -180,7 +189,8 @@ export default {
           label: '未安排'
         }
       ],
-      toServeList: []
+      toServeList: [],
+      totalSize: ''
     }
   },
   created() {
@@ -194,7 +204,7 @@ export default {
       var urlParam = toUrlParam(url, this.pageSetting)
       loadSYuCeData(urlParam).then(res => {
         this.initOData = res.data.data
-        window.console.log(this.initOData)
+        this.totalSize = this.initOData[0].pageQuanity
         this.initData = this.mergeTableRow(this.initOData, ['yuCeNo', 'beiShaDate', 'yuCeDate', 'variety', 'yuCeQuanity', 'yeWuZu'])
 
         window.console.log(this.initData)
@@ -253,6 +263,10 @@ export default {
           this.initData = this.mergeTableRow(this.initOData, ['yuCeNo', 'beiShaDate', 'yuCeDate', 'variety', 'yuCeQuanity', 'yeWuZu', 'state'])
         })
       }
+    },
+    handleCurrentChange(val) {
+      this.pageSetting.pageNumber = val
+      this.initData()
     },
     formatStatus1(val) {
       return val == 0 ? '未安排' : val == 1 ? '已安排' : ''

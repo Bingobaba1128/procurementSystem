@@ -87,6 +87,16 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-row style="margin-top:20px">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="totalSize*10"
+          :current-page="pageSetting.pageNumber"
+          @current-change="handleCurrentChange"
+        />
+      </el-row>
+
     </el-row>
     <el-dialog v-if="dialogHistoryVisible" title="历史价格表" :visible.sync="dialogHistoryVisible" width="95%">
       <priceHistory :param="historyData" @closeDialog="closeDialog" />
@@ -131,7 +141,8 @@ export default {
           label: '否' },
         { value: '2',
           label: '全部' }
-      ]
+      ],
+      totalSize: ''
     }
   },
   created() {
@@ -143,6 +154,7 @@ export default {
       var urlParam = toUrlParam(url, this.pageSetting)
       loadData(urlParam).then(res => {
         this.searchResult = res.data.data
+        this.totalSize = this.searchResult[0].pageQuanity
       })
       getSettingList('getAllYarnChanDiName').then(res => {
         this.chanDiList = res.data.data
@@ -153,6 +165,7 @@ export default {
       this.$set(this.queryInfo, 'pageSize', this.pageSetting.pageSize)
       var url = '/LoadZhouZhuanL?'
       var urlParam = toUrlParam(url, this.queryInfo)
+      window.console.log(this.queryInfo)
       loadData(urlParam).then(res => {
         // window.console.log(res.data.data)
         this.searchResult = res.data.data
@@ -179,18 +192,6 @@ export default {
       this.dialogEditTableVisible = false
       this.initData()
     },
-    // exportExcel() {
-    //   this.downloadLoading = true
-    //   /* generate workbook object from table */
-    //   var wb = XLSX.utils.table_to_book(document.querySelector('#out-table'))
-    //   /* get binary string as output */
-    //   var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
-    //   try {
-    //     FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '原纱库存周转量基准表.xlsx')
-    //     this.downloadLoading = false
-    //   } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
-    //   return wbout
-    // },
     exportExcel() {
       this.downloadLoading = true
       require.ensure([], () => {
@@ -227,6 +228,10 @@ export default {
           this.initData()
         }
       })
+    },
+    handleCurrentChange(val) {
+      this.pageSetting.pageNumber = val
+      this.initData()
     }
   }
 }

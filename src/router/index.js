@@ -106,8 +106,6 @@ export const constantRoutes = [
     ]
   },
 
-
-
   {
     path: '/ysdjb',
     component: Layout,

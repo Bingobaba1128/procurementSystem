@@ -139,6 +139,15 @@
         </el-table-column>
 
       </el-table>
+      <el-row style="margin-top:20px">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="totalSize*10"
+          :current-page="pageSetting.pageNumber"
+          @current-change="handleCurrentChange"
+        />
+      </el-row>
     </el-row>
 
   </el-card>
@@ -209,7 +218,8 @@ export default {
       selectedID: '',
       updateParam: '',
       showCurrentNote: '',
-      pdfLink: ''
+      pdfLink: '',
+      totalSize: ''
     }
   },
 
@@ -258,6 +268,7 @@ export default {
         this.jsData = res.data.data
         this.passParam.jingSha = this.jsData.jingSha
         this.passParam.shaZhi = this.jsData.shaZhi
+        this.totalSize = this.jsData[0].pageQuanity
       })
     },
 
@@ -374,6 +385,10 @@ export default {
           this.updateData(this.updateParams)
         }
       }
+    },
+    handleCurrentChange(val) {
+      this.pageSetting.pageNumber = val
+      this.initData()
     }
 
   }

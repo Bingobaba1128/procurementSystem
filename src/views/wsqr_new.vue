@@ -139,6 +139,15 @@
         </el-table-column>
 
       </el-table>
+      <el-row style="margin-top:20px">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="totalSize*10"
+          :current-page="pageSetting.pageNumber"
+          @current-change="handleCurrentChange"
+        />
+      </el-row>
     </el-row>
 
   </el-card>
@@ -209,7 +218,8 @@ export default {
       selectedID: '',
       updateParam: '',
       showCurrentNote: '',
-      pdfLink: ''
+      pdfLink: '',
+      totalSize: ''
     }
   },
 
@@ -257,6 +267,7 @@ export default {
       loadWSData(urlParam).then(res => {
         window.console.log(res)
         this.jsData = res.data.data
+        this.totalSize = this.jsData[0].pageQuanity
 
         this.passParam.jingSha = this.jsData.jingSha
         this.passParam.shaZhi = this.jsData.shaZhi
@@ -271,7 +282,10 @@ export default {
         this.jsData = res.data.data
       })
     },
-
+    handleCurrentChange(val) {
+      this.pageSetting.pageNumber = val
+      this.initData()
+    },
     // 替代经纱查询
     showReplaceJS(jingsha, shaZhiNo, id) {
       // 储存原始数据
