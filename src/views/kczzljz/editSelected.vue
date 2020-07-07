@@ -12,6 +12,9 @@
       <el-form-item label="最低周转量（T）">
         <el-input v-model="setting.zuiDiL" />
       </el-form-item>
+      <el-form-item label="备注">
+        <el-input v-model="setting.liangRemarks" />
+      </el-form-item>
       <el-form-item label="仓库">
         <el-input v-model="setting.cangKu" disabled />
       </el-form-item>
@@ -39,17 +42,9 @@ export default {
         gouShaL: '',
         kuCunL: '',
         zuiDiL: '',
-        cangKu: '越南原纱仓'
+        cangKu: '越南原纱仓',
+        liangRemarks: ''
       }
-      // rules: {
-      //   setDate: [
-      //     { required: true, message: '请设置日期', trigger: 'blur' }
-      //   ],
-      //   sjjg: [
-      //     { required: true, message: '请填写实际价格', trigger: 'blur' },
-      //     { max: 10, message: '长度在 0 到 10 个数字', trigger: 'blur' }
-      //   ]
-      // }
     }
   },
   methods: {
@@ -59,6 +54,7 @@ export default {
         this.$set(this.param[i], 'kuCunL', this.setting.kuCunL)
         this.$set(this.param[i], 'zuiDiL', this.setting.zuiDiL)
         this.$set(this.param[i], 'cangKu', this.setting.cangKu)
+        this.$set(this.param[i], 'liangRemarks', this.setting.liangRemarks)
       }
     },
     saveToServe() {

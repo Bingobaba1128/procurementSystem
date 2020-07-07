@@ -164,7 +164,7 @@
           <el-table-column label="最低周转量" prop="zhouZhuanLiang" />
           <el-table-column label="消化量(KG)" prop="xiaoHuaLiang" />
           <el-table-column label="总需量" prop="totalXuYaoLiang" />
-          <el-table-column label="订购量(KG)" prop="dingGouLiang">
+          <el-table-column label="订购量(KG)" prop="dingGouLiang" width="160">
             <template slot-scope="scope">
               <input v-model="scope.row.dingGouLiang" placeholder="0" type="number">
             </template>
@@ -188,6 +188,7 @@
               <span>{{ formatConfirmStatus(scope.row.queRenComplete) }}</span>
             </template>
           </el-table-column>
+          <el-table-column label="经纬纱确认状态" prop="querenSymbol" width="120" />
 
           <el-table-column
             type="selection"
@@ -232,6 +233,7 @@
               <span>{{ formatConfirmStatus(scope.row.queRenComplete) }}</span>
             </template>
           </el-table-column>
+          <el-table-column label="经纬纱确认状态" prop="querenSymbol" width="350" />
         </el-table-column>
       </el-table>
 
@@ -328,16 +330,15 @@ export default {
       var url = baseUrl + '/LoadPlanList?'
       var urlParam = toUrlParam(url, setting)
       loadSJDSBData(urlParam).then(res => {
-        if(res.data.code !== 200){
+        if (res.data.code !== 200) {
           this.$message.error(res.data.msg)
-        } else{
-       this.getInitOData = res.data.data
+        } else {
+          this.getInitOData = res.data.data
           this.totalNeeded = this.getInitOData[0].xyl
           this.totalOrderAmount = this.getInitOData[0].dgl
-        // 合并的地方
-        this.getInitData = this.mergeTableRow(this.getInitOData, ['doTime', 'clothId', 'productionNo', 'jiaoZhouLength', 'huiPiLength', 'produceRequestNo', 'jiangRanChang', 'zhiZaoChang', 'jiaoZhouDate', 'huiPiDate', 'chengPinDate'])
+          // 合并的地方
+          this.getInitData = this.mergeTableRow(this.getInitOData, ['doTime', 'clothId', 'productionNo', 'jiaoZhouLength', 'huiPiLength', 'produceRequestNo', 'jiangRanChang', 'zhiZaoChang', 'jiaoZhouDate', 'huiPiDate', 'chengPinDate'])
         }
- 
       })
     },
     // 给合并提供样式
@@ -416,6 +417,12 @@ export default {
       }
     },
     clickToShow() {
+      for (var i = 0; i < this.multipleSelection.length; i++) {
+        if (this.multipleSelection[i].querenSymbol == '未确认') {
+          this.$message.error('勾选中包含未确认的经纬纱')
+          return
+        }
+      }
       updatePlanData(this.multipleSelection).then(res => {
         if (res.data.code !== 200) {
           this.$message.error(res.data.msg)

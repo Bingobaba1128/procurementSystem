@@ -228,22 +228,22 @@
     <el-form :inline="true" :rules="rules" :model="param" class="demo-form-inline">
       <el-row>
         <el-col :span="24">
-          <el-checkbox v-model="param.tzsbz">特种纱</el-checkbox>
-          <el-checkbox v-model="param.gpmbz">高配棉</el-checkbox>
-          <el-checkbox v-model="param.oabz">OA</el-checkbox>
-          <el-checkbox v-model="param.oebz">OE</el-checkbox>
-          <el-checkbox v-model="param.sirobz">SIRO</el-checkbox>
-          <el-checkbox v-model="param.jsbz">精梳</el-checkbox>
-          <el-checkbox v-model="param.sgfbz">紧密纺</el-checkbox>
-          <el-checkbox v-model="param.zjbz">竹节纱</el-checkbox>
-          <el-checkbox v-model="param.gtlbz">弹力纱</el-checkbox>
-          <el-checkbox v-model="param.ygbz">有色纱</el-checkbox>
-          <el-checkbox v-model="param.hxsbz">化纤纱</el-checkbox>
-          <el-checkbox v-model="param.qtsbz">全天丝</el-checkbox>
-          <el-checkbox v-model="param.qtbz">其他</el-checkbox>
-        </el-col>        
+          <el-checkbox v-model="param.tzsbz" border>特种纱</el-checkbox>
+          <el-checkbox v-model="param.gpmbz" border>高配棉</el-checkbox>
+          <el-checkbox v-model="param.oabz" border>OA</el-checkbox>
+          <el-checkbox v-model="param.oebz" border>OE</el-checkbox>
+          <el-checkbox v-model="param.sirobz" border>SIRO</el-checkbox>
+          <el-checkbox v-model="param.jsbz" border>精梳</el-checkbox>
+          <el-checkbox v-model="param.sgfbz" border>紧密纺</el-checkbox>
+          <el-checkbox v-model="param.zjbz" border>竹节纱</el-checkbox>
+          <el-checkbox v-model="param.gtlbz" border>弹力纱</el-checkbox>
+          <el-checkbox v-model="param.ygbz" border>有色纱</el-checkbox>
+          <el-checkbox v-model="param.hxsbz" border>化纤纱</el-checkbox>
+          <el-checkbox v-model="param.qtsbz" border>全天丝</el-checkbox>
+          <el-checkbox v-model="param.qtbz" border>其他</el-checkbox>
+        </el-col>
       </el-row>
-      <el-row>
+      <el-row style="margin-top:20px">
         <el-col :span="8">
 
           <el-form-item label="条干（CV）（标准）" label-width="160px">
@@ -264,8 +264,6 @@
             </el-select>
           </el-form-item>
         </el-col>
-
-
 
       </el-row>
     </el-form>
@@ -289,6 +287,7 @@
             <el-select v-model="param.chengFen" placeholder="请选择">
               <el-option
                 v-for="item in chengFenList"
+                v-show="item.isSelected"
                 :key="item.chengFen"
                 :label="item.chengFen"
                 :value="item.chengFen"
@@ -331,7 +330,6 @@
 <script>
 import { getSettingList, saveNewForm, addNewChengFen, getChengFen } from '@/api/ysda'
 import { loadData } from '@/api/gysda'
-
 
 export default {
   props: {
@@ -435,9 +433,6 @@ export default {
     }
   },
 
-  mounted() {
-    this.initChengFen()
-  },
   created() {
     this.getInitSetting()
   },
@@ -455,8 +450,13 @@ export default {
       getSettingList('getAllYarnChanDiName').then(res => {
         this.chanDiList = res.data.data
       })
+      this.initChengFen()
       getSettingList('getAllYarnChengFenName').then(res => {
         this.chengFenList = res.data.data
+        for (let i = 0; i < this.chengFenList.length; i++) {
+          this.$set(this.chengFenList[i], 'isSelected', true)
+        }
+        window.console.log(this.chengFenList)
       })
       loadData().then(res => {
         this.gongYingList = res.data.data
@@ -476,6 +476,7 @@ export default {
         this.$message.error('请输入必填项')
       } else {
         window.console.log(this.param)
+        this.$set(this.param, 'chengFen', null)
         saveNewForm(this.param).then(res => {
           if (res.status !== 200) {
             this.$message.error(res.data.tipInfo)
@@ -488,7 +489,9 @@ export default {
     },
     addRow() {
       // 预验证供应商品种不为空
-      if (this.param.chengFen == '') {
+      window.console.log(this.chengFenList)
+      window.console.log(this.innerForm)
+      if (this.param.chengFen == '' || this.param.chengFen == null) {
         this.$message.error('请选择成分')
       } else {
         var insertItem = {
@@ -500,6 +503,8 @@ export default {
           addDatetime: ''
         }
         this.innerForm.push(insertItem)
+        this.checkAndRemove()
+        this.param.chengFen = ''
       }
     },
     initChengFen() {
@@ -507,11 +512,31 @@ export default {
         // window.console.log(res.data)
         if (res.data.data != null) {
           this.innerForm = res.data.data
+          this.checkAndRemove()
         }
       })
     },
+    checkAndRemove() {
+      for (let i = 0; i < this.innerForm.length; i++) {
+        for (let j = 0; j < this.chengFenList.length; j++) {
+          if (this.chengFenList[j].chengFen == this.innerForm[i].chengFen) {
+            this.$set(this.chengFenList[j], 'isSelected', false)
+          }
+        }
+      }
+    },
+
     handleDelete(index, row) {
       this.innerForm.splice(index, 1)
+      window.console.log(this.innerForm)
+      window.console.log(this.chengFenList)
+      for (let i = 0; i < this.innerForm.length; i++) {
+        for (let j = 0; j < this.chengFenList.length; j++) {
+          if (this.chengFenList[j].chengFen == this.innerForm[i].chengFen) {
+            this.$set(this.chengFenList[j], 'isSelected', true)
+          }
+        }
+      }
     },
     saveChengFen() {
       addNewChengFen(this.innerForm).then(res => {
@@ -523,7 +548,7 @@ export default {
         }
       })
     },
-        saveName(val1, val2){
+    saveName(val1, val2) {
       this.$set(this.param, 'gysId', val1)
       this.$set(this.param, 'gysName', val2)
     }

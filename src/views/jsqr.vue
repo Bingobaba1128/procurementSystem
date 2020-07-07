@@ -265,7 +265,6 @@ export default {
     searchData() {
       var url = baseUrl + '/LoadData?'
       var urlParam = toUrlParam(url, this.queryInfo)
-      window.console.log(urlParam)
       searchJSData(urlParam).then(res => {
         this.jsData = res.data.data
       })
@@ -286,7 +285,6 @@ export default {
         jingSha: jingsha
       }
       var urlParam = toUrlParam(url, data)
-      window.console.log(urlParam)
       insteadOfJing(urlParam).then(res => {
         this.jingshaList = Object.assign({}, this.jingshaList, res.data.data)
       })
@@ -307,9 +305,8 @@ export default {
       for (var i = 0; i < this.jsData.length; i++) {
         if (this.jsData[i].id === this.selectedID) {
           this.$set(this.jsData[i], 'jingShaDangAnD', val)
-          
-          this.$set(this.jsData[i], 'yarnIdD', id)
 
+          this.$set(this.jsData[i], 'yarnIdD', id)
         }
       }
     },
@@ -340,9 +337,6 @@ export default {
     updateData(param1) {
       updateJSData(param1).then(res => {
         // 点击提交后，后端传回数据
-        window.console.log(param1)
-        window.console.log('点击提交后，后端传回数据')
-        window.console.log(res)
         if (res.data.code !== 200) {
           this.$message.error(res.data.msg)
         } else {
@@ -376,7 +370,7 @@ export default {
           if (this.updateParams.state == 0) {
             this.$set(this.updateParams, 'id', null)
           }
-          window.console.log(this.updateParams)
+          // window.console.log(this.updateParams)
           this.updateData(this.updateParams)
         }
       }

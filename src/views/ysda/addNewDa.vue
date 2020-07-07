@@ -218,24 +218,23 @@
       </el-row>
     </el-form>
     <el-form :inline="true" :rules="rules" :model="queryParam" class="demo-form-inline">
-      <el-row>
-        <el-col :span="24">
-          <el-checkbox v-model="queryParam.tzsbz">特种纱</el-checkbox>
-          <el-checkbox v-model="queryParam.gpmbz">高配棉</el-checkbox>
-          <el-checkbox v-model="queryParam.oabz">OA</el-checkbox>
-          <el-checkbox v-model="queryParam.oebz">OE</el-checkbox>
-          <el-checkbox v-model="queryParam.sirobz">SIRO</el-checkbox>
-          <el-checkbox v-model="queryParam.jsbz">精梳</el-checkbox>
-          <el-checkbox v-model="queryParam.sgfbz">紧密纺</el-checkbox>
-          <el-checkbox v-model="queryParam.zjbz">竹节纱</el-checkbox>
-          <el-checkbox v-model="queryParam.gtlbz">弹力纱</el-checkbox>
-          <el-checkbox v-model="queryParam.ygbz">有色纱</el-checkbox>
-          <el-checkbox v-model="queryParam.hxsbz">化纤纱</el-checkbox>
-          <el-checkbox v-model="queryParam.qtsbz">全天丝</el-checkbox>
-          <el-checkbox v-model="queryParam.qtbz">其他</el-checkbox>
-        </el-col>
+      <el-row style="display: flex; justify-content:center">
+        <el-checkbox v-model="queryParam.tzsbz" border>特种纱</el-checkbox>
+        <el-checkbox v-model="queryParam.gpmbz" border>高配棉</el-checkbox>
+        <el-checkbox v-model="queryParam.oabz" border>OA</el-checkbox>
+        <el-checkbox v-model="queryParam.oebz" border>OE</el-checkbox>
+        <el-checkbox v-model="queryParam.sirobz" border>SIRO</el-checkbox>
+        <el-checkbox v-model="queryParam.jsbz" border>精梳</el-checkbox>
+        <el-checkbox v-model="queryParam.sgfbz" border>紧密纺</el-checkbox>
+        <el-checkbox v-model="queryParam.zjbz" border>竹节纱</el-checkbox>
+        <el-checkbox v-model="queryParam.gtlbz" border>弹力纱</el-checkbox>
+        <el-checkbox v-model="queryParam.ygbz" border>有色纱</el-checkbox>
+        <el-checkbox v-model="queryParam.hxsbz" border>化纤纱</el-checkbox>
+        <el-checkbox v-model="queryParam.qtsbz" border>全天丝</el-checkbox>
+        <el-checkbox v-model="queryParam.qtbz" border>其他</el-checkbox>
       </el-row>
-      <el-row>
+
+      <el-row style="margin-top: 20px">
         <el-col :span="8">
           <el-form-item label="条干（CV）（标准）" label-width="160px">
             <el-input v-model="queryParam.tgbz" placeholder="添加条干" type="number" />
@@ -451,7 +450,7 @@ export default {
         })
       }
     },
-    saveName(val1, val2){
+    saveName(val1, val2) {
       this.$set(this.queryParam, 'gysId', val1)
       this.$set(this.queryParam, 'gysName', val2)
     }

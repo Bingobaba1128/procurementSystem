@@ -91,7 +91,9 @@
 
         <el-table-column type="index" label="序号" />
         <el-table-column label="勾选采购">
-          <el-button type="text" @click="addRow">确定</el-button>
+          <template slot-scope="scope">
+            <el-button type="text" @click="addRow(scope.row.id)">确定</el-button>
+          </template>
         </el-table-column>
         <el-table-column label="未定天数" prop="" width="120" />
         <el-table-column label="布编" prop="clothId" width="120" />
@@ -104,42 +106,7 @@
         <el-table-column label="纱产地及型号" prop="jingShaD" width="120" />
         <el-table-column label="需用量（KG）" prop="xuYaoLiang" width="120" />
         <el-table-column label="订购量（KG）" prop="dingGouLiang" width="120" />
-        <!-- <el-table-column label="数量（KG）" width="120">
-          <template slot-scope="scope">
-            <el-input
-              v-model="userInput.amount"
-              placeholder=""
-              clearable
-              type="number"
-              @change="saveToQuery1"
-              disabled
-            />
-          </template>
-        </el-table-column>
-        <el-table-column label="单价（元/吨）" width="120">
-          <template slot-scope="scope">
-            <el-input
-              v-model="userInput.unitPrice"
-              placeholder=""
-              clearable
-              type="number"
-              @change="saveToQuery2"
-              disabled
-            />
-          </template>
-        </el-table-column>
-        <el-table-column v-if="!banned" label="外销单价" width="120">
-          <template slot-scope="scope">
-            <el-input
-              v-model="userInput.outUnitprice"
-              placeholder=""
-              clearable
-              type="number"
-              @change="saveToQuery3"
-              disabled
-            />
-          </template>
-        </el-table-column> -->
+
         <el-table-column label="到货仓库" width="120">
           越南原纱仓
         </el-table-column>
@@ -225,6 +192,7 @@
             <el-input
               v-model="scope.row.productionNo"
               placeholder=""
+              disabled
               clearable
             />
           </template>
@@ -337,7 +305,8 @@ export default {
       }, {
         value: '1',
         label: '经'
-      }, {
+      },
+      {
         value: '2',
         label: '全部'
       }
@@ -470,32 +439,36 @@ export default {
       return defaultDate
       // this.$set(this.selectedSupplier, 'signDate', defaultDate)
     },
-    addRow() {
-      var data = this.planData[0]
-      window.console.log(data)
-      var insertItem = {
-        id: data.id,
-        jingSha: data.jingShaD,
-        quanity: '',
-        unitprice: '',
-        cangku: '越南原纱仓',
-        shaQi: data.shaQi,
-        productionNo: data.productionNo,
-        remarks: data.remarks,
-        outUnitprice: '',
-        nature: data.nature,
-        explain: '',
-        clothId: data.clothId,
-        noDingDays: '',
-        zhengShu: '',
-        planNo: data.id,
-        chengPinDate: data.chengPinDate,
-        huiPiDate: data.huiPiDate,
-        jiaoZhouDate: data.jiaoZhouDate
+    addRow(id) {
+      for (var i = 0; i < this.planData.length; i++) {
+        if (this.planData[i].id == id) {
+          var data = this.planData[i]
+          var insertItem = {
+            id: data.id,
+            jingSha: data.jingShaD,
+            quanity: '',
+            unitprice: '',
+            cangku: '越南原纱仓',
+            shaQi: data.shaQi,
+            productionNo: data.productionNo,
+            remarks: data.remarks,
+            outUnitprice: '',
+            nature: data.nature,
+            explain: '',
+            clothId: data.clothId,
+            noDingDays: '',
+            zhengShu: '',
+            planNo: data.id,
+            chengPinDate: data.chengPinDate,
+            huiPiDate: data.huiPiDate,
+            jiaoZhouDate: data.jiaoZhouDate,
+            jingOrWei: data.jingOrWei
+          }
+          this.innerForm.push(insertItem)
+          window.console.log(this.innerForm)
+          this.$set(this.selectedSupplier, 'listS', this.innerForm)
+        }
       }
-      this.innerForm.push(insertItem)
-      window.console.log(this.innerForm)
-      this.$set(this.selectedSupplier, 'listS', this.innerForm)
     },
     onChange(name) {
       this.$set(this.selectedSupplier, 'name', name)
@@ -539,15 +512,6 @@ export default {
         }
       })
     },
-    saveToQuery1() {
-      this.$set(this.planData[0], 'quanity', this.userInput.amount)
-    },
-    saveToQuery2() {
-      this.$set(this.planData[0], 'unitprice', this.userInput.unitPrice)
-    },
-    saveToQuery3() {
-      this.$set(this.planData[0], 'outUnitprice', this.userInput.outUnitprice)
-    },
     checkNature(value) {
       if (value == 1) {
         this.banned = false
@@ -558,7 +522,6 @@ export default {
     formatjingOrWei(val) {
       return val == 0 ? '纬' : '经'
     }
-
   }
 }
 </script>

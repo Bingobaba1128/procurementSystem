@@ -79,7 +79,7 @@
       <el-col :span="12" class="searchCombo">
         <div class="searchHeader">每包个数</div>
 
-        <el-input v-model="queryInfo.meiBaoGeShu1" placeholder="请输入最低个数" clearable type="number" />
+        <el-input v-model="queryInfo.meiBaoGeShu1" placeholder="请输入最低个数" clearable type="number" @change="triggerGeShu2" />
         ~
         <el-input v-model="queryInfo.meiBaoGeShu2" placeholder="请输入最高个数" clearable type="number" />
 
@@ -227,6 +227,11 @@ export default {
 
     searchData() {
       window.console.log(this.queryInfo)
+      // if (this.queryInfo.meiBaoGeShu2 < this.queryInfo.meiBaoGeShu1) {
+      //   window.console.log(this.queryInfo.meiBaoGeShu2)
+      //   window.console.log(this.queryInfo.meiBaoGeShu1)
+      //   this.$message.error('输入的最高个数要大于最低个数')
+      // } else {
       this.$set(this.queryInfo, 'pageNumber', this.pageSetting.pageNumber)
       this.$set(this.queryInfo, 'pageSize', this.pageSetting.pageSize)
 
@@ -236,6 +241,15 @@ export default {
       getAllData(urlParam).then(res => {
         this.initAllData = res.data.data
       })
+      //       this.$set(this.queryInfo, 'pageNumber', this.pageSetting.pageNumber)
+      // this.$set(this.queryInfo, 'pageSize', this.pageSetting.pageSize)
+
+      // var url = baseUrl + '/loadZhongLiang?'
+      // var urlParam = toUrlParam(url, this.queryInfo)
+      // window.console.log(urlParam)
+      // getAllData(urlParam).then(res => {
+      //   this.initAllData = res.data.data
+      // })
     },
     // 勾选表单
     toggleSelection(rows) {
@@ -259,6 +273,9 @@ export default {
           this.initData()
         }
       })
+    },
+    triggerGeShu2() {
+      this.queryInfo.meiBaoGeShu2 = this.queryInfo.meiBaoGeShu1
     }
   }
 }

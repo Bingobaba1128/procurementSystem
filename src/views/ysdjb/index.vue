@@ -101,8 +101,7 @@ import { getInitData, getHistoryData } from '@/api/ysdjb'
 import { toUrlParam } from '@/utils/toUrlParam'
 import editSelected from '@/views/ysdjb/editSelected'
 import priceHistory from '@/views/ysdjb/priceHistory'
-import { getSettingList} from '@/api/ysda'
-
+import { getSettingList } from '@/api/ysda'
 
 export default {
   components: {
@@ -141,7 +140,7 @@ export default {
       getInitData(urlParam).then(res => {
         this.searchResult = res.data.data
       })
-            getSettingList('getAllYarnChanDiName').then(res => {
+      getSettingList('getAllYarnChanDiName').then(res => {
         this.chanDiList = res.data.data
       })
     },

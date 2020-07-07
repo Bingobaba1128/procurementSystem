@@ -48,7 +48,103 @@ export const constantRoutes = [
       meta: { title: '工作台', icon: 'dashboard' }
     }]
   },
+  {
+    path: '/yssetting',
+    component: Layout,
+    redirect: '/yssetting/yscd',
+    name: 'yssetting',
+    meta: { title: '原纱配置', icon: 'nested' },
+    children: [
+      {
+        path: '/原纱产地',
+        name: 'yscd',
+        component: () => import('@/views/ysdaCd/yscd'),
+        meta: { title: '原纱产地', icon: 'nested' }
+      },
+      {
+        path: '/原纱颜色',
+        name: 'ysys',
+        component: () => import('@/views/ysdaYs/ysys'),
+        meta: { title: '原纱颜色', icon: 'nested' }
+      },
+      {
+        path: '/原纱成分',
+        name: 'yscf',
+        component: () => import('@/views/ysdaCf/yscf'),
+        meta: { title: '原纱成分', icon: 'nested' }
+      },
+      {
+        path: '/原纱吊牌',
+        name: 'ysdp',
+        component: () => import('@/views/ysdaDp/ysdp'),
+        meta: { title: '原纱吊牌', icon: 'nested' }
+      }
+    ]
+  },
+  {
+    path: '/gysda',
+    component: Layout,
+    children: [
+      {
+        path: '/供应商档案',
+        name: 'gysda',
+        component: () => import('@/views/gysda/gysda'),
+        meta: { title: '供应商档案', icon: 'tree' }
+      }
+    ]
+  },
+  {
+    path: '/ysda',
+    component: Layout,
+    children: [
+      {
+        path: '/原纱档案',
+        name: 'ysda',
+        component: () => import('@/views/ysda/ysda'),
+        meta: { title: '原纱档案', icon: 'tree' }
+      }
+    ]
+  },
 
+
+
+  {
+    path: '/ysdjb',
+    component: Layout,
+    children: [
+      {
+        path: '/原纱单价表',
+        name: 'ysdjb',
+        component: () => import('@/views/ysdjb/index'),
+        meta: { title: '原纱单价表', icon: 'tree' }
+      }
+    ]
+  },
+
+  {
+    path: '/kczzljz',
+    component: Layout,
+    children: [
+      {
+        path: '/原纱库存周转量基准',
+        name: 'kczzljz',
+        component: () => import('@/views/kczzljz/kczzljz'),
+        meta: { title: '原纱库存周转量基准', icon: 'tree' }
+      }
+    ]
+  },
+  {
+    path: '/yszlbz',
+    component: Layout,
+    children: [
+      {
+        path: '/原纱重量标准',
+        name: 'yszlbz',
+        component: () => import('@/views/yszlbz/yszlbz'),
+        meta: { title: '原纱重量标准', icon: 'tree' }
+      }
+    ]
+  },
   {
     path: '/jsqr',
     component: Layout,
@@ -106,111 +202,6 @@ export const constantRoutes = [
         name: 'ysdhd',
         component: () => import('@/views/ysdhd/ysdhd'),
         meta: { title: '原纱订货单', icon: 'tree' }
-      }
-    ]
-  },
-  // {
-  //   path: '/yshtjfpgl',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: '/原纱合同及发票管理',
-  //       name: 'yshtfp',
-  //       component: () => import('@/views/yshtfp'),
-  //       meta: { title: '原纱合同及发票管理', icon: 'tree' }
-  //     }
-  //   ]
-  // },
-  {
-    path: '/ysda',
-    component: Layout,
-    children: [
-      {
-        path: '/原纱档案',
-        name: 'ysda',
-        component: () => import('@/views/ysda/ysda'),
-        meta: { title: '原纱档案', icon: 'tree' }
-      }
-    ]
-  },
-  {
-    path: '/yssetting',
-    component: Layout,
-    redirect: '/yssetting/yscd',
-    name: 'yssetting',
-    meta: { title: '原纱配置', icon: 'nested' },
-    children: [
-      {
-        path: '/原纱产地',
-        name: 'yscd',
-        component: () => import('@/views/ysdaCd/yscd'),
-        meta: { title: '原纱产地', icon: 'nested' }
-      },
-      {
-        path: '/原纱颜色',
-        name: 'ysys',
-        component: () => import('@/views/ysdaYs/ysys'),
-        meta: { title: '原纱颜色', icon: 'nested' }
-      },
-      {
-        path: '/原纱成分',
-        name: 'yscf',
-        component: () => import('@/views/ysdaCf/yscf'),
-        meta: { title: '原纱成分', icon: 'nested' }
-      },
-      {
-        path: '/原纱吊牌',
-        name: 'ysdp',
-        component: () => import('@/views/ysdaDp/ysdp'),
-        meta: { title: '原纱吊牌', icon: 'nested' }
-      }
-    ]
-  },
-  {
-    path: '/ysdjb',
-    component: Layout,
-    children: [
-      {
-        path: '/原纱单价表',
-        name: 'ysdjb',
-        component: () => import('@/views/ysdjb/index'),
-        meta: { title: '原纱单价表', icon: 'tree' }
-      }
-    ]
-  },
-  {
-    path: '/gysda',
-    component: Layout,
-    children: [
-      {
-        path: '/供应商档案',
-        name: 'gysda',
-        component: () => import('@/views/gysda/gysda'),
-        meta: { title: '供应商档案', icon: 'tree' }
-      }
-    ]
-  },
-  {
-    path: '/kczzljz',
-    component: Layout,
-    children: [
-      {
-        path: '/原纱库存周转量基准',
-        name: 'kczzljz',
-        component: () => import('@/views/kczzljz/kczzljz'),
-        meta: { title: '原纱库存周转量基准', icon: 'tree' }
-      }
-    ]
-  },
-  {
-    path: '/yszlbz',
-    component: Layout,
-    children: [
-      {
-        path: '/原纱重量标准',
-        name: 'yszlbz',
-        component: () => import('@/views/yszlbz/yszlbz'),
-        meta: { title: '原纱重量标准', icon: 'tree' }
       }
     ]
   },

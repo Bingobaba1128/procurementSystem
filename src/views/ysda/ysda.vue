@@ -118,7 +118,7 @@
         <el-table-column label="产地" prop="chanDi" />
         <el-table-column label="类型" prop="fl" />
         <el-table-column label="名称" prop="name" />
-        <el-table-column label="属性" prop="shuXing" />
+        <el-table-column label="属性" prop="shuXingList" />
         <el-table-column label="型号" prop="xingHao" />
         <el-table-column label="支数（折算支数）" prop="shaZhi" />
         <el-table-column label="核算价格（万元/吨）" prop="hsjg" />
@@ -128,7 +128,7 @@
           </template> -->
         </el-table-column>
 
-        <el-table-column label="成分" prop="chengFen">
+        <el-table-column label="成分" prop="chengFen" width="160">
           <template slot-scope="scope">
             <p v-for="(item) in scope.row.chengFen" :key="item" style="margin:0px">
               {{ item }}
@@ -238,6 +238,49 @@ export default {
       getAllYarnArchives().then(res => {
         this.initAllData = res.data.data
         for (var i = 0; i < this.initAllData.length; i++) {
+          window.console.log(this.initAllData[i])
+          let str = ''
+          if(this.initAllData[i].tzsbz){
+            str += '特种纱,'
+          }
+          if(this.initAllData[i].gpmbz){
+            str += '高配棉,'
+          }
+          if(this.initAllData[i].oabz){
+            str += 'OA,'
+          }
+          if(this.initAllData[i].oebz){
+            str += 'OE,'
+          }
+          if(this.initAllData[i].sirobz){
+            str += 'SIRO,'
+          }
+          if(this.initAllData[i].jsbz){
+            str += '精梳,'
+          }
+          if(this.initAllData[i].sgfbz){
+            str += '紧密纺,'
+          }
+          if(this.initAllData[i].zjbz){
+            str += '竹节纱,'
+          }
+          if(this.initAllData[i].gtlbz){
+            str += '弹力纱,'
+          }
+          if(this.initAllData[i].ygbz){
+            str += '有色纱,'
+          }
+          if(this.initAllData[i].hxsbz){
+            str += '化纤纱,'
+          }
+          if(this.initAllData[i].qtsbz){
+            str += '全天丝,'
+          }
+          if(this.initAllData[i].qtbz){
+            str += '其他,'
+          }
+          this.$set(this.initAllData[i], 'shuXingList', str)
+
           this.$set(this.initAllData[i], 'tybz', this.statusCheck(this.initAllData[i].tybz))
         }
       })
@@ -254,22 +297,6 @@ export default {
     statusCheck(val) {
       return val == false ? '否' : '是'
     },
-    // exportExcel() {
-    //   this.downloadLoading = true
-    //   /* generate workbook object from table */
-
-    //   var wb = XLSX.utils.table_to_book(document.querySelector('#out-table'))
-    //   window.console.log(wb)
-
-    //   /* get binary string as output */
-    //   var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
-    //   try {
-    //     FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '原纱档案.xlsx')
-    //     // this.initData()
-    //     this.downloadLoading = false
-    //   } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
-    //   return wbout
-    // },
 
     handleExport() {
       this.downloadLoading = true
