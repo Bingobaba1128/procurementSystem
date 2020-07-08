@@ -90,6 +90,15 @@
         </el-table-column>
 
       </el-table>
+      <el-row style="margin-top:20px">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="totalSize*10"
+          :current-page="pageSetting.pageNumber"
+          @current-change="handleCurrentChange"
+        />
+      </el-row>
     </el-row>
     <el-dialog v-if="dialogHistoryVisible" title="历史价格表" :visible.sync="dialogHistoryVisible" :close-on-click-modal="false">
       <priceHistory :param="historyData" @closeDialog="closeDialog" />
@@ -127,7 +136,8 @@ export default {
       dialogEditTableVisible: false,
       dialogHistoryVisible: false,
       historyData: '',
-      chanDiList: ''
+      chanDiList: '',
+      totalSize: ''
     }
   },
   created() {
@@ -139,6 +149,7 @@ export default {
       var urlParam = toUrlParam(url, this.pageSetting)
       getInitData(urlParam).then(res => {
         this.searchResult = res.data.data
+        this.totalSize = this.searchResult[0].pageQuanity
       })
       getSettingList('getAllYarnChanDiName').then(res => {
         this.chanDiList = res.data.data
@@ -226,6 +237,10 @@ export default {
         })
       }
       )
+    },
+    handleCurrentChange(val) {
+      this.pageSetting.pageNumber = val
+      this.initData()
     }
   }
 }
