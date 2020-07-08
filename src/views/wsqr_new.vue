@@ -62,7 +62,7 @@
         <el-table-column label="纬纱" width="220">
           <template slot-scope="scope">
             <el-button type="text" @click="showReplaceJS(scope.row.jingSha,scope.row.shaZhi,scope.row.id)"> {{ scope.row.jingSha }} <i class="el-icon-arrow-down el-icon--right" /> </el-button>
-            <el-dialog title="选择替换的纬纱" :visible.sync="dialogReplaceJSVisible">
+            <el-dialog title="选择替换的纬纱" :visible.sync="dialogReplaceJSVisible" :close-on-click-modal="false">
               <el-form>
                 <el-form-item label="纬纱" prop="jingsha">
                   <el-select v-model="JSvalue" filterable placeholder="请选择您所需要的纬纱">
@@ -106,7 +106,7 @@
         <el-table-column label="备注" width="120">
           <template slot-scope="scope">
             <el-button type="text" @click="editNote(scope.row.id)"> 编辑备注 </el-button>
-            <el-dialog title="编辑您的备注" :visible.sync="dialogNoteVisible">
+            <el-dialog title="编辑您的备注" :visible.sync="dialogNoteVisible" :close-on-click-modal="false">
               已提交备注： {{ showCurrentNote }}
               <el-input
                 v-model="note"

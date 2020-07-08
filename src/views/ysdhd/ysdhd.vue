@@ -49,17 +49,17 @@
         <el-button type="primary" icon="el-icon-search" @click="searchData">检索</el-button>
       </el-col>
 
-      <el-dialog v-if="dialogAddNewTableVisible" title="原纱订货单（申请）" :visible.sync="dialogAddNewTableVisible" width="95%">
+      <el-dialog v-if="dialogAddNewTableVisible" title="原纱订货单（申请）" :visible.sync="dialogAddNewTableVisible" fullscreen>
         <addNewForm @closeDialog="closeDialog" />
       </el-dialog>
-      <el-dialog v-if="dialogEditTableVisible" title="原纱订货单（修改）" :visible.sync="dialogEditTableVisible" width="95%">
+      <el-dialog v-if="dialogEditTableVisible" title="原纱订货单（修改）" :visible.sync="dialogEditTableVisible" fullscreen>
         <editTable :param="editOriginData" @closeDialog="closeDialog" />
       </el-dialog>
 
-      <el-dialog v-if="dialogAddPlanNewTableVisible" title="原纱订货单（计划申请）" :visible.sync="dialogAddPlanNewTableVisible" width="95%">
+      <el-dialog v-if="dialogAddPlanNewTableVisible" title="原纱订货单（计划申请）" :visible.sync="dialogAddPlanNewTableVisible" fullscreen>
         <addPlanNew @closeDialog="closeDialog" />
       </el-dialog>
-      <el-dialog v-if="dialogEditPlanTableVisible" title="计划原纱订货单（修改）" :visible.sync="dialogEditPlanTableVisible" width="95%">
+      <el-dialog v-if="dialogEditPlanTableVisible" title="计划原纱订货单（修改）" :visible.sync="dialogEditPlanTableVisible" fullscreen>
         <editPlanTable :param="editOriginData" @closeDialog="closeDialog" />
       </el-dialog>
     </el-row>

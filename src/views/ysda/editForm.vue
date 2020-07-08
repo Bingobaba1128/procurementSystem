@@ -76,7 +76,7 @@
       <el-row>
         <el-col :span="8">
 
-          <el-form-item label="编码"  prop="otherName" label-width="160px">
+          <el-form-item label="编码" prop="otherName" label-width="160px">
             <el-input v-model="param.otherName" placeholder="添加编码" />
           </el-form-item>
         </el-col>
@@ -226,8 +226,8 @@
       </el-row>
     </el-form>
     <el-form :inline="true" :rules="rules" :model="param" class="demo-form-inline">
-            <el-row>
-                <el-col :span="8">
+      <el-row>
+        <el-col :span="8">
 
           <el-form-item label="型号" label-width="160px">
             <el-input v-model="param.xingHao" placeholder="添加型号" />
@@ -437,7 +437,7 @@ export default {
         hsjg: [
           { required: true, message: '请输入价格', trigger: 'blur' }
         ],
-                        otherName: [
+        otherName: [
           { required: true, message: '请输入编码', trigger: 'blur' }
         ]
       }

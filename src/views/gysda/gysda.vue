@@ -15,11 +15,11 @@
     </el-row>
 
     <!-- 列表区 -->
-    <el-dialog v-if="dialogAddTableVisible" title="供应商档案（新增）" :visible.sync="dialogAddTableVisible" width="95%">
+    <el-dialog v-if="dialogAddTableVisible" title="供应商档案（新增111）" :visible.sync="dialogAddTableVisible" fullscreen>
       <addNewForm @closeDialog="closeDialog" />
     </el-dialog>
 
-    <el-dialog v-if="dialogEditTableVisible" title="供应商档案（修改）" :visible.sync="dialogEditTableVisible" width="95%">
+    <el-dialog v-if="dialogEditTableVisible" title="供应商档案（修改）" :visible.sync="dialogEditTableVisible" fullscreen>
       <editForm :key="editData.id" :param="editData" @closeDialog="closeDialog" />
     </el-dialog>
     <el-row>

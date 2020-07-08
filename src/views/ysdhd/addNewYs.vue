@@ -91,11 +91,6 @@
     </el-row>
     <el-row style="margin-top: 20px" :gutter="10">
       <el-col :span="3" />
-      <el-col :span="5">
-        <el-input v-model="queryInfo.clothId" placeholder="请输入" clearable>
-          <template slot="prepend">原纱名称</template>
-        </el-input>
-      </el-col>
 
       <el-col :span="6" class="searchCombo">
         <div class="searchHeader">到货仓库</div>

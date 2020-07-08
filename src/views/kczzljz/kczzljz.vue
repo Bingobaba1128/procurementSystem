@@ -57,7 +57,7 @@
         <el-button type="primary" plain @click="exportExcel">导出Excel</el-button>
       </el-col>
 
-      <el-dialog v-if="dialogEditTableVisible" title="数据修改" :visible.sync="dialogEditTableVisible" width="95%">
+      <el-dialog v-if="dialogEditTableVisible" title="数据修改" :visible.sync="dialogEditTableVisible" :close-on-click-modal="false">
         <editSelected :param="multipleSelection" @closeDialog="closeDialog" />
       </el-dialog>
       <el-table id="out-table" ref="multipleTable" :data="searchResult" border stripe max-height="750" @selection-change="handleSelectionChange">
@@ -98,7 +98,7 @@
       </el-row>
 
     </el-row>
-    <el-dialog v-if="dialogHistoryVisible" title="历史价格表" :visible.sync="dialogHistoryVisible" width="95%">
+    <el-dialog v-if="dialogHistoryVisible" title="历史价格表" :visible.sync="dialogHistoryVisible" fullscreen>
       <priceHistory :param="historyData" @closeDialog="closeDialog" />
     </el-dialog>
   </el-card>
@@ -185,8 +185,11 @@ export default {
       this.multipleSelection = val
     },
     editSelected() {
-      window.console.log(this.multipleSelection)
-      this.dialogEditTableVisible = true
+      if (this.multipleSelection.length == 0) {
+        this.$message.error('请勾选需要调整的项目')
+      } else {
+        this.dialogEditTableVisible = true
+      }
     },
     closeDialog() {
       this.dialogEditTableVisible = false

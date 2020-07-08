@@ -218,13 +218,13 @@
       </el-row>
     </el-form>
     <el-form :inline="true" :rules="rules" :model="queryParam" class="demo-form-inline">
-      <el-row >
+      <el-row>
         <el-col :span="8">
           <el-form-item label="条干（CV）（标准）" label-width="160px">
             <el-input v-model="queryParam.tgbz" placeholder="添加条干" type="number" />
           </el-form-item>
         </el-col>
-                <el-col :span="8">
+        <el-col :span="8">
 
           <el-form-item label="型号" label-width="160px">
             <el-input v-model="queryParam.xingHao" placeholder="添加型号" />
@@ -260,7 +260,6 @@
         <el-checkbox v-model="queryParam.qtsbz" border>全天丝</el-checkbox>
         <el-checkbox v-model="queryParam.qtbz" border>其他</el-checkbox>
       </el-row>
-
 
     </el-form>
 
@@ -415,7 +414,7 @@ export default {
         hsjg: [
           { required: true, message: '请输入价格', trigger: 'blur' }
         ],
-                otherName: [
+        otherName: [
           { required: true, message: '请输入编码', trigger: 'blur' }
         ]
       }

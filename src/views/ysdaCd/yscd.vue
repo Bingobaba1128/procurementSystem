@@ -24,10 +24,10 @@
         </el-table-column>
       </el-table>
     </el-row>
-    <el-dialog v-if="dialogEditVisible" title="原纱产地（编辑）" :visible.sync="dialogEditVisible" width="95%">
+    <el-dialog v-if="dialogEditVisible" title="原纱产地（编辑）" :visible.sync="dialogEditVisible" :close-on-click-modal="false">
       <editYscd :param="selectedData" @closeDialog="closeDialog" />
     </el-dialog>
-    <el-dialog v-if="dialogAddVisible" title="原纱产地（新增）" :visible.sync="dialogAddVisible" width="95%">
+    <el-dialog v-if="dialogAddVisible" title="原纱产地（新增）" :visible.sync="dialogAddVisible" :close-on-click-modal="false">
       <addYscd @closeDialog="closeDialog" />
     </el-dialog>
   </el-card>

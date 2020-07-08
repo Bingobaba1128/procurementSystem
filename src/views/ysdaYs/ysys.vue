@@ -22,10 +22,10 @@
         </el-table-column>
       </el-table>
     </el-row>
-    <el-dialog v-if="dialogEditVisible" title="原纱颜色（编辑）" :visible.sync="dialogEditVisible" width="95%">
+    <el-dialog v-if="dialogEditVisible" title="原纱颜色（编辑）" :visible.sync="dialogEditVisible" :close-on-click-modal="false">
       <editYsys :param="selectedData" @closeDialog="closeDialog" />
     </el-dialog>
-    <el-dialog v-if="dialogAddVisible" title="原纱颜色（新增）" :visible.sync="dialogAddVisible" width="95%">
+    <el-dialog v-if="dialogAddVisible" title="原纱颜色（新增）" :visible.sync="dialogAddVisible" :close-on-click-modal="false">
       <addYsys @closeDialog="closeDialog" />
     </el-dialog>
   </el-card>

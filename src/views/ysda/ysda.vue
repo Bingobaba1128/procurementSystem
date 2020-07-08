@@ -106,10 +106,10 @@
         <el-button type="primary" plain @click="handleExport">导出Excel</el-button>
       </el-col>
     </el-row>
-    <el-dialog v-if="dialogAddTableVisible" title="原纱档案（新增）" :visible.sync="dialogAddTableVisible" width="95%">
+    <el-dialog v-if="dialogAddTableVisible" title="原纱档案（新增）" :visible.sync="dialogAddTableVisible" fullscreen>
       <addNewForm @closeDialog="closeDialog" />
     </el-dialog>
-    <el-dialog v-if="dialogEditTableVisible && editData" title="原纱档案（修改）" :visible.sync="dialogEditTableVisible" width="95%">
+    <el-dialog v-if="dialogEditTableVisible && editData" title="原纱档案（修改）" :visible.sync="dialogEditTableVisible" fullscreen>
       <editForm :key="editData.id" :param="editData" @closeDialog="closeDialog" />
     </el-dialog>
     <el-row>
@@ -118,7 +118,7 @@
         <el-table-column label="产地" prop="chanDi" />
         <el-table-column label="类型" prop="fl" />
         <el-table-column label="名称" prop="name" />
-        <el-table-column label="属性" prop="shuXingList"  width="160"/>
+        <el-table-column label="属性" prop="shuXingList" width="160" />
         <el-table-column label="型号" prop="xingHao" />
         <el-table-column label="支数（折算支数）" prop="shaZhi" />
         <el-table-column label="核算价格（万元/吨）" prop="hsjg" />

@@ -276,6 +276,18 @@ export default {
       this.multipleSelection = val
     },
     saveToServe() {
+      if (this.multipleSelection.length == 0) {
+        this.$message.error('请勾选需要存入的条目')
+      } else {
+        saveNewForm(this.multipleSelection).then(res => {
+          if (res.data.code !== 200) {
+            this.$message.error(res.data.data)
+          } else {
+            this.$message.success(res.data.data)
+            this.initData()
+          }
+        })
+      }
       saveNewForm(this.multipleSelection).then(res => {
         if (res.data.code !== 200) {
           this.$message.error(res.data.data)
