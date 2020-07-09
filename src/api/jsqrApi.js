@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { baseUrl } from '@/api/apiUrl'
 
 export function loadJSData(data) {
   return request({
@@ -26,7 +27,8 @@ export function insteadOfJing(data) {
 
 export function updateJSData(data) {
   return request({
-    baseURL: 'http://120.78.186.60:8097/addJingWei',
+    baseURL: baseUrl,
+    url: '/addJingWei',
     method: 'post',
     data
   })

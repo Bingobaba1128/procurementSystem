@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { baseUrl } from '@/api/apiUrl'
 
 export function loadSJDSBData(data) {
   return request({
@@ -10,7 +11,8 @@ export function loadSJDSBData(data) {
 
 export function updatePlanData(data) {
   return request({
-    baseURL: 'http://120.78.186.60:8097/addPlanBuChong',
+    baseURL: baseUrl,
+    url: '/addPlanBuChong',
     method: 'post',
     data
   })
@@ -18,7 +20,7 @@ export function updatePlanData(data) {
 
 export function searchTotalAmount() {
   return request({
-    baseURL: 'http://120.78.186.60:8097',
+    baseURL: baseUrl,
     url: '/searchTotal',
     method: 'get'
   })

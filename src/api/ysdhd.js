@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import baseUrl from '@/api/apiUrl'
+import { baseUrl } from '@/api/apiUrl'
 
 export function loadYuanShaData(data) {
   return request({
@@ -35,8 +35,8 @@ export function loadFeature(data) {
 
 export function addNewData(data) {
   return request({
-    baseURL: '',
-    url: 'http://120.78.186.60:8097/addPurchaseByNoPlan',
+    baseURL: baseUrl,
+    url: '/addPurchaseByNoPlan',
     method: 'post',
     data
   })

@@ -115,21 +115,6 @@
         <el-table-column label="交轴日期" prop="jiaoZhouDate" width="120" />
         <el-table-column label="坯布交期" prop="huiPiDate" width="120" />
         <el-table-column label="备注" prop="remarks" width="120" />
-        <!-- <el-table-column label="属性" prop="nature" width="120">
-          <template slot-scope="scope">
-            <el-select v-model="scope.row.nature" placeholder="请选择">
-              <el-option
-                v-for="item in natureList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-                @click.native="checkNature(item.value)"
-                disabled
-              />
-            </el-select>
-          </template>
-        </el-table-column> -->
-
       </el-table>
     </el-row>
 
@@ -141,7 +126,7 @@
         <el-table-column label="数量（KG）" width="120">
           <template slot-scope="scope">
             <el-input
-              v-model="scope.row.quanity"
+              v-model="scope.row.dingGouLiang"
               placeholder=""
               clearable
               type="number"
@@ -171,19 +156,21 @@
         </el-table-column>
         <el-table-column label="计划交期" prop="shaQi" width="160">
           <template slot-scope="scope">
-            <el-input
+            <el-date-picker
               v-model="scope.row.shaQi"
-              placeholder=""
-              clearable
+              type="date"
+              placeholder="选择日期"
+              value-format="yyyy-MM-dd"
             />
           </template>
         </el-table-column>
         <el-table-column label="确认交期" prop="chengPinDate" width="160">
           <template slot-scope="scope">
-            <el-input
+            <el-date-picker
               v-model="scope.row.chengPinDate"
-              placeholder=""
-              clearable
+              type="date"
+              placeholder="选择日期"
+              value-format="yyyy-MM-dd"
             />
           </template>
         </el-table-column>
@@ -199,19 +186,21 @@
         </el-table-column>
         <el-table-column label="交轴日期" prop="jiaoZhouDate" width="160">
           <template slot-scope="scope">
-            <el-input
+            <el-date-picker
               v-model="scope.row.jiaoZhouDate"
-              placeholder=""
-              clearable
+              type="date"
+              placeholder="选择日期"
+              value-format="yyyy-MM-dd"
             />
           </template>
         </el-table-column>
         <el-table-column label="坯布交期" prop="huiPiDate" width="160">
           <template slot-scope="scope">
-            <el-input
+            <el-date-picker
               v-model="scope.row.huiPiDate"
-              placeholder=""
-              clearable
+              type="date"
+              placeholder="选择日期"
+              value-format="yyyy-MM-dd"
             />
           </template>
         </el-table-column>
@@ -443,6 +432,7 @@ export default {
       for (var i = 0; i < this.planData.length; i++) {
         if (this.planData[i].id == id) {
           var data = this.planData[i]
+          window.console.log(data)
           var insertItem = {
             id: data.id,
             jingSha: data.jingShaD,
@@ -462,7 +452,8 @@ export default {
             chengPinDate: data.chengPinDate,
             huiPiDate: data.huiPiDate,
             jiaoZhouDate: data.jiaoZhouDate,
-            jingOrWei: data.jingOrWei
+            jingOrWei: data.jingOrWei,
+            dingGouLiang: data.dingGouLiang
           }
           this.innerForm.push(insertItem)
           window.console.log(this.innerForm)
