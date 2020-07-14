@@ -4,7 +4,7 @@ import { baseUrl } from '@/api/apiUrl'
 export function getAllYarnChengFen(data) {
   return request({
     baseURL: baseUrl,
-    url: '/api/getAllYarnChengFen',
+    url: data,
     method: 'get'
   })
 }

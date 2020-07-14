@@ -1,11 +1,22 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">原纱采购系统</div>
+    {{ token }}
   </div>
 </template>
 
 <script>
-
+export default {
+  data() {
+    return {
+      token: ''
+    }
+  },
+  created() {
+    this.token = this.$token.loadToken()
+    window.console.log(this.token)
+  }
+}
 </script>
 
 <style lang="scss" scoped>

@@ -20,6 +20,15 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-row style="margin-top:20px">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="totalSize*10"
+          :current-page="pageSetting.PageIndex"
+          @current-change="handleCurrentChange"
+        />
+      </el-row>
     </el-row>
     <el-dialog v-if="dialogEditVisible" title="原纱成分（编辑）" :visible.sync="dialogEditVisible" :close-on-click-modal="false">
       <editYscf :param="selectedData" @closeDialog="closeDialog" />
@@ -33,6 +42,7 @@
 import { getAllYarnChengFen, deleteChengFen, getOneYarnChengFen, addNewChengFen } from '@/api/yscf'
 import editYscf from '@/views/ysdaCf/editYscf'
 import addYscf from '@/views/ysdaCf/addYscf'
+import { toUrlParam } from '@/utils/toUrlParam'
 
 export default {
   components: {
@@ -44,7 +54,12 @@ export default {
       initFormData: '',
       dialogEditVisible: false,
       selectedData: '',
-      dialogAddVisible: false
+      totalSize: '',
+      dialogAddVisible: false,
+      pageSetting: {
+        PageIndex: 1,
+        PageSize: 10
+      }
     }
   },
   created() {
@@ -52,7 +67,10 @@ export default {
   },
   methods: {
     initData() {
-      getAllYarnChengFen().then(res => {
+      var url = '/api/getAllYarnChengFen?'
+      var urlParam = toUrlParam(url, this.pageSetting)
+      getAllYarnChengFen(urlParam).then(res => {
+        this.totalSize = res.data.count
         this.initFormData = res.data.data
       })
     },
@@ -88,6 +106,10 @@ export default {
     },
     formatStatus(val) {
       return val == true ? '是' : val == false ? '否' : ''
+    },
+    handleCurrentChange(val) {
+      this.pageSetting.PageIndex = val
+      this.initData()
     }
 
   }

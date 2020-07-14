@@ -1,10 +1,10 @@
 import request from '@/utils/request'
 import { baseUrl } from '@/api/apiUrl'
 
-export function getAllYarnArchives() {
+export function getAllYarnArchives(data) {
   return request({
     baseURL: baseUrl,
-    url: '/api/getAllYarnArchives',
+    url: data,
     method: 'get'
   })
 }

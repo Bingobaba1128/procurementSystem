@@ -21,6 +21,15 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-row style="margin-top:20px">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="totalSize*10"
+          :current-page="pageSetting.PageIndex"
+          @current-change="handleCurrentChange"
+        />
+      </el-row>
     </el-row>
     <el-dialog v-if="dialogEditVisible" title="原纱颜色（编辑）" :visible.sync="dialogEditVisible" :close-on-click-modal="false">
       <editYsys :param="selectedData" @closeDialog="closeDialog" />
@@ -34,6 +43,7 @@
 import { getAllYarnYanSe, deleteYanSe, getOneYarnYanSe } from '@/api/ysys'
 import editYsys from '@/views/ysdaYs/editYsys'
 import addYsys from '@/views/ysdaYs/addYsys'
+import { toUrlParam } from '@/utils/toUrlParam'
 
 export default {
   components: {
@@ -45,7 +55,12 @@ export default {
       initFormData: '',
       dialogEditVisible: false,
       selectedData: '',
-      dialogAddVisible: false
+      dialogAddVisible: false,
+      pageSetting: {
+        PageIndex: 1,
+        PageSize: 10
+      },
+      totalSize: ''
     }
   },
   created() {
@@ -53,7 +68,11 @@ export default {
   },
   methods: {
     initData() {
-      getAllYarnYanSe().then(res => {
+      var url = '/api/getAllYarnYanSe?'
+      var urlParam = toUrlParam(url, this.pageSetting)
+      getAllYarnYanSe(urlParam).then(res => {
+        this.totalSize = res.data.count
+
         window.console.log(res.data.data)
         this.initFormData = res.data.data
       })
@@ -91,6 +110,10 @@ export default {
     },
     formatStatus(val) {
       return val == true ? '是' : val == false ? '否' : ''
+    },
+    handleCurrentChange(val) {
+      this.pageSetting.PageIndex = val
+      this.initData()
     }
 
   }

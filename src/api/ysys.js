@@ -4,7 +4,7 @@ import { baseUrl } from '@/api/apiUrl'
 export function getAllYarnYanSe(data) {
   return request({
     baseURL: baseUrl,
-    url: '/api/getAllYarnYanSe',
+    url: data,
     method: 'get'
   })
 }

@@ -451,8 +451,8 @@ export default {
       } else {
         window.console.log(this.queryParam)
         saveNewForm(this.queryParam).then(res => {
-          if (res.status !== 200) {
-            this.$message.error(res.data.tipInfo)
+          if (res.code !== 200) {
+            this.$message.error(res.data.data)
           } else {
             this.$message.success(res.data.tipInfo)
             this.$emit('closeDialog')

@@ -23,6 +23,15 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-row style="margin-top:20px">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="totalSize*10"
+          :current-page="pageSetting.PageIndex"
+          @current-change="handleCurrentChange"
+        />
+      </el-row>
     </el-row>
     <el-dialog v-if="dialogEditVisible" title="原纱产地（编辑）" :visible.sync="dialogEditVisible" :close-on-click-modal="false">
       <editYscd :param="selectedData" @closeDialog="closeDialog" />
@@ -36,6 +45,7 @@
 import { getAllYarnChanDi, deleteChanDi, getOneYarnChanDi, addNewChanDi } from '@/api/ysdaComponents'
 import editYscd from '@/views/ysdaCd/editYscd'
 import addYscd from '@/views/ysdaCd/addYscd'
+import { toUrlParam } from '@/utils/toUrlParam'
 
 export default {
   components: {
@@ -47,7 +57,12 @@ export default {
       initFormData: '',
       dialogEditVisible: false,
       selectedData: '',
-      dialogAddVisible: false
+      dialogAddVisible: false,
+      totalSize: '',
+      pageSetting: {
+        PageIndex: 1,
+        PageSize: 10
+      }
     }
   },
   created() {
@@ -55,8 +70,10 @@ export default {
   },
   methods: {
     initData() {
-      getAllYarnChanDi().then(res => {
-        window.console.log(res.data.data)
+      var url = '/api/getAllYarnChanDi?'
+      var urlParam = toUrlParam(url, this.pageSetting)
+      getAllYarnChanDi(urlParam).then(res => {
+        this.totalSize = res.data.count
         this.initFormData = res.data.data
       })
     },
@@ -93,6 +110,10 @@ export default {
     },
     formatStatus(val) {
       return val == true ? '是' : val == false ? '否' : ''
+    },
+    handleCurrentChange(val) {
+      this.pageSetting.PageIndex = val
+      this.initData()
     }
 
   }

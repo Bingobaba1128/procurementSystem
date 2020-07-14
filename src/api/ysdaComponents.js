@@ -4,7 +4,7 @@ import { baseUrl } from '@/api/apiUrl'
 export function getAllYarnChanDi(data) {
   return request({
     baseURL: baseUrl,
-    url: '/api/getAllYarnChanDi',
+    url: data,
     method: 'get'
   })
 }

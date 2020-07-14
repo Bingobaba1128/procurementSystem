@@ -1,10 +1,10 @@
 import request from '@/utils/request'
 import { baseUrl } from '@/api/apiUrl'
 
-export function loadData() {
+export function loadData(data) {
   return request({
     baseURL: baseUrl,
-    url: '/api/supplier/getTotalSupplier?supplierType=1',
+    url: data,
     method: 'get'
   })
 }

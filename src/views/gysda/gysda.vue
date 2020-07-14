@@ -46,6 +46,15 @@
         </el-table-column>
 
       </el-table>
+      <el-row style="margin-top:20px">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="totalSize*10"
+          :current-page="pageSetting.PageIndex"
+          @current-change="handleCurrentChange"
+        />
+      </el-row>
     </el-row>
 
   </el-card>
@@ -72,7 +81,13 @@ export default {
       },
       dialogAddTableVisible: false,
       dialogEditTableVisible: false,
-      editData: ''
+      editData: '',
+      totalSize: '',
+      pageSetting: {
+        PageIndex: 1,
+        PageSize: 10,
+        supplierType: 1
+      }
     }
   },
 
@@ -84,7 +99,10 @@ export default {
 
     // 数据初始化
     initData() {
-      loadData().then(res => {
+      var url = '/api/supplier/getTotalSupplier?'
+      var urlParam = toUrlParam(url, this.pageSetting)
+      loadData(urlParam).then(res => {
+        this.totalSize = res.data.count
         this.initAllData = res.data.data
       })
     },
@@ -135,6 +153,10 @@ export default {
       searchData(url).then(res => {
         this.initAllData = res.data.data
       })
+    },
+    handleCurrentChange(val) {
+      this.pageSetting.PageIndex = val
+      this.initData()
     }
   }
 }

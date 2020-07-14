@@ -155,6 +155,15 @@
         </el-table-column>
 
       </el-table>
+      <el-row style="margin-top:20px">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="totalSize*10"
+          :current-page="pageSetting.PageIndex"
+          @current-change="handleCurrentChange"
+        />
+      </el-row>
     </el-row>
 
   </el-card>
@@ -223,7 +232,12 @@ export default {
       editData: '',
       yanSeList: '',
       diaoPaiList: '',
-      chanDiList: ''
+      chanDiList: '',
+      totalSize: '',
+      pageSetting: {
+        PageIndex: 2,
+        PageSize: 10
+      }
     }
   },
 
@@ -235,7 +249,10 @@ export default {
 
     // 数据初始化
     initData() {
-      getAllYarnArchives().then(res => {
+      var url = '/api/getAllYarnArchives?'
+      var urlParam = toUrlParam(url, this.pageSetting)
+      getAllYarnArchives(urlParam).then(res => {
+        this.totalSize = res.data.count
         this.initAllData = res.data.data
         for (var i = 0; i < this.initAllData.length; i++) {
           window.console.log(this.initAllData[i])
@@ -362,6 +379,10 @@ export default {
       searchBycCondition(urlParam).then(res => {
         this.initAllData = res.data.data
       })
+    },
+    handleCurrentChange(val) {
+      this.pageSetting.PageIndex = val
+      this.initData()
     }
   }
 }
