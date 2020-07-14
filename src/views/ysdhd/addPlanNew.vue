@@ -111,9 +111,27 @@
           越南原纱仓
         </el-table-column>
         <el-table-column label="计划交期" prop="shaQi" width="120" />
-        <el-table-column label="确认交期" prop="chengPinDate" width="120" />
-        <el-table-column label="交轴日期" prop="jiaoZhouDate" width="120" />
-        <el-table-column label="坯布交期" prop="huiPiDate" width="120" />
+        <el-table-column label="确认交期" prop="chengPinDate" width="120">
+          <template slot-scope="scope">
+            <p v-for="(item) in scope.row.chengPinDate" :key="item" style="margin:0px">
+              {{ item }}
+            </p>
+          </template>
+        </el-table-column>
+        <el-table-column label="交轴日期" prop="jiaoZhouDate" width="120">
+          <template slot-scope="scope">
+            <p v-for="(item) in scope.row.jiaoZhouDate" :key="item" style="margin:0px">
+              {{ item }}
+            </p>
+          </template>
+        </el-table-column>
+        <el-table-column label="坯布交期" prop="huiPiDate" width="120">
+          <template slot-scope="scope">
+            <p v-for="(item) in scope.row.huiPiDate" :key="item" style="margin:0px">
+              {{ item }}
+            </p>
+          </template>
+        </el-table-column>
         <el-table-column label="备注" prop="remarks" width="120" />
       </el-table>
     </el-row>
@@ -133,75 +151,41 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="单价（元/吨）" prop="unitprice" width="120">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.unitprice"
-              placeholder=""
-              clearable
-              type="number"
-            />
-          </template>
-        </el-table-column>
+        <el-table-column label="单价（元/吨）" prop="unitprice" width="120" />
         <el-table-column label="到货仓库" prop="cangku" width="120" />
-        <el-table-column label="纱期" prop="shaQi" width="160">
+        <el-table-column label="纱期" prop="shaQi" width="160" />
+        <!-- <el-table-column label="计划交期" prop="shaQi" width="160">
           <template slot-scope="scope">
             <el-date-picker
               v-model="scope.row.shaQi"
               type="date"
               placeholder="选择日期"
               value-format="yyyy-MM-dd"
+              disabled
             />
           </template>
-        </el-table-column>
-        <el-table-column label="计划交期" prop="shaQi" width="160">
-          <template slot-scope="scope">
-            <el-date-picker
-              v-model="scope.row.shaQi"
-              type="date"
-              placeholder="选择日期"
-              value-format="yyyy-MM-dd"
-            />
-          </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="确认交期" prop="chengPinDate" width="160">
           <template slot-scope="scope">
-            <el-date-picker
-              v-model="scope.row.chengPinDate"
-              type="date"
-              placeholder="选择日期"
-              value-format="yyyy-MM-dd"
-            />
+            <p v-for="(item) in scope.row.chengPinDate" :key="item" style="margin:0px">
+              {{ item }}
+            </p>
           </template>
+
         </el-table-column>
-        <el-table-column label="生产安排编号" prop="productionNo" width="120">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.productionNo"
-              placeholder=""
-              disabled
-              clearable
-            />
-          </template>
-        </el-table-column>
+        <el-table-column label="生产安排编号" prop="productionNo" width="120" />
         <el-table-column label="交轴日期" prop="jiaoZhouDate" width="160">
           <template slot-scope="scope">
-            <el-date-picker
-              v-model="scope.row.jiaoZhouDate"
-              type="date"
-              placeholder="选择日期"
-              value-format="yyyy-MM-dd"
-            />
+            <p v-for="(item) in scope.row.jiaoZhouDate" :key="item" style="margin:0px">
+              {{ item }}
+            </p>
           </template>
         </el-table-column>
         <el-table-column label="坯布交期" prop="huiPiDate" width="160">
           <template slot-scope="scope">
-            <el-date-picker
-              v-model="scope.row.huiPiDate"
-              type="date"
-              placeholder="选择日期"
-              value-format="yyyy-MM-dd"
-            />
+            <p v-for="(item) in scope.row.huiPiDate" :key="item" style="margin:0px">
+              {{ item }}
+            </p>
           </template>
         </el-table-column>
         <el-table-column label="备注" prop="remarks" width="120">
@@ -245,25 +229,9 @@
           </template>
         </el-table-column>
         <el-table-column label="完成日期" prop="" width="160" />
-        <el-table-column label="布编" prop="clothId" width="120">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.clothId"
-              placeholder=""
-              clearable
-            />
-          </template>
-        </el-table-column>
-        <el-table-column label="未定天数" prop="" width="120" />
-        <el-table-column label="订单证书要求" prop="zhengShu" width="120">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.zhengShu"
-              placeholder=""
-              clearable
-            />
-          </template>
-        </el-table-column>
+        <el-table-column label="布编" prop="clothId" width="120" />
+        <el-table-column label="未定天数" prop="noDingDays" width="120" />
+        <el-table-column label="订单证书要求" prop="zhengshuQingKuang" width="120" />
         <el-table-column label="操作" width="120">
           <template slot-scope="scope">
             <el-button type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
@@ -436,8 +404,8 @@ export default {
           var insertItem = {
             id: data.id,
             jingSha: data.jingShaD,
-            quanity: '',
-            unitprice: '',
+            quanity: data.xuYaoLiang,
+            unitprice: data.untiPrice,
             cangku: '越南原纱仓',
             shaQi: data.shaQi,
             productionNo: data.productionNo,
@@ -446,14 +414,15 @@ export default {
             nature: data.nature,
             explain: '',
             clothId: data.clothId,
-            noDingDays: '',
+            noDingDays: data.noDingDays,
             zhengShu: '',
             planNo: data.id,
             chengPinDate: data.chengPinDate,
             huiPiDate: data.huiPiDate,
             jiaoZhouDate: data.jiaoZhouDate,
             jingOrWei: data.jingOrWei,
-            dingGouLiang: data.dingGouLiang
+            dingGouLiang: data.dingGouLiang,
+            zhengshuQingKuang: data.zhengshuQingKuang
           }
           this.innerForm.push(insertItem)
           window.console.log(this.innerForm)

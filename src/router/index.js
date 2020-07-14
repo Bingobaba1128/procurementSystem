@@ -203,6 +203,18 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/yshtfp',
+    component: Layout,
+    children: [
+      {
+        path: '/原纱合同及发票管理',
+        name: 'yshtfp',
+        component: () => import('@/views/yshtfp/index'),
+        meta: { title: '原纱合同及发票管理', icon: 'tree' }
+      }
+    ]
+  },
   // {
   //   path: '/nested',
   //   component: Layout,

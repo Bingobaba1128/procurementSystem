@@ -4,13 +4,16 @@ const config = require('../vue.config.js')
 const rawArgv = process.argv.slice(2)
 const args = rawArgv.join(' ')
 
+
 if (process.env.npm_config_preview || rawArgv.includes('--preview')) {
   const report = rawArgv.includes('--report')
 
   run(`vue-cli-service build ${args}`)
 
-  const port = 9526
-  const publicPath = config.publicPath
+  // const port = 9526
+  // const publicPath = config.publicPath
+  const port = 8097
+  const publicPath = '120.78.186.60'
 
   var connect = require('connect')
   var serveStatic = require('serve-static')
