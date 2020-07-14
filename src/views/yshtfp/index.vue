@@ -119,14 +119,14 @@
             </el-table-column>
             <el-table-column label="物流单" prop="wuLiuDan">
               <template slot-scope="scope">
-                <el-button v-if="scope.row.wuLiuDan != null && scope.row.wuLiuDan != '' " type="text" @click="showFile(scope.row.faPiaoPhoto)"> 查看文件 </el-button>
+                <el-button v-if="scope.row.wuLiuDan != null && scope.row.wuLiuDan != '' " type="text" @click="showFile(scope.row.wuLiuDan)"> 查看文件 </el-button>
                 <el-upload
                   ref="upload"
                   class="upload-demo"
                   name="file"
                   multiple
                   :limit="1"
-                  action="http://192.168.5.103:8097/addChuanWu?"
+                  action="http://192.168.5.103:8097/uploadSalesContracts?"
                   :on-preview="handlePreview"
                   :on-remove="handleRemove"
                   :before-remove="beforeRemove"
@@ -142,14 +142,14 @@
             </el-table-column>
             <el-table-column label="报关单" prop="baoGuanDan">
               <template slot-scope="scope">
-                <el-button v-if="scope.row.baoGuanDan != null && scope.row.baoGuanDan != '' " type="text" @click="showFile(scope.row.faPiaoPhoto)"> 查看文件 </el-button>
+                <el-button v-if="scope.row.baoGuanDan != null && scope.row.baoGuanDan != '' " type="text" @click="showFile(scope.row.baoGuanDan)"> 查看文件 </el-button>
                 <el-upload
                   ref="upload"
                   class="upload-demo"
                   name="file"
                   multiple
                   :limit="1"
-                  action="http://192.168.5.103:8097/addChuanWu?"
+                  action="http://192.168.5.103:8097/uploadSalesContracts?"
                   :on-preview="handlePreview"
                   :on-remove="handleRemove"
                   :before-remove="beforeRemove"
@@ -164,8 +164,8 @@
             </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
-                <el-button type="text" @click="saveToServe(scope.row.ruKuNo)">保存</el-button>
-
+                <el-button type="text" @click="saveToServe(scope.row.ruKuNo)">操作人保存</el-button>
+                <el-button type="text" @click="saveToChuanWu(scope.row.ruKuNo)">船务保存</el-button>
                 <el-button type="text" @click="deleteDataF(scope.row.id)">删除</el-button>
 
               </template>
@@ -183,7 +183,7 @@
 </template>
 
 <script>
-import { getAllData, addRecord, deleteData, searchResult } from '@/api/yshtfp'
+import { getAllData, addRecord, deleteData, searchResult, addChuanWuRecord } from '@/api/yshtfp'
 import { toUrlParam } from '@/utils/toUrlParam'
 import { baseUrl } from '@/api/apiUrl'
 
@@ -268,6 +268,22 @@ export default {
           this.$set(this.addOriginData[i], 'operator', '邓科')
 
           addRecord(this.addOriginData[i]).then(res => {
+            if (res.data.code !== 200) {
+              this.$message.error(res.data.msg)
+            } else {
+              this.$message.success(res.data.msg)
+              this.initData(this.pageSetting)
+            }
+          })
+        }
+      }
+    },
+    saveToChuanWu(no) {
+      for (var i = 0; i < this.addOriginData.length; i++) {
+        if (this.addOriginData[i].ruKuNo == no) {
+          this.$set(this.addOriginData[i], 'operator', '邓科')
+
+          addChuanWuRecord(this.addOriginData[i]).then(res => {
             if (res.data.code !== 200) {
               this.$message.error(res.data.msg)
             } else {

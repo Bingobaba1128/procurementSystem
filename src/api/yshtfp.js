@@ -34,6 +34,15 @@ export function addRecord(data) {
   })
 }
 
+export function addChuanWuRecord(data) {
+  return request({
+    baseURL: baseUrl,
+    url: '/addChuanWu',
+    data: data,
+    method: 'post'
+  })
+}
+
 // export function saveEditDiaoPai(data) {
 //   return request({
 //     baseURL: baseUrl,
