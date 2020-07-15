@@ -143,7 +143,7 @@ export default {
         address: '',
         note: '',
         addUserId: '',
-        addUsername: '邓科',
+        addUsername: this.$token.loadToken().employeeName,
         enable: false,
         fax: '',
         taxNo: '',

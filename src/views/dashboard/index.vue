@@ -1,7 +1,6 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">原纱采购系统</div>
-    {{ token }}
   </div>
 </template>
 
@@ -12,9 +11,8 @@ export default {
       token: ''
     }
   },
-  created() {
-    this.token = this.$token.loadToken()
-    window.console.log(this.token)
+  mounted() {
+    // this.token = this.$token.loadToken()
   }
 }
 </script>

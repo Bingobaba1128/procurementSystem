@@ -1,5 +1,6 @@
 <template>
   <el-card>
+
     <!-- 检索区 -->
     <el-row :gutter="10">
       <el-col :span="7" class="searchCombo">
@@ -87,12 +88,15 @@ export default {
         PageIndex: 1,
         PageSize: 10,
         supplierType: 1
-      }
+      },
+      token: ''
     }
   },
 
   created() {
     this.initData()
+    this.token = this.$token.loadToken()
+    window.console.log(this.token)
   },
 
   methods: {
@@ -140,6 +144,7 @@ export default {
           this.$message.error(res.data.tipInfo)
         } else {
           this.editData = res.data.data
+          this.$set(this.editData, 'addUsername', this.$token.loadToken().employeeName)
         //   window.console.log(this.editData)
           // alert(this.editData.id)
           // var value = this.editData.tybz == true ? '是' : '否'
