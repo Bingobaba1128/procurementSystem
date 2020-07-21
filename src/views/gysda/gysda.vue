@@ -16,7 +16,7 @@
     </el-row>
 
     <!-- 列表区 -->
-    <el-dialog v-if="dialogAddTableVisible" title="供应商档案（新增111）" :visible.sync="dialogAddTableVisible" fullscreen>
+    <el-dialog v-if="dialogAddTableVisible" v-dialogDrag title="供应商档案（新增111）" :visible.sync="dialogAddTableVisible" :close-on-click-modal="false">
       <addNewForm @closeDialog="closeDialog" />
     </el-dialog>
 

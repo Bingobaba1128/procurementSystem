@@ -18,6 +18,7 @@ import '@/icons' // icon
 import '@/permission' // permission control
 
 import token from '@/utils/token'
+import dialogDrag from '@/utils/dialog'
 
 /**
  * If you don't want to use mock-server

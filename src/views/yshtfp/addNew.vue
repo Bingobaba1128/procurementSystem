@@ -48,7 +48,7 @@
               name="file"
               multiple
               :limit="1"
-              action="http://192.168.5.103:8097/uploadSalesContracts?"
+              action="http://120.78.186.60:8097/uploadSalesContracts?"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
               :before-remove="beforeRemove"
