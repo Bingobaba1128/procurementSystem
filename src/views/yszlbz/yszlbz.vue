@@ -124,6 +124,29 @@
             />
           </template>
         </el-table-column>
+                <el-table-column label="原纱定长" prop="yuanShaDingChang"/>
+
+                <el-table-column label="原纱使用长度" prop="yuanShaUserLength">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.yuanShaUserLength"
+              placeholder="请输入使用长度"
+              type="number"
+              clearable
+            />
+          </template>
+        </el-table-column>
+                <el-table-column label="原纱定长使用率" prop="yuanShaUserLv">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.yuanShaUserLv"
+              placeholder="请输入定长使用率"
+              type="number"
+              clearable
+            />
+          </template>
+        </el-table-column>
+                <el-table-column label="原纱定长" prop="biLi" />
 
       </el-table>
       <el-row style="margin-top:20px">
