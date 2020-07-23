@@ -124,9 +124,9 @@
             />
           </template>
         </el-table-column>
-                <el-table-column label="原纱定长" prop="yuanShaDingChang"/>
+        <el-table-column label="原纱定长" prop="yuanShaDingChang" />
 
-                <el-table-column label="原纱使用长度" prop="yuanShaUserLength">
+        <el-table-column label="原纱使用长度" prop="yuanShaUserLength">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.yuanShaUserLength"
@@ -136,7 +136,7 @@
             />
           </template>
         </el-table-column>
-                <el-table-column label="原纱定长使用率" prop="yuanShaUserLv">
+        <el-table-column label="原纱定长使用率" prop="yuanShaUserLv">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.yuanShaUserLv"
@@ -146,7 +146,7 @@
             />
           </template>
         </el-table-column>
-                <el-table-column label="原纱定长" prop="biLi" />
+        <el-table-column label="原纱定长" prop="biLi" />
 
       </el-table>
       <el-row style="margin-top:20px">
@@ -302,23 +302,32 @@ export default {
       if (this.multipleSelection.length == 0) {
         this.$message.error('请勾选需要存入的条目')
       } else {
-        saveNewForm(this.multipleSelection).then(res => {
-          if (res.data.code !== 200) {
-            this.$message.error(res.data.data)
-          } else {
-            this.$message.success(res.data.data)
-            this.initData()
+        window.console.log(this.multipleSelection)
+        this.multipleSelection.map(object => {
+          window.console.log(object)
+          if (object.meiBaoGeShu == '' || object.meiBaoZhongLiang == '' || object.yuanShaUserLength == null || object.yuanShaUserLv == null) {
+            this.$message.error('请填写需要输入的部分')
+          } 
+          else {
+            saveNewForm(this.multipleSelection).then(res => {
+              if (res.data.code !== 200) {
+                this.$message.error(res.data.data)
+              } else {
+                this.$message.success(res.data.data)
+                this.initData()
+              }
+            })
           }
         })
       }
-      saveNewForm(this.multipleSelection).then(res => {
-        if (res.data.code !== 200) {
-          this.$message.error(res.data.data)
-        } else {
-          this.$message.success(res.data.data)
-          this.initData()
-        }
-      })
+      // saveNewForm(this.multipleSelection).then(res => {
+      //   if (res.data.code !== 200) {
+      //     this.$message.error(res.data.data)
+      //   } else {
+      //     this.$message.success(res.data.data)
+      //     this.initData()
+      //   }
+      // })
     },
     triggerGeShu2() {
       this.queryInfo.meiBaoGeShu2 = this.queryInfo.meiBaoGeShu1
