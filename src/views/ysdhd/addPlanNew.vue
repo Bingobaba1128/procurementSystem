@@ -95,7 +95,7 @@
             <el-button type="text" @click="addRow(scope.row.id)">确定</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="未定天数" prop="" width="120" />
+        <el-table-column label="未定天数" prop="noDingDays" width="120" />
         <el-table-column label="布编" prop="clothId" width="120" />
         <el-table-column label="生产安排单号" prop="productionNo" width="120" />
         <el-table-column label="经纬" prop="jingOrWei" width="120">
@@ -106,6 +106,7 @@
         <el-table-column label="纱产地及型号" prop="jingShaD" width="120" />
         <el-table-column label="需用量（KG）" prop="xuYaoLiang" width="120" />
         <el-table-column label="订购量（KG）" prop="dingGouLiang" width="120" />
+        <el-table-column label="价格" prop="hsjg" width="120" />
 
         <el-table-column label="到货仓库" width="120">
           越南原纱仓
@@ -151,20 +152,19 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="单价（元/吨）" prop="unitprice" width="120" />
+        <el-table-column label="单价（元/吨）" prop="unitPrice" width="120" />
         <el-table-column label="到货仓库" prop="cangku" width="120" />
-        <el-table-column label="纱期" prop="shaQi" width="160" />
-        <!-- <el-table-column label="计划交期" prop="shaQi" width="160">
+        <el-table-column label="纱期" prop="shaQi" width="160">
           <template slot-scope="scope">
             <el-date-picker
               v-model="scope.row.shaQi"
               type="date"
               placeholder="选择日期"
               value-format="yyyy-MM-dd"
-              disabled
+              
             />
           </template>
-        </el-table-column> -->
+        </el-table-column>
         <el-table-column label="确认交期" prop="chengPinDate" width="160">
           <template slot-scope="scope">
             <p v-for="(item) in scope.row.chengPinDate" :key="item" style="margin:0px">
@@ -231,7 +231,7 @@
         <el-table-column label="完成日期" prop="" width="160" />
         <el-table-column label="布编" prop="clothId" width="120" />
         <el-table-column label="未定天数" prop="noDingDays" width="120" />
-        <el-table-column label="订单证书要求" prop="zhengshuQingKuang" width="120" />
+        <el-table-column label="订单证书要求" prop="zhengShuQingKuang" width="120" />
         <el-table-column label="操作" width="120">
           <template slot-scope="scope">
             <el-button type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
@@ -277,7 +277,8 @@ export default {
       }],
       searchQuery: {
         jingOrWei: '',
-        jingSha: ''
+        jingSha: '',
+        name: ''
       },
       infoOptions: [
         {
@@ -400,12 +401,11 @@ export default {
       for (var i = 0; i < this.planData.length; i++) {
         if (this.planData[i].id == id) {
           var data = this.planData[i]
-          window.console.log(data)
+          window.console.log(data,'data')
           var insertItem = {
             id: data.id,
             jingSha: data.jingShaD,
             quanity: data.xuYaoLiang,
-            unitprice: data.untiPrice,
             cangku: '越南原纱仓',
             shaQi: data.shaQi,
             productionNo: data.productionNo,
@@ -415,17 +415,18 @@ export default {
             explain: '',
             clothId: data.clothId,
             noDingDays: data.noDingDays,
-            zhengShu: '',
             planNo: data.id,
             chengPinDate: data.chengPinDate,
             huiPiDate: data.huiPiDate,
             jiaoZhouDate: data.jiaoZhouDate,
             jingOrWei: data.jingOrWei,
             dingGouLiang: data.dingGouLiang,
-            zhengshuQingKuang: data.zhengshuQingKuang
+            zhengShuQingKuang: data.zhengShuQingKuang,
+            unitPrice: data.hsjg
           }
+          window.console.log(insertItem.unitPrice)
           this.innerForm.push(insertItem)
-          window.console.log(this.innerForm)
+          window.console.log(this.innerForm,'indneer')
           this.$set(this.selectedSupplier, 'listS', this.innerForm)
         }
       }
@@ -435,12 +436,13 @@ export default {
     },
     saveToServe() {
       window.console.log(this.selectedSupplier)
-
+      this.$set(this.selectedSupplier.listS[0], 'quanity',this.selectedSupplier.listS[0].dingGouLiang)
+      this.$set(this.selectedSupplier.listS[0], 'unitprice',this.selectedSupplier.listS[0].unitPrice)
       if (this.selectedSupplier.name == '') {
         this.$message.error('请选择供应商')
       } else {
         window.console.log(this.selectedSupplier.listS)
-        if (this.selectedSupplier.listS[0].unitprice == '' || this.selectedSupplier.listS[0].quanity == '') {
+        if (this.selectedSupplier.listS[0].unitPrice == '' || this.selectedSupplier.listS[0].quanity == '') {
           this.$message.error('请添加产品数量和单价')
         } else {
           addNewData(this.selectedSupplier).then(res => {
@@ -459,6 +461,7 @@ export default {
     },
     searchJingData() {
       var url = baseUrl + '/loadPlanData?'
+      this.$set(this.searchQuery,'name', this.selectedSupplier.name)
       var urlParam = toUrlParam(url, this.searchQuery)
       searchData(urlParam).then(res => {
         if (res.data.code !== 200) {

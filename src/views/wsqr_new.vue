@@ -48,12 +48,16 @@
 
     <!-- 列表区 -->
     <el-row>
-      <el-table :data="jsData" border stripe>
+      <el-table :data="jsData" border stripe       v-loading="listLoading" 
+      element-loading-text="努力加载中..."
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(255,255, 255, 0.9)"
+        empty-text=" ">
         <el-table-column type="index" label="序号" />
-        <el-table-column label="下单日期" prop="doTime" width="120" />
-        <el-table-column label="生产单号" prop="productionNo" width="120" />
-        <el-table-column label="布编" prop="clothId" width="120" />
-        <el-table-column label="织长" prop="huiPiLength" width="120" />
+        <el-table-column label="下单日期" prop="doTime" width="120" show-overflow-tooltip/>
+        <el-table-column label="生产单号" prop="productionNo" width="120" show-overflow-tooltip/>
+        <el-table-column label="布编" prop="clothId" width="120" show-overflow-tooltip/>
+        <el-table-column label="织长" prop="huiPiLength" width="120" show-overflow-tooltip/>
         <el-table-column label="织缩率" prop="zhiBuZhiChengLv" width="120">
           <template slot-scope="scope">
             {{ scope.row.zhiBuZhiChengLv }}%
@@ -83,26 +87,27 @@
             </el-dialog>
           </template>
         </el-table-column>
-        <el-table-column label="需用量" prop="xuYaoLiang" width="120" />
-        <el-table-column label="生产安排单备注" prop="remarks" width="120" />
-        <el-table-column label="计划轴期" prop="jiaoZhouDate" width="120">
-          <template slot-scope="scope">
+                <el-table-column label="型号" prop="xingHao" width="120" show-overflow-tooltip/>
+
+        <el-table-column label="需用量" prop="xuYaoLiang" width="120" show-overflow-tooltip/>
+        <el-table-column label="计划轴期" prop="jiaoZhouDate" width="120" show-overflow-tooltip/>
+          <!-- <template slot-scope="scope">
             <p v-for="(item) in scope.row.jiaoZhouDate" :key="item" style="margin:0px">
               {{ item }}
             </p>
           </template>
-        </el-table-column>
-        <el-table-column label="计划坯期" prop="huiPiDate" width="120">
-          <template slot-scope="scope">
+        </el-table-column> -->
+        <el-table-column label="计划坯期" prop="huiPiDate" width="120" show-overflow-tooltip />
+          <!-- <template slot-scope="scope">
             <p v-for="(item) in scope.row.huiPiDate" :key="item" style="margin:0px">
               {{ item }}
             </p>
           </template>
-        </el-table-column>
-        <el-table-column label="参考百米用纬" prop="weiShaBmysl" width="120" />
+        </el-table-column> -->
+        <el-table-column label="参考百米用纬" prop="weiShaBmysl" width="120" show-overflow-tooltip/>
 
-        <el-table-column label="客户" prop="clientName" width="120" />
-        <el-table-column label="业务员" prop="saleManName" width="120" />
+        <el-table-column label="客户" prop="clientName" width="120" show-overflow-tooltip/>
+        <el-table-column label="业务员" prop="saleManName" width="120" show-overflow-tooltip/>
         <el-table-column label="备注" width="120">
           <template slot-scope="scope">
             <el-button type="text" @click="editNote(scope.row.id)"> 编辑备注 </el-button>
@@ -137,6 +142,7 @@
             <span>{{ formatStatus(scope.row.state) }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="生产安排单备注" prop="remarks" width="120" show-overflow-tooltip/>
 
       </el-table>
       <el-row style="margin-top:20px">
@@ -264,9 +270,15 @@ export default {
     initData() {
       var url = baseUrl + '/LoadWeiShaData?'
       var urlParam = toUrlParam(url, this.pageSetting)
+                  this.listLoading = true
+
       loadWSData(urlParam).then(res => {
-        window.console.log(res)
+                this.listLoading = false
         this.jsData = res.data.data
+                this.jsData.map((item,index) => {
+          this.$set(this.jsData[index], 'jiaoZhouDate', item.jiaoZhouDate.join(', '))
+          this.$set(this.jsData[index], 'huiPiDate', item.huiPiDate.join(', '))
+        })
         this.totalSize = this.jsData[0].pageQuanity
 
         this.passParam.jingSha = this.jsData.jingSha

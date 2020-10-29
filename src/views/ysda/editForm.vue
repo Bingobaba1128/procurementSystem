@@ -241,7 +241,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="供应商" label-width="160px">
+          <el-form-item label="供应商" label-width="160px" prop="gysName">
             <el-select v-model="param.gysName" placeholder="请选择">
               <el-option
                 v-for="item in gongYingList"
@@ -439,6 +439,9 @@ export default {
         ],
         otherName: [
           { required: true, message: '请输入编码', trigger: 'blur' }
+        ],
+                gysName: [
+          { required: true, message: '请输入编码', trigger: 'blur' }
         ]
       }
     }
@@ -469,7 +472,9 @@ export default {
         }
         window.console.log(this.chengFenList)
       })
-      loadData().then(res => {
+
+            var param1 = '/api/supplier/getTotalSupplier?pageSize=10&pageNumber=1&supplierType=1'
+      loadData(param1).then(res => {
         this.gongYingList = res.data.data
       })
       // alert(this.param)

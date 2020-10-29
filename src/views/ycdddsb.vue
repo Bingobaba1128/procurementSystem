@@ -45,31 +45,37 @@
             prop="beiShaDate"
             label="备纱单日期"
             width="120"
+            show-overflow-tooltip
           />
           <el-table-column
             prop="yeWuZu"
             label="业务组"
             width="120"
+            show-overflow-tooltip
           />
           <el-table-column
             prop="yuCeNo"
             label="预测订单号"
             width="120"
+            show-overflow-tooltip
           />
           <el-table-column
             prop="yuCeDate"
             label="预测下单日期"
             width="120"
+            show-overflow-tooltip
           />
           <el-table-column
             prop="variety"
             label="品种"
             width="120"
+            show-overflow-tooltip
           />
           <el-table-column
             prop="yuCeQuanity"
             label="预测数量(码长)"
             width="120"
+            show-overflow-tooltip
           />
         </el-table-column>
         <el-table-column style="text-align:center" label="备纱信息" width="1200">
@@ -78,7 +84,7 @@
               <span>{{ formatStatus(scope.row.jingOrWei) }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="经纬纱名称" prop="name" width="120" />
+          <el-table-column label="经纬纱名称" prop="name" width="120" show-overflow-tooltip/>
           <el-table-column label="长度" width="120">
             <template slot-scope="scope">
               <el-input

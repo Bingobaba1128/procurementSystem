@@ -79,9 +79,10 @@
       <el-table :data="initOriginData" border stripe max-height="750">
 
         <el-table-column type="index" label="序号" />
-        <el-table-column label="单号" prop="yuanShaPurchaseNo" />
-        <el-table-column label="签订日期" prop="signDate" />
-        <el-table-column label="供应商" prop="name" />
+                <el-table-column label="供应商" prop="name" show-overflow-tooltip/>
+
+        <el-table-column label="单号" prop="yuanShaPurchaseNo" show-overflow-tooltip/>
+        <el-table-column label="签订日期" prop="signDate" show-overflow-tooltip/>
         <el-table-column label="审核情况" prop="approveState">
           <template slot-scope="scope">
             {{ formatStatus(scope.row.approveState) }}

@@ -231,7 +231,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="供应商" label-width="160px">
+          <el-form-item label="供应商" label-width="160px" prop="gysName">
             <el-select v-model="queryParam.gysName" placeholder="请选择">
               <el-option
                 v-for="item in gongYingList"
@@ -399,6 +399,9 @@ export default {
         chanDi: [
           { required: true, message: '请选择产地', trigger: 'blur' }
         ],
+        gysName: [
+          { required: true, message: '请选择产地', trigger: 'blur' }
+        ],
         fl: [
           { required: true, message: '请选择分类', trigger: 'blur' }
         ],
@@ -434,9 +437,9 @@ export default {
       getSettingList('getAllYarnChanDiName').then(res => {
         this.chanDiList = res.data.data
       })
-      loadData().then(res => {
+      var param1 = '/api/supplier/getTotalSupplier?pageSize=10&pageNumber=1&supplierType=1'
+      loadData(param1).then(res => {
         this.gongYingList = res.data.data
-        window.console.log(this.gongYingList)
       })
     },
     bindValue(val) {
@@ -446,13 +449,13 @@ export default {
       this.$set(this.queryParam, 'gytybz', val)
     },
     saveToServe() {
-      if (this.queryParam.chanDi == '' || this.queryParam.fl == '' || this.queryParam.name == '' || this.queryParam.shaZhi == '' || this.queryParam.yanSe == '') {
+      if (this.queryParam.chanDi == '' || this.queryParam.fl == '' || this.queryParam.name == '' || this.queryParam.shaZhi == '' || this.queryParam.yanSe == '' || this.queryParam.gysName == '') {
         this.$message.error('请输入必填项')
       } else {
         window.console.log(this.queryParam)
         saveNewForm(this.queryParam).then(res => {
-          if (res.code !== 200) {
-            this.$message.error(res.data.data)
+          if (res.data.code !== 1) {
+            this.$message.error(res.data.tipInfo)
           } else {
             this.$message.success(res.data.tipInfo)
             this.$emit('closeDialog')

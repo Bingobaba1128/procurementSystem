@@ -100,10 +100,10 @@
           width="55"
         />
         <el-table-column type="index" label="序号" />
-        <el-table-column label="产地" prop="chanDi" />
-        <el-table-column label="名称" prop="name" />
-        <el-table-column label="型号" prop="xingHao" />
-        <el-table-column label="支数（折算支数）" prop="shaZhi" />
+        <el-table-column label="产地" prop="chanDi" show-overflow-tooltip/>
+        <el-table-column label="名称" prop="name" show-overflow-tooltip/>
+        <el-table-column label="型号" prop="xingHao" show-overflow-tooltip/>
+        <el-table-column label="支数（折算支数）" prop="shaZhi" show-overflow-tooltip/>
         <el-table-column label="每包个数" prop="meiBaoGeShu">
           <template slot-scope="scope">
             <el-input
@@ -124,7 +124,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="原纱定长" prop="yuanShaDingChang" />
+        <el-table-column label="原纱定长" prop="yuanShaDingChang" show-overflow-tooltip/>
 
         <el-table-column label="原纱使用长度" prop="yuanShaUserLength">
           <template slot-scope="scope">
@@ -136,18 +136,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="原纱定长使用率" prop="yuanShaUserLv">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.yuanShaUserLv"
-              placeholder="请输入定长使用率"
-              type="number"
-              clearable
-            />
-          </template>
-        </el-table-column>
-        <el-table-column label="原纱定长" prop="biLi" />
-
+        <el-table-column label="原纱定长使用率" prop="yuanShaUserLv" />
       </el-table>
       <el-row style="margin-top:20px">
         <el-pagination
@@ -305,7 +294,7 @@ export default {
         window.console.log(this.multipleSelection)
         this.multipleSelection.map(object => {
           window.console.log(object)
-          if (object.meiBaoGeShu == '' || object.meiBaoZhongLiang == '' || object.yuanShaUserLength == null || object.yuanShaUserLv == null) {
+          if (object.meiBaoGeShu == '' || object.meiBaoZhongLiang == '' || object.yuanShaUserLength == null) {
             this.$message.error('请填写需要输入的部分')
           } 
           else {

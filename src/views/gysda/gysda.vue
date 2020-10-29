@@ -26,12 +26,12 @@
     <el-row>
       <el-table :data="initAllData" height="500" border stripe>
         <el-table-column type="index" label="序号" />
-        <el-table-column label="供应商名称" prop="name" />
-        <el-table-column label="简称" prop="shortName" />
-        <el-table-column label="代码" prop="code" />
-        <el-table-column label="地址" prop="address" />
-        <el-table-column label="负责人" prop="contactName" />
-        <el-table-column label="联系电话" prop="contactPhone" />
+        <el-table-column label="供应商名称" prop="name" show-overflow-tooltip/>
+        <el-table-column label="简称" prop="shortName" show-overflow-tooltip/>
+        <el-table-column label="代码" prop="code" show-overflow-tooltip/>
+        <el-table-column label="地址" prop="address" show-overflow-tooltip/>
+        <el-table-column label="负责人" prop="contactName" show-overflow-tooltip/>
+        <el-table-column label="联系电话" prop="contactPhone" show-overflow-tooltip/>
 
         <el-table-column label="停用" prop="enable">
           <template slot-scope="scope">

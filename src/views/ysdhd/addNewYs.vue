@@ -66,14 +66,8 @@
         <el-button type="primary" @click="addRow">增加行</el-button>
       </el-col>
 
-      <el-col :span="5" :offset="2" style="display:flex">
+      <!-- <el-col :span="5" :offset="2" style="display:flex">
         <el-input v-model="selectedSupplier.chanDi" disabled>
-          <template slot="prepend">产地</template>
-        </el-input>
-      </el-col>
-
-      <el-col :span="7" :offset="1" class="searchCombo">
-        <div class="searchHeader">品种</div>
         <el-select
           v-model="selectedSupplier.pinZhong"
           filterable
@@ -85,6 +79,43 @@
             :key="item.id"
             :label="item.pinZhong"
             :value="item.pinZhong"
+            @click.native="click(item.id)"
+          />
+        </el-select>        </el-input>
+      </el-col> -->
+
+      <el-col :span="7" :offset="1" class="searchCombo">
+        <div class="searchHeader">产地</div>
+        <el-select
+          v-model="selectedSupplier.chanDi"
+          filterable
+          placeholder="请选择"
+        >
+          <el-option
+            v-for="item in chanDiList"
+            :key="item.chanDi"
+            :label="item.chanDi"
+            :value="item.chanDi"
+            @click.native="getPin(item.chanDi)"
+          />
+        </el-select>
+      </el-col>
+
+<!-- {{productFeatures}} -->
+      <el-col :span="7" :offset="1" class="searchCombo">
+        <div class="searchHeader">品种</div>
+        <el-select
+          v-model="selectedSupplier.pinZhong"
+          filterable
+          placeholder="请选择"
+          @change="selectPinZhongTrigger(selectedSupplier.pinZhong)"
+        >
+          <el-option
+            v-for="item in productFeatures"
+            :key="item.id"
+            :label="item.name"
+            :value="item.name"
+            @click.native="click(item.id)"
           />
         </el-select>
       </el-col>
@@ -217,10 +248,10 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="订单证书要求" prop="zhengShu" width="120">
+        <el-table-column label="订单证书要求" prop="zhengshuQingKuang" width="120">
           <template slot-scope="scope">
             <el-input
-              v-model="scope.row.zhengShu"
+              v-model="scope.row.zhengshuQingKuang"
               placeholder=""
               clearable
             />
@@ -244,6 +275,7 @@
 <script>
 import { baseUrl } from '@/api/apiUrl'
 import { addNewYuanSha, loadContactPerson, loadPinZhongByCloth, loadFeature, addNewData } from '@/api/ysdhd'
+import { loadData } from '@/api/gysda'
 
 export default {
   data() {
@@ -276,6 +308,7 @@ export default {
         state: '',
         suppler: ''
       },
+      price: '',
       dialogAddNewTableVisible: false,
       selectedSupplier: {
         signDate: this.getNowTime(),
@@ -292,7 +325,9 @@ export default {
       innerForm: [],
       nature: '内销',
       productFeatures: '',
-      banned: true
+      banned: true,
+      chanDiList: [],
+      specialId: ''
     }
   },
   created() {
@@ -304,30 +339,36 @@ export default {
     },
     // 供应商初始化
     initOData() {
+            var param1 = baseUrl + '/api/getAllYarnChanDi'
+      addNewYuanSha(param1).then(res => {
+        this.chanDiList = res.data.data
+      })
       var url = baseUrl + '/api/supplier/getAllSupplier?supplierType=1'
-      // var urlParam = toUrlParam(url, this.queryInfo)
-      window.console.log(url)
       addNewYuanSha(url).then(res => {
         this.supplierList = res.data.data
-        window.console.log(this.supplierList)
       })
+      
+
     },
     selectTrigger(id) {
       // 加载指定供应商联系人
       var url = baseUrl + '/api/supplier/getLoadContactName?id=' + id
       loadContactPerson(url).then(res => {
-        this.selectedSupplier.contactName = res.data.data
+        this.asaselectedSupplier.contactName = res.data.data
         this.$set(this.selectedSupplier, 'id', id)
+        
         window.console.log(this.selectedSupplier)
       })
+      this.specialId = id
       // 加载产地品种
-      var url2 = baseUrl + '/api/getYarnArchives?GysId=' + id
-      loadFeature(url2).then(res => {
-        // window.console.log(res.data.data)
-        this.productFeatures = res.data.data
-      })
+      // var url2 = baseUrl + '/api/getYarnArchives?GysId=' + id
+      // loadFeature(url2).then(res => {
+      //   // window.console.log(res.data.data)
+      //   this.productFeatures = res.data.data
+      // })
     },
     selectPinZhongTrigger(pinZhong) {
+
       for (var i = 1; i < this.productFeatures.length; i++) {
         if (this.productFeatures[i].pinZhong == pinZhong) {
           this.$set(this.selectedSupplier, 'chanDi', this.productFeatures[i].chanDi)
@@ -358,14 +399,14 @@ export default {
     },
     addRow() {
       // 预验证供应商品种不为空
-      if (this.selectedSupplier.name == '' || this.selectedSupplier.pinZhong == '') {
-        this.$message.error('请选择供应商及品种')
+      if ( this.selectedSupplier.pinZhong == '') {
+        this.$message.error('请选择及品种')
       } else {
         var insertItem = {
           id: null,
           jingSha: this.selectedSupplier.pinZhong + '' + this.selectedSupplier.chanDi,
           quanity: '',
-          unitprice: '',
+          unitprice: this.price,
           cangku: '越南原纱仓',
           shaQi: '',
           productionNo: '',
@@ -375,31 +416,58 @@ export default {
           explain: '',
           clothId: '',
           noDingDays: '',
-          zhengShu: ''
+          zhengshuQingKuang: ''
         }
         this.innerForm.push(insertItem)
         this.$set(this.selectedSupplier, 'listS', this.innerForm)
       }
     },
+    click(id){
+            var param = '/api/getOneYarnArchives/' + id
+      loadData(param).then(res => {
+        this.price = res.data.data.hsjg
+      })
+    },
+        getPin(name){
+            var param = '/api/getAllYarnArchives?chanDi=' + name
+      loadData(param).then(res => {
+        this.productFeatures = res.data.data
+      })
+    },
     onChange(name) {
       this.$set(this.selectedSupplier, 'name', name)
     },
     saveToServe() {
+      if(this.selectedSupplier.name !== ''){
       window.console.log(this.selectedSupplier.listS)
+      var flag = true
       for (var i = 0; i < this.selectedSupplier.listS.length; i++) {
         if (this.selectedSupplier.listS[i].quanity == '' || this.selectedSupplier.listS[i].unitprice == '') {
           this.$message.error('请添加产品数量和单价')
+          flag = false
         } else {
-          addNewData(this.selectedSupplier).then(res => {
+flag = true
+        }
+      }
+      if(flag){
+        this.$set(this.selectedSupplier, 'id',this.specialId)
+
+                addNewData(this.selectedSupplier).then(res => {
             if (res.data.code !== 200) {
+
               this.$message.error(res.data.msg)
             } else {
               this.$message.success(res.data.msg)
               this.$emit('closeDialog')
             }
-          })
-        }
+          })        
+      }        
+      } else {
+                      this.$message.error('请添加供应商')
+
       }
+
+
     },
     handleDelete(index, row) {
       this.innerForm.splice(index, 1)

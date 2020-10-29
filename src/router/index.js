@@ -176,10 +176,10 @@ export const constantRoutes = [
     component: Layout,
     children: [
       {
-        path: '/生产计划定纱表',
+        path: '/生产计划订纱表',
         name: 'scjhdsb',
         component: () => import('@/views/scjhdsb'),
-        meta: { title: '生产计划定纱表', icon: 'tree' }
+        meta: { title: '生产计划订纱表', icon: 'tree' }
       }
     ]
   },

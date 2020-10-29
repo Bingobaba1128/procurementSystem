@@ -71,19 +71,19 @@
           type="selection"
           width="55"
         />
-        <el-table-column type="index" label="序号" />
-        <el-table-column label="产地" prop="chanDi" />
-        <el-table-column label="名称" prop="name" />
-        <el-table-column label="属性" prop="shuXing" />
-        <el-table-column label="型号" prop="xingHao" />
-        <el-table-column label="支数（折算支数）" prop="shaZhi" />
+        <el-table-column type="index" label="序号" show-overflow-tooltip/>
+        <el-table-column label="产地" prop="chanDi" show-overflow-tooltip/>
+        <el-table-column label="名称" prop="name" show-overflow-tooltip/>
+        <el-table-column label="属性" prop="shuXing" show-overflow-tooltip/>
+        <el-table-column label="型号" prop="xingHao" show-overflow-tooltip/>
+        <el-table-column label="支数（折算支数）" prop="shaZhi" show-overflow-tooltip/>
 
-        <el-table-column label="实际价格（元/吨）" prop="sjjg" />
-        <el-table-column label="核算价格（元/吨）" prop="hsjg" />
-        <el-table-column label="设置日期" prop="setDate" />
-        <el-table-column label="备注" prop="sjjgbz" />
+        <el-table-column label="实际价格（元/吨）" prop="sjjg" show-overflow-tooltip/>
+        <el-table-column label="核算价格（元/吨）" prop="hsjg" show-overflow-tooltip/>
+        <el-table-column label="设置日期" prop="setDate" show-overflow-tooltip/>
+        <el-table-column label="备注" prop="sjjgbz" show-overflow-tooltip/>
 
-        <el-table-column label="历史价格">
+        <el-table-column label="历史价格" >
           <template slot-scope="scope">
             <el-button type="text" @click="searchHistory(scope.row.id)">查阅</el-button>
           </template>

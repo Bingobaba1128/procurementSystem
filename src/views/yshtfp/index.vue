@@ -33,9 +33,9 @@
         <el-row>
           <el-table border stripe :data="dataList" tooltip-effect="dark">
             <el-table-column type="index" label="序号" />
-            <el-table-column label="采购单号" prop="yuanShaPurchaseNo" />
-            <el-table-column label="原纱品种" prop="jingSha" />
-            <el-table-column label="采购数量(Kg)" prop="quanity" />
+            <el-table-column label="采购单号" prop="yuanShaPurchaseNo" show-overflow-tooltip/>
+            <el-table-column label="原纱品种" prop="jingSha" show-overflow-tooltip/>
+            <el-table-column label="采购数量(Kg)" prop="quanity" show-overflow-tooltip/>
 
             <el-table-column label="操作">
               <template slot-scope="scope">
@@ -54,14 +54,14 @@
           </el-row>
         </el-row>
       </el-col>
-      <el-col :span="24">
+      <!-- <el-col :span="24">
         <el-row>
 
           <el-table :data="addOriginData" border stripe tooltip-effect="dark">
             <el-table-column type="index" label="序号" />
-            <el-table-column label="采购单号" prop="yuanShaPurchaseNo" />
-            <el-table-column label="原纱品种" prop="jingSha" />
-            <el-table-column label="采购数量(Kg)" prop="quanity" />
+            <el-table-column label="采购单号" prop="yuanShaPurchaseNo" show-overflow-tooltip/>
+            <el-table-column label="原纱品种" prop="jingSha" show-overflow-tooltip/>
+            <el-table-column label="采购数量(Kg)" prop="quanity" show-overflow-tooltip/>
             <el-table-column class="alignCenter" label="入库详情">
               <el-table-column
                 prop="ruKuQuanity"
@@ -174,22 +174,25 @@
           </el-table>
 
         </el-row>
-      </el-col>
+      </el-col> -->
     </el-row>
-    <!-- <el-dialog v-if="dialogAddNewTableVisible" title="入库发票（新增）" :visible.sync="dialogAddNewTableVisible" fullscreen>
-      <addNewForm :param="addOriginData" @closeDialog="closeDialog" />
-    </el-dialog> -->
+    <el-dialog v-if="dialogAddNewTableVisible" title="原纱合同及发票管理详情页" :visible.sync="dialogAddNewTableVisible" fullscreen>
+      <showDetails :param="addOriginData" :no="passNo" :id="passId" @closeDialog="closeDialog" />
+    </el-dialog>
   </el-card>
 </template>
-
 <script>
 import { getAllData, addRecord, deleteData, searchResult, addChuanWuRecord } from '@/api/yshtfp'
 import { toUrlParam } from '@/utils/toUrlParam'
 import { baseUrl } from '@/api/apiUrl'
+import showDetails from '@/views/yshtfp/showDetails'
 
 export default {
-
+  components: {
+    showDetails
+  },
   data() {
+    
     return {
       pageSetting: {
         pageSize: 10,
@@ -200,6 +203,8 @@ export default {
       totalSize: '',
       dialogAddNewTableVisible: false,
       addOriginData: [],
+      passNo: '',
+      passId:'',
       stateList: [{
         label: '完成',
         value: '完成'
@@ -240,13 +245,16 @@ export default {
       this.initData(this.pageSetting)
     },
     addRecord(data) {
-      window.console.log(data.listS.length)
-      for (var i = 0; i < data.listS.length; i++) {
-        this.$set(data.listS[i], 'yuanShaPurchaseNo', data.yuanShaPurchaseNo)
-        this.$set(data.listS[i], 'quanity', data.quanity)
-        this.$set(data.listS[i], 'jingSha', data.jingSha)
-      }
-      this.addOriginData = data.listS
+      // window.console.log(data.listS.length)
+      // for (var i = 0; i < data.listS.length; i++) {
+      //   this.$set(data.listS[i], 'yuanShaPurchaseNo', data.yuanShaPurchaseNo)
+      //   this.$set(data.listS[i], 'quanity', data.quanity)
+      //   this.$set(data.listS[i], 'jingSha', data.jingSha)
+      // }
+      // this.addOriginData = data.listS
+      this.passNo = data.yuanShaPurchaseNo
+      this.passId = data.jingShaId
+      this.dialogAddNewTableVisible = true
       window.console.log(this.addOriginData)
     },
     handleRemove(file, fileList) {

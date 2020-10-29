@@ -87,20 +87,24 @@
         </el-table-column>
         <el-table-column label="计划交期" prop="shaQi" width="160">
           <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.shaQi"
-              placeholder=""
-              clearable
-            />
+
+                                            <el-date-picker
+          v-model="selectedSupplier.shaQi"
+          type="date"
+          placeholder="选择日期"
+          value-format="yyyy-MM-dd"
+        />
           </template>
         </el-table-column>
         <el-table-column label="确认交期" prop="chengPinDate" width="160">
           <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.chengPinDate"
-              placeholder=""
-              clearable
-            />
+
+                                <el-date-picker
+          v-model="selectedSupplier.chengPinDate"
+          type="date"
+          placeholder="选择日期"
+          value-format="yyyy-MM-dd"
+        />
           </template>
         </el-table-column>
         <el-table-column label="生产安排编号" prop="productionNo" width="120">
@@ -114,20 +118,23 @@
         </el-table-column>
         <el-table-column label="交轴日期" prop="jiaoZhouDate" width="160">
           <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.jiaoZhouDate"
-              placeholder=""
-              clearable
-            />
+
+                    <el-date-picker
+          v-model="selectedSupplier.jiaoZhouDate"
+          type="date"
+          placeholder="选择日期"
+          value-format="yyyy-MM-dd"
+        />
           </template>
         </el-table-column>
         <el-table-column label="坯布交期" prop="huiPiDate" width="160">
           <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.huiPiDate"
-              placeholder=""
-              clearable
-            />
+                                <el-date-picker
+          v-model="selectedSupplier.huiPiDate"
+          type="date"
+          placeholder="选择日期"
+          value-format="yyyy-MM-dd"
+        />
           </template>
         </el-table-column>
         <el-table-column label="备注" prop="remarks" width="120">
@@ -170,7 +177,16 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="完成日期" prop="" width="160" />
+        <el-table-column label="完成日期" prop="completeDate" width="160">
+          <template slot-scope="scope">
+                                            <el-date-picker
+          v-model="selectedSupplier.completeDate"
+          type="date"
+          placeholder="选择日期"
+          value-format="yyyy-MM-dd"
+        />
+          </template>
+        </el-table-column>
         <el-table-column label="布编" prop="clothId" width="120">
           <template slot-scope="scope">
             <el-input
@@ -180,11 +196,11 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="未定天数" prop="" width="120" />
-        <el-table-column label="订单证书要求" prop="zhengShu" width="120">
+        <el-table-column label="未定天数" prop="noDingDays" width="120" />
+        <el-table-column label="订单证书要求" prop="zhengShuQingKuang" width="120">
           <template slot-scope="scope">
             <el-input
-              v-model="scope.row.zhengShu"
+              v-model="scope.row.zhengShuQingKuang"
               placeholder=""
               clearable
             />
@@ -330,7 +346,7 @@ export default {
         explain: '',
         clothId: '',
         noDingDays: '',
-        zhengShu: ''
+        zhengShuQingKuang: ''
       }
       this.innerForm.push(insertItem)
       this.$set(this.selectedSupplier, 'listS', this.innerForm)

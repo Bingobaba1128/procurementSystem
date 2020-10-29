@@ -115,38 +115,38 @@
     <el-row>
       <el-table id="out-table" :data="initAllData" height="500" border stripe>
         <el-table-column type="index" label="序号" />
-        <el-table-column label="产地" prop="chanDi" />
-        <el-table-column label="类型" prop="fl" />
-        <el-table-column label="名称" prop="name" />
-        <el-table-column label="属性" prop="shuXingList" width="160" />
-        <el-table-column label="型号" prop="xingHao" />
-        <el-table-column label="支数（折算支数）" prop="shaZhi" />
-        <el-table-column label="核算价格（万元/吨）" prop="hsjg" />
-        <el-table-column label="工艺标志" prop="jspsbz">
+        <el-table-column label="产地" prop="chanDi" show-overflow-tooltip/>
+        <el-table-column label="类型" prop="fl" show-overflow-tooltip/>
+        <el-table-column label="名称" prop="name" show-overflow-tooltip/>
+        <el-table-column label="属性" prop="shuXingList" width="160" show-overflow-tooltip/>
+        <el-table-column label="型号" prop="xingHao" show-overflow-tooltip/>
+        <el-table-column label="支数（折算支数）" prop="shaZhi" show-overflow-tooltip/>
+        <el-table-column label="核算价格（万元/吨）" prop="hsjg" show-overflow-tooltip/>
+        <el-table-column label="工艺标志" prop="jspsbz" show-overflow-tooltip>
           <!-- <template slot-scope="scope">
             {{ statusCheck(scope.row.jspsbz) }}
           </template> -->
         </el-table-column>
 
-        <el-table-column label="成分" prop="chengFen" width="160">
+        <el-table-column label="成分" prop="chengFen" width="160" show-overflow-tooltip>
           <template slot-scope="scope">
             <p v-for="(item) in scope.row.chengFen" :key="item" style="margin:0px">
               {{ item }}
             </p>
           </template>
         </el-table-column>
-        <el-table-column label="备注" prop="note" width="160" />
+        <el-table-column label="备注" prop="note" width="160" show-overflow-tooltip/>
 
-        <el-table-column label="停用标志" prop="tybz" />
-        <el-table-column label="单纱强力标准" prop="dsqlbz" />
-        <el-table-column label="最低单纱强力标准" prop="zddsqlbz" />
-        <el-table-column label="强力CV标准" prop="qlcvbz" />
-        <el-table-column label="支偏上限标准" prop="zpsbz" />
-        <el-table-column label="捻度标准" prop="ndbz" />
-        <el-table-column label="捻系数标准" prop="nxsbz" />
-        <el-table-column label="断裂伸长率标准" prop="dlsclbz" />
-        <el-table-column label="条干（CV）标准" prop="tgbz" />
-        <el-table-column label="存货编码" prop="chbm" />
+        <el-table-column label="停用标志" prop="tybz" show-overflow-tooltip/>
+        <el-table-column label="单纱强力标准" prop="dsqlbz" show-overflow-tooltip/>
+        <el-table-column label="最低单纱强力标准" prop="zddsqlbz" show-overflow-tooltip/>
+        <el-table-column label="强力CV标准" prop="qlcvbz" show-overflow-tooltip/>
+        <el-table-column label="支偏上限标准" prop="zpsbz" show-overflow-tooltip/>
+        <el-table-column label="捻度标准" prop="ndbz" show-overflow-tooltip/>
+        <el-table-column label="捻系数标准" prop="nxsbz" show-overflow-tooltip/>
+        <el-table-column label="断裂伸长率标准" prop="dlsclbz" show-overflow-tooltip/>
+        <el-table-column label="条干（CV）标准" prop="tgbz" show-overflow-tooltip/>
+        <el-table-column label="存货编码" prop="chbm" show-overflow-tooltip/>
         <el-table-column label="操作" fixed="right" width="160">
           <template slot-scope="scope">
             <el-button type="text" @click="editDataM(scope.row.id)">修改</el-button>
@@ -235,7 +235,7 @@ export default {
       chanDiList: '',
       totalSize: '',
       pageSetting: {
-        PageIndex: 2,
+        PageIndex: 1,
         PageSize: 10
       }
     }
