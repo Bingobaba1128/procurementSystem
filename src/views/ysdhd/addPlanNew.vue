@@ -85,60 +85,8 @@
       </el-col>
 
     </el-row>
-
-    <el-row>
-      <el-table :data="planData" border stripe max-height="750">
-
-        <el-table-column type="index" label="序号" />
-        <el-table-column label="勾选采购">
-          <template slot-scope="scope">
-            <el-button type="text" @click="addRow(scope.row.id)">确定</el-button>
-          </template>
-        </el-table-column>
-        <el-table-column label="未定天数" prop="noDingDays" width="120" />
-        <el-table-column label="布编" prop="clothId" width="120" />
-        <el-table-column label="生产安排单号" prop="productionNo" width="120" />
-        <el-table-column label="经纬" prop="jingOrWei" width="120">
-          <template slot-scope="scope">
-            {{ formatjingOrWei(scope.row.jingOrWei) }}
-          </template>
-        </el-table-column>
-        <el-table-column label="纱产地及型号" prop="jingShaD" width="120" />
-        <el-table-column label="需用量（KG）" prop="xuYaoLiang" width="120" />
-        <el-table-column label="订购量（KG）" prop="dingGouLiang" width="120" />
-        <el-table-column label="价格" prop="hsjg" width="120" />
-
-        <el-table-column label="到货仓库" width="120">
-          越南原纱仓
-        </el-table-column>
-        <el-table-column label="计划交期" prop="shaQi" width="120" />
-        <el-table-column label="确认交期" prop="chengPinDate" width="120">
-          <template slot-scope="scope">
-            <p v-for="(item) in scope.row.chengPinDate" :key="item" style="margin:0px">
-              {{ item }}
-            </p>
-          </template>
-        </el-table-column>
-        <el-table-column label="交轴日期" prop="jiaoZhouDate" width="120">
-          <template slot-scope="scope">
-            <p v-for="(item) in scope.row.jiaoZhouDate" :key="item" style="margin:0px">
-              {{ item }}
-            </p>
-          </template>
-        </el-table-column>
-        <el-table-column label="坯布交期" prop="huiPiDate" width="120">
-          <template slot-scope="scope">
-            <p v-for="(item) in scope.row.huiPiDate" :key="item" style="margin:0px">
-              {{ item }}
-            </p>
-          </template>
-        </el-table-column>
-        <el-table-column label="备注" prop="remarks" width="120" />
-      </el-table>
-    </el-row>
-
     <el-row style="margin-top: 20px">
-      <el-table :data="innerForm" border stripe max-height="750">
+      <el-table :data="innerForm" border stripe  max-height="750">
 
         <el-table-column type="index" label="序号" />
         <el-table-column label="经纱产地及型号" prop="jingSha" width="120" />
@@ -165,30 +113,32 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="确认交期" prop="chengPinDate" width="160">
-          <template slot-scope="scope">
+        <el-table-column label="确认交期" prop="chengPinDate" width="160" show-overflow-tooltip>
+          <!-- <template slot-scope="scope">
             <p v-for="(item) in scope.row.chengPinDate" :key="item" style="margin:0px">
               {{ item }}
             </p>
-          </template>
+          </template> -->
 
         </el-table-column>
         <el-table-column label="生产安排编号" prop="productionNo" width="120" />
-        <el-table-column label="交轴日期" prop="jiaoZhouDate" width="160">
-          <template slot-scope="scope">
+                <el-table-column label="布编" prop="clothId" width="120" />
+
+        <el-table-column label="交轴日期" prop="jiaoZhouDate" width="160" show-overflow-tooltip>
+          <!-- <template slot-scope="scope">
             <p v-for="(item) in scope.row.jiaoZhouDate" :key="item" style="margin:0px">
               {{ item }}
             </p>
-          </template>
+          </template> -->
         </el-table-column>
-        <el-table-column label="坯布交期" prop="huiPiDate" width="160">
-          <template slot-scope="scope">
+        <el-table-column label="坯布交期" prop="huiPiDate" width="160" show-overflow-tooltip>
+          <!-- <template slot-scope="scope">
             <p v-for="(item) in scope.row.huiPiDate" :key="item" style="margin:0px">
               {{ item }}
             </p>
-          </template>
+          </template> -->
         </el-table-column>
-        <el-table-column label="备注" prop="remarks" width="120">
+        <el-table-column label="备注" prop="remarks" width="420">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.remarks"
@@ -209,7 +159,7 @@
               />
             </el-select>
           </template>
-        </el-table-column>        <el-table-column label="说明" prop="explain" width="120">
+        </el-table-column>        <el-table-column label="说明" prop="explain"   width="620">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.explain"
@@ -229,7 +179,6 @@
           </template>
         </el-table-column>
         <el-table-column label="完成日期" prop="" width="160" />
-        <el-table-column label="布编" prop="clothId" width="120" />
         <el-table-column label="未定天数" prop="noDingDays" width="120" />
         <el-table-column label="订单证书要求" prop="zhengShuQingKuang" width="120" />
         <el-table-column label="操作" width="120">
@@ -239,9 +188,65 @@
         </el-table-column>
       </el-table>
     </el-row>
+    <el-row>
+      <el-table :data="planData" border stripe max-height="750">
+
+        <el-table-column type="index" label="序号" />
+        <el-table-column label="勾选采购">
+          <template slot-scope="scope">
+            <el-button type="text" @click="addRow(scope.row.id)">确定</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column label="未定天数" prop="noDingDays" width="120" />
+        <el-table-column label="生产安排单号" prop="productionNo" width="120" />
+                <el-table-column label="布编" prop="clothId" width="120" />
+
+        <el-table-column label="经纬" prop="jingOrWei" width="120">
+          <template slot-scope="scope">
+            {{ formatjingOrWei(scope.row.jingOrWei) }}
+          </template>
+        </el-table-column>
+        <el-table-column label="纱产地及型号" prop="jingShaD" width="120" />
+        <el-table-column label="需用量（KG）" prop="xuYaoLiang" width="120" />
+        <el-table-column label="订购量（KG）" prop="dingGouLiang" width="120" />
+        <el-table-column label="价格" prop="hsjg" width="120" />
+
+        <el-table-column label="到货仓库" width="120">
+          越南原纱仓
+        </el-table-column>
+        <el-table-column label="计划交期" prop="shaQi" width="120" />
+        <el-table-column label="确认交期" prop="chengPinDate" width="120" show-overflow-tooltip> 
+          <!-- <template slot-scope="scope">
+            <p v-for="(item) in scope.row.chengPinDate" :key="item" style="margin:0px">
+              {{ item }}
+            </p>
+          </template> -->
+        </el-table-column>
+        <el-table-column label="交轴日期" prop="jiaoZhouDate" width="120" show-overflow-tooltip>
+          <!-- <template slot-scope="scope">
+            <p v-for="(item) in scope.row.jiaoZhouDate" :key="item" style="margin:0px">
+              {{ item }}
+            </p>
+          </template> -->
+        </el-table-column>
+        <el-table-column label="坯布交期" prop="huiPiDate" width="120" show-overflow-tooltip>
+          <!-- <template slot-scope="scope">
+            <p v-for="(item) in scope.row.huiPiDate" :key="item" style="margin:0px">
+              {{ item }}
+            </p>
+          </template> -->
+        </el-table-column>
+        <el-table-column label="备注" prop="remarks" width="120" />
+      </el-table>
+    </el-row>
+
+
     <el-row style="margin-top: 20px" :gutter="10">
       <el-col :span="2">
         <el-button type="primary" @click="saveToServe">确定存入</el-button>
+      </el-col>
+            <el-col :span="2">
+        <el-button type="primary" @click="addMore">继续新增</el-button>
       </el-col>
     </el-row>
 
@@ -252,6 +257,7 @@
 import { baseUrl } from '@/api/apiUrl'
 import { addNewYuanSha, loadContactPerson, searchData, loadPinZhongByCloth, loadFeature, addNewData } from '@/api/ysdhd'
 import { toUrlParam } from '@/utils/toUrlParam'
+import { getGuid } from '@/utils/getGuid'
 
 export default {
   data() {
@@ -352,6 +358,10 @@ export default {
         this.supplierList = res.data.data
         window.console.log(this.supplierList)
       })
+      var param = baseUrl + '/api/getPlanList'
+      addNewYuanSha(param).then(res => {
+        this.planData = res.data.data
+      })
     },
     selectTrigger(id) {
       // 加载指定供应商联系人
@@ -428,6 +438,11 @@ export default {
           this.innerForm.push(insertItem)
           window.console.log(this.innerForm,'indneer')
           this.$set(this.selectedSupplier, 'listS', this.innerForm)
+          this.planData.map((item,index) => {
+            if(item.id === id){
+              this.planData.splice(index,1)
+            }
+          })
         }
       }
     },
@@ -450,7 +465,31 @@ export default {
               this.$message.error(res.data.msg)
             } else {
               this.$message.success(res.data.msg)
-              this.$emit('closeDialog')
+                            this.$router.push('/原纱订货单')
+            }
+          })
+        }
+      }
+    },
+        addMore() {
+      window.console.log(this.selectedSupplier)
+      this.$set(this.selectedSupplier.listS[0], 'quanity',this.selectedSupplier.listS[0].dingGouLiang)
+      this.$set(this.selectedSupplier.listS[0], 'unitprice',this.selectedSupplier.listS[0].unitPrice)
+      if (this.selectedSupplier.name == '') {
+        this.$message.error('请选择供应商')
+      } else {
+        window.console.log(this.selectedSupplier.listS)
+        if (this.selectedSupplier.listS[0].unitPrice == '' || this.selectedSupplier.listS[0].quanity == '') {
+          this.$message.error('请添加产品数量和单价')
+        } else {
+          addNewData(this.selectedSupplier).then(res => {
+            if (res.data.code !== 200) {
+              this.$message.error(res.data.msg)
+            } else {
+              this.$message.success(res.data.msg)
+                            // this.$router.replace({ path: '/原纱合同及发票管理/原纱订货单计划新增', query: { guid: getGuid() }})
+
+this.$router.go(0)
             }
           })
         }

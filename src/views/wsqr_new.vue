@@ -29,13 +29,15 @@
 
       <!-- 确认订单状态 -->
       <el-col :span="5">
-        <el-select v-model="queryInfo.state" placeholder="确认状态">
+        <el-select v-model="queryInfo.stateName" placeholder="确认状态">
           <!-- <template slot="prefix">确认状态</template> -->
           <el-option
             v-for="item in statusOptions"
             :key="item.value"
             :label="item.label"
-            :value="item.value"
+            :value="item.label"
+                        @click.native="changeState(item.value)"
+
           />
         </el-select>
       </el-col>
@@ -65,9 +67,20 @@
         </el-table-column>
         <el-table-column label="纬纱" width="220">
           <template slot-scope="scope">
-            <el-button type="text" @click="showReplaceJS(scope.row.jingSha,scope.row.shaZhi,scope.row.id)"> {{ scope.row.jingSha }} <i class="el-icon-arrow-down el-icon--right" /> </el-button>
+            <el-button type="text" @click="showReplaceJS(scope.row.jingSha,scope.row.shaZhi,scope.row.id,scope.row)"> {{ scope.row.jingSha }} <i class="el-icon-arrow-down el-icon--right" /> </el-button>
             <el-dialog title="选择替换的纬纱" :visible.sync="dialogReplaceJSVisible" :close-on-click-modal="false">
               <el-form>
+                                <el-form-item label="产地" prop="chanDi">
+                  <el-select v-model="chanDi" filterable placeholder="请选择您所需要的产地">
+                    <el-option
+                      v-for="item in chanDiList"
+                      :key="item.chanDi"
+                      :label="item.chanDi"
+                      :value="item.chanDi"
+                      @click.native="searchJing(item, item.chanDi)"
+                    />
+                  </el-select>
+                </el-form-item>
                 <el-form-item label="纬纱" prop="jingsha">
                   <el-select v-model="JSvalue" filterable placeholder="请选择您所需要的纬纱">
                     <el-option
@@ -75,7 +88,7 @@
                       :key="item.id"
                       :label="item.name"
                       :value="item.name"
-                      @click.native="onChange(item.gongYingShang,item.yarnId)"
+                      @click.native="onChange(item,item.gongYingShang,item.yarnId)"
                     />
                   </el-select>
                 </el-form-item>
@@ -89,7 +102,7 @@
         </el-table-column>
                 <el-table-column label="型号" prop="xingHao" width="120" show-overflow-tooltip/>
 
-        <el-table-column label="需用量" prop="xuYaoLiang" width="120" show-overflow-tooltip/>
+        <el-table-column label="需用量" prop="xuYongLiang" width="120" show-overflow-tooltip/>
         <el-table-column label="计划轴期" prop="jiaoZhouDate" width="120" show-overflow-tooltip/>
           <!-- <template slot-scope="scope">
             <p v-for="(item) in scope.row.jiaoZhouDate" :key="item" style="margin:0px">
@@ -129,7 +142,7 @@
         </el-table-column>
         <el-table-column label="操作" width="120">
           <template slot-scope="scope">
-            <el-button type="text" @click="updateInfo(scope.row.id)">{{ formateUpload(scope.row.state) }}</el-button>
+            <el-button type="text" @click="updateInfo(scope.row.id,scope.$index)">{{ formateUpload(scope.row.state) }}</el-button>
           </template>
         </el-table-column>
         <el-table-column label="工艺变更申请" width="120">
@@ -149,7 +162,7 @@
         <el-pagination
           background
           layout="prev, pager, next"
-          :total="totalSize*10"
+          :total="totalSize"
           :current-page="pageSetting.pageNumber"
           @current-change="handleCurrentChange"
         />
@@ -164,6 +177,7 @@ import { loadWSData, updateWSData } from '@/api/wsqrApi'
 import { searchJSData, insteadOfJing, searchPdf } from '@/api/jsqrApi'
 import { baseUrl } from '@/api/apiUrl'
 import { toUrlParam } from '@/utils/toUrlParam'
+import { combineObject } from '@/utils/combineObject'
 
 export default {
   filters: {
@@ -195,16 +209,19 @@ export default {
         pageSize: 10
       },
       queryInfo: {
-        pageNumber: 1,
-        pageSize: 10,
         doTime: '',
         clothId: '',
         productionNo: '',
-        state: ''
+        state: 0,
+        stateName: '未确认'
       },
       jsData: '',
 
       statusOptions: [
+        {
+          value: null,
+          label: '全部'
+        },
         {
           value: '1',
           label: '已确认'
@@ -225,7 +242,11 @@ export default {
       updateParam: '',
       showCurrentNote: '',
       pdfLink: '',
-      totalSize: ''
+      totalSize: '',
+      chanDiList: '',
+      chanDi:'',
+      allData:''
+
     }
   },
 
@@ -234,6 +255,9 @@ export default {
   },
 
   methods: {
+        changeState(val){
+      this.queryInfo.state = val
+    },
     // 打开pdf
     showPdf(id) {
       const loading = this.$loading({
@@ -269,7 +293,9 @@ export default {
     // 数据初始化
     initData() {
       var url = baseUrl + '/LoadWeiShaData?'
-      var urlParam = toUrlParam(url, this.pageSetting)
+                  var searchInfo = combineObject(this.queryInfo, this.pageSetting)
+
+      var urlParam = toUrlParam(url, searchInfo)
                   this.listLoading = true
 
       loadWSData(urlParam).then(res => {
@@ -278,8 +304,12 @@ export default {
                 this.jsData.map((item,index) => {
           this.$set(this.jsData[index], 'jiaoZhouDate', item.jiaoZhouDate.join(', '))
           this.$set(this.jsData[index], 'huiPiDate', item.huiPiDate.join(', '))
+                    this.$set(this.jsData[index], 'chanDiZhongJian', '')
+          this.$set(this.jsData[index], 'jingShaZhongJian', item.jingSha)
+          this.$set(this.jsData[index], 'jingShaDangAnZhongJian', item.jingShaDangAn)
+          this.$set(this.jsData[index], 'yarnIdZhongJian', item.yarnId)
         })
-        this.totalSize = this.jsData[0].pageQuanity
+        this.totalSize = parseInt(this.jsData[0].pageQuanity) 
 
         this.passParam.jingSha = this.jsData.jingSha
         this.passParam.shaZhi = this.jsData.shaZhi
@@ -288,36 +318,45 @@ export default {
 
     // 查询数据
     searchData() {
-      var url = baseUrl + '/LoadWeiShaData?'
-      var urlParam = toUrlParam(url, this.queryInfo)
-      searchJSData(urlParam).then(res => {
-        this.jsData = res.data.data
-      })
+       this.initData()
     },
     handleCurrentChange(val) {
       this.pageSetting.pageNumber = val
       this.initData()
     },
     // 替代经纱查询
-    showReplaceJS(jingsha, shaZhiNo, id) {
-      // 储存原始数据
-      for (var i = 0; i < this.jsData.length; i++) {
-        if (this.jsData[i].id === id) {
-          this.$set(this.jsData[i], 'zhongJian', this.jsData[i].jingSha)
-          this.$set(this.jsData[i], 'original', this.jsData[i].jingShaDangAn)
-        }
-      }
-      var url = baseUrl + '/loadChangeYuanSha?'
+    showReplaceJS(jingsha, shaZhiNo, id,alldata) {
+//加载产地
+var param = baseUrl + '/api/getAllYarnChanDi'
+loadWSData(param).then(res => {
+  this.chanDiList = res.data.data
+})
+
+this.chanDi = ''
+this.JSvalue = ''
+this.jsData.map((item,index) => {
+  if(item.id === id){
+    this.allData = item
+  }
+})
+window.console.log(this.allData,'allldata')
+      
+      this.dialogReplaceJSVisible = true
+    },
+        searchJing(data, val) {
+
+      this.jingshaList = ''
+      var url = baseUrl + '/loadChangeYuanSha?' + '&chanDi='+val + '&'
       var data = {
-        shaZhi: parseInt(shaZhiNo),
-        jingSha: jingsha
+        shaZhi: this.allData.shaZhi,
+        jingSha: this.allData.jingSha
       }
       var urlParam = toUrlParam(url, data)
       insteadOfJing(urlParam).then(res => {
         this.jingshaList = Object.assign({}, this.jingshaList, res.data.data)
       })
-      this.selectedID = id
-      this.dialogReplaceJSVisible = true
+      this.JSvalue = ''
+      window.console.log(this.allData,'search jing')
     },
     switchJSType(JSvalue, id) {
       for (var i = 0; i < this.jsData.length; i++) {
@@ -329,11 +368,15 @@ export default {
       this.dialogReplaceJSVisible = false
     },
     //
-    onChange(val, id) {
+    onChange(data, val, id) {
       for (var i = 0; i < this.jsData.length; i++) {
-        if (this.jsData[i].id === this.selectedID) {
-          this.$set(this.jsData[i], 'jingShaDangAnD', val)
-          this.$set(this.jsData[i], 'yarnIdD', id)
+        if (this.jsData[i].id === this.allData.id) {
+          this.$set(this.jsData[i], 'jingShaDangAnD', data.gongYingShang)
+          this.$set(this.jsData[i], 'jingShaD',data.name )
+          this.$set(this.jsData[i], 'xingHao',data.xingHao )
+          this.$set(this.jsData[i], 'yarnIdD', data.yarnId)
+          this.$set(this.jsData[i], 'jingSha', data.name)
+          window.console.log(this.jsData[i],'test')
         }
       }
     },
@@ -380,18 +423,15 @@ export default {
       })
     },
     // 上传变更后信息
-    updateInfo(id) {
-      for (var i = 0; i < this.jsData.length; i++) {
-        if (this.jsData[i].id === id) {
+    updateInfo(id,i) {
           // this.updateData(this.jsData[i])
-          this.updateParams = Object.assign({}, this.updateParams, this.jsData[i])
+                    this.updateParams = JSON.parse(JSON.stringify(this.jsData[i]))
           this.$delete(this.updateParams, 'clothNo')
           this.$delete(this.updateParams, 'dangAnId')
           this.$delete(this.updateParams, 'doTime')
           this.$delete(this.updateParams, 'huiPiDate')
           this.$delete(this.updateParams, 'jiaoZhouDate')
           this.$delete(this.updateParams, 'jiaoZhouLength')
-          this.$delete(this.updateParams, 'xuYaoLiang')
           this.$delete(this.updateParams, 'applyTime')
           this.$delete(this.updateParams, 'shaZhi')
           //   this.$delete(this.updateParams, 'jingSha')
@@ -399,13 +439,15 @@ export default {
 
           this.$set(this.updateParams, 'personId', '10001')
           this.$set(this.updateParams, 'personName', '邓科')
+                    this.$set(this.updateParams, 'jingSha', this.jsData[i].jingShaZhongJian)
+          this.$set(this.updateParams, 'jingShaDangAn', this.jsData[i].jingShaDangAnZhongJian)
+          this.$set(this.updateParams, 'yarnId', this.jsData[i].yarnIdZhongJian)
           if (this.updateParams.state == 0) {
             this.$set(this.updateParams, 'id', null)
           }
           window.console.log(this.updateParams)
           this.updateData(this.updateParams)
-        }
-      }
+      
     }
 
   }

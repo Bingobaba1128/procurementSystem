@@ -57,7 +57,7 @@
       </el-dialog>
 
       <el-dialog v-if="dialogAddPlanNewTableVisible" title="原纱订货单（计划申请）" :visible.sync="dialogAddPlanNewTableVisible" fullscreen>
-        <addPlanNew @closeDialog="closeDialog" />
+        <addPlanNew @closeDialog1="closeDialog1"  @closeDialog="closeDialog"/>
       </el-dialog>
       <el-dialog v-if="dialogEditPlanTableVisible" title="计划原纱订货单（修改）" :visible.sync="dialogEditPlanTableVisible" fullscreen>
         <editPlanTable :param="editOriginData" @closeDialog="closeDialog" />
@@ -118,6 +118,7 @@
 
 <script>
 import { baseUrl } from '@/api/apiUrl'
+import { getGuid } from '@/utils/getGuid'
 
 import addNewForm from '@/views/ysdhd/addNewYs'
 import editTable from '@/views/ysdhd/editDingDan'
@@ -206,7 +207,11 @@ export default {
       })
     },
     addNewYS() {
-      this.dialogAddNewTableVisible = true
+//             let { href } = this.$router.resolve({ path: '/原纱订货单新增' })
+// window.open(href, '_blank')
+                                  this.$router.push({ path: '/原纱合同及发票管理/原纱订货单新增', query: { guid: getGuid() }})
+
+      // this.dialogAddNewTableVisible = true
       // var url = baseUrl + '/api/supplier/getAllSupplier?supplierType=1'
       // // var urlParam = toUrlParam(url, this.queryInfo)
       // window.console.log(url)
@@ -262,15 +267,31 @@ export default {
       })
     },
     addPlanNewForm() {
-      this.dialogAddPlanNewTableVisible = true
+                                  this.$router.push({ path: '/原纱合同及发票管理/原纱订货单计划新增', query: { guid: getGuid() }})
+
+      // this.$router.push('/原纱订货单计划新增')
+//       let { href } = this.$router.resolve({ path: '/原纱订货单计划新增' })
+// window.open(href, '_blank')
+      // this.dialogAddPlanNewTableVisible = true
     },
     closeDialog() {
       this.dialogEditTableVisible = false
-      this.dialogAddNewTableVisible = false
-      this.dialogAddPlanNewTableVisible = false
+      // this.dialogAddNewTableVisible = false
+      // this.dialogAddPlanNewTableVisible = false
       this.dialogEditPlanTableVisible = false
       this.initData()
     },
+    //     closeDialog1() {
+    //   this.dialogAddPlanNewTableVisible = false
+
+    //   setTimeout(function(){ 
+    //     this.dialogAddPlanNewTableVisible = true 
+    //     alert('is meeee')
+
+    //   }, 20020);
+
+
+    // },
     handleCurrentChange(val) {
       this.pageSetting.pageNumber = val
       this.initData()

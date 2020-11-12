@@ -29,13 +29,14 @@
 
       <!-- 确认订单状态 -->
       <el-col :span="5">
-        <el-select v-model="queryInfo.state" clearable placeholder="确认状态">
+        <el-select v-model="queryInfo.stateName" clearable placeholder="确认状态">
           <!-- <template slot="prefix">确认状态</template> -->
           <el-option
             v-for="item in statusOptions"
             :key="item.value"
             :label="item.label"
-            :value="item.value"
+            :value="item.label"
+            @click.native="changeState(item.value)"
           />
         </el-select>
       </el-col>
@@ -63,19 +64,19 @@
         <el-table-column label="浆长" prop="jiaoZhouLength" width="120" show-overflow-tooltip/>
         <!-- <el-table-column label="测试" prop="shaZhi" /> -->
 
-        <el-table-column label="经纱" class="jingsha" width="160">
+        <el-table-column label="经纱" class="jingSha" width="160">
           <template slot-scope="scope">
-            <el-button type="text" @click="showReplaceJS(scope.row.jingSha,scope.row.shaZhi,scope.row.id)"> {{ scope.row.jingSha }} <i class="el-icon-arrow-down el-icon--right" /> </el-button>
+            <el-button type="text" @click="showReplaceJS(scope.row.jingSha,scope.row.shaZhi,scope.row.id,scope.row)"> {{ scope.row.jingSha }} <i class="el-icon-arrow-down el-icon--right" /> </el-button>
             <el-dialog title="选择替换的经纱" :visible.sync="dialogReplaceJSVisible" :close-on-click-modal="false">
               <el-form>
-                <el-form-item label="产地" prop="jingsha">
-                  <el-select v-model="JSvalue" filterable placeholder="请选择您所需要的产地">
+                <el-form-item label="产地" prop="chanDi">
+                  <el-select v-model="chanDi" filterable placeholder="请选择您所需要的产地">
                     <el-option
-                      v-for="item in jingshaList"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.name"
-                      @click.native="onChange(item, item.gongYingShang,item.yarnId)"
+                      v-for="item in chanDiList"
+                      :key="item.chanDi"
+                      :label="item.chanDi"
+                      :value="item.chanDi"
+                      @click.native="searchJing(item, item.chanDi)"
                     />
                   </el-select>
                 </el-form-item>
@@ -100,7 +101,7 @@
         </el-table-column>
                 <el-table-column label="型号" prop="xingHao" width="120" />
         <el-table-column label="根数" prop="touFen" width="120" />
-        <el-table-column label="需用量" prop="xuYaoLiang" width="120" show-overflow-tooltip/>
+        <el-table-column label="需用量" prop="xuYongLiang" width="120" show-overflow-tooltip/>
         <el-table-column label="计划轴期" prop="jiaoZhouDate" width="120" show-overflow-tooltip />
         <el-table-column label="计划坯期" prop="huiPiDate" width="120" show-overflow-tooltip />
         <el-table-column label="客户" prop="clientName" width="120" show-overflow-tooltip/>
@@ -127,7 +128,7 @@
         </el-table-column>
         <el-table-column label="操作" width="120">
           <template slot-scope="scope">
-            <el-button type="text" @click="updateInfo(scope.row, scope.row.id)">{{ formateUpload(scope.row.state) }}</el-button>
+            <el-button type="text" @click="updateInfo(scope.row, scope.row.id,scope.$index)">{{ formateUpload(scope.row.state) }}</el-button>
           </template>
         </el-table-column>
         <el-table-column label="工艺变更申请" width="120">
@@ -147,7 +148,7 @@
         <el-pagination
           background
           layout="prev, pager, next"
-          :total="totalSize*10"
+          :total="totalSize"
           :current-page="pageSetting.pageNumber"
           @current-change="handleCurrentChange"
         />
@@ -161,6 +162,7 @@
 import { loadJSData, searchJSData, insteadOfJing, updateJSData, searchPdf } from '@/api/jsqrApi'
 import { baseUrl } from '@/api/apiUrl'
 import { toUrlParam } from '@/utils/toUrlParam'
+import { combineObject } from '@/utils/combineObject'
 
 export default {
   filters: {
@@ -186,6 +188,7 @@ export default {
         resource: '',
         desc: ''
       },
+      chanDiList:'',
             listLoading: true,
       JSvalue: '',
       dialogVisible: false,
@@ -194,16 +197,19 @@ export default {
         pageSize: 10
       },
       queryInfo: {
-        pageNumber: 1,
-        pageSize: 10,
         doTime: '',
         clothId: '',
         productionNo: '',
-        state: ''
+        state: 0,
+        stateName: '未确定'
       },
       jsData: '',
 
       statusOptions: [
+        {
+          value: null,
+          label: '全部'
+        },
         {
           value: '1',
           label: '已确认'
@@ -224,7 +230,9 @@ export default {
       updateParam: '',
       showCurrentNote: '',
       pdfLink: '',
-      totalSize: ''
+      totalSize: '',
+      chanDi: '',
+      allData: ''
     }
   },
 
@@ -233,6 +241,9 @@ export default {
   },
 
   methods: {
+    changeState(val){
+      this.queryInfo.state = val
+    },
     // 打开pdf
     showPdf(id) {
       const loading = this.$loading({
@@ -268,7 +279,9 @@ export default {
     // 数据初始化
     initData() {
       var url = baseUrl + '/LoadData?'
-      var urlParam = toUrlParam(url, this.pageSetting)
+            var searchInfo = combineObject(this.queryInfo, this.pageSetting)
+
+      var urlParam = toUrlParam(url, searchInfo)
             this.listLoading = true
 
       loadJSData(urlParam).then(res => {
@@ -278,63 +291,91 @@ export default {
         this.jsData.map((item,index) => {
           this.$set(this.jsData[index], 'jiaoZhouDate', item.jiaoZhouDate.join(', '))
           this.$set(this.jsData[index], 'huiPiDate', item.huiPiDate.join(', '))
+          this.$set(this.jsData[index], 'chanDiZhongJian', '')
+          this.$set(this.jsData[index], 'jingShaZhongJian', item.jingSha)
+          this.$set(this.jsData[index], 'jingShaDangAnZhongJian', item.jingShaDangAn)
+          this.$set(this.jsData[index], 'yarnIdZhongJian', item.yarnId)
         })
+        window.console.log(this.jsData)
         this.passParam.jingSha = this.jsData.jingSha
         this.passParam.shaZhi = this.jsData.shaZhi
-        this.totalSize = this.jsData[0].pageQuanity
+        this.totalSize = parseInt(this.jsData[0].pageQuanity) 
       })
     },
 
     // 查询数据
     searchData() {
-      var url = baseUrl + '/LoadData?'
-      var urlParam = toUrlParam(url, this.queryInfo)
-      searchJSData(urlParam).then(res => {
-        this.jsData = res.data.data
-      })
+      this.initData()
+      // var url = baseUrl + '/LoadData?'
+      //             var searchInfo = combineObject(this.queryInfo, this.pageSetting)
+
+      // var urlParam = toUrlParam(url, searchInfo)
+      // searchJSData(urlParam).then(res => {
+      //   this.jsData = res.data.data
+      //           this.totalSize = this.jsData[0].pageQuanity
+
+      // })
     },
 
     // 替代经纱查询
-    showReplaceJS(jingsha, shaZhiNo, id) {
-      // 储存原始数据
-      for (var i = 0; i < this.jsData.length; i++) {
-        if (this.jsData[i].id === id) {
-          this.$set(this.jsData[i], 'zhongJian', this.jsData[i].jingSha)
-          this.$set(this.jsData[i], 'original', this.jsData[i].jingShaDangAn)
-        }
-      }
-      var url = baseUrl + '/loadChangeYuanSha?'
+    showReplaceJS(jingsha, shaZhiNo, id,alldata) {
+//加载产地
+var param = baseUrl + '/api/getAllYarnChanDi'
+loadJSData(param).then(res => {
+  this.chanDiList = res.data.data
+})
+
+this.chanDi = ''
+this.JSvalue = ''
+this.jsData.map((item,index) => {
+  if(item.id === id){
+    this.allData = item
+  }
+})
+window.console.log(this.allData,'allldata')
+      
+      this.dialogReplaceJSVisible = true
+    },
+    searchJing(data, val) {
+
+      this.jingshaList = ''
+      var url = baseUrl + '/loadChangeYuanSha?' + '&chanDi='+val + '&'
       var data = {
-        shaZhi: shaZhiNo,
-        jingSha: jingsha
+        shaZhi: this.allData.shaZhi,
+        jingSha: this.allData.jingSha
       }
       var urlParam = toUrlParam(url, data)
       insteadOfJing(urlParam).then(res => {
         this.jingshaList = Object.assign({}, this.jingshaList, res.data.data)
       })
-      this.selectedID = id
       this.JSvalue = ''
-      this.dialogReplaceJSVisible = true
+      window.console.log(this.allData,'search jing')
     },
     switchJSType(JSvalue, id) {
       for (var i = 0; i < this.jsData.length; i++) {
-        if (this.jsData[i].id === id) {
+        if (this.jsData[i].id === this.allData.id) {
                     this.$set(this.jsData[i], 'zhongJian', this.jsData[i].jingSha)
 
-          this.$set(this.jsData[i], 'jingSha', JSvalue)
+          // this.$set(this.jsData[i], 'jingSha', JSvalue)
           // this.$set(this.jsData[i], 'jingShaD', JSvalue)
         }
       }
+      this.chanDi = ''
+this.JSvalue = ''
+// this.allData = ''
       this.dialogReplaceJSVisible = false
     },
     //
-    onChange(data, val, id) {
+    onChange(data, val, index) {
+      window.console.log(this.allData,'onchange')
       for (var i = 0; i < this.jsData.length; i++) {
-        if (this.jsData[i].id === this.selectedID) {
+        if (this.jsData[i].id === this.allData.id) {
           this.$set(this.jsData[i], 'jingShaDangAnD', data.gongYingShang)
           this.$set(this.jsData[i], 'jingShaD',data.name )
           this.$set(this.jsData[i], 'xingHao',data.xingHao )
           this.$set(this.jsData[i], 'yarnIdD', data.yarnId)
+          this.$set(this.jsData[i], 'jingSha', data.name)
+          window.console.log(this.jsData[i],'test')
         }
       }
     },
@@ -363,6 +404,7 @@ export default {
 
     // 更新编辑信息(传参格式特殊)
     updateData(param1) {
+      window.console.log(param1,'padddataaaa')
       updateJSData(param1).then(res => {
         // 点击提交后，后端传回数据
         if (res.data.code !== 200) {
@@ -378,31 +420,35 @@ export default {
       })
     },
     // 上传变更后信息
-    updateInfo(data,id) {
-      for (var i = 0; i < this.jsData.length; i++) {
+    updateInfo(data,id,i) {
 
-        if (this.jsData[i].id === id) {
           if(this.jsData[i].state === '0'){
-            window.console.log(this.jsData[i])
-          this.updateParams = Object.assign({}, this.updateParams, this.jsData[i])
+            window.console.log(this.jsData[i],'00000')
+                    this.updateParams = JSON.parse(JSON.stringify(this.jsData[i]))
+
           this.updateData(this.jsData[i])            
 
           } else {
-          this.$set(this.jsData[i],'jingSha',this.jsData[i].zhongJian)
-          this.updateParams = Object.assign({}, this.updateParams, this.jsData[i])
+          // this.$set(this.jsData[i],'jingSha',this.jsData[i].zhongJian)
+                    // this.updateData(this.jsData[i])            
+
+                    this.updateParams = JSON.parse(JSON.stringify(this.jsData[i]))
+          window.console.log(this.jsData[i],'11111')
           this.$delete(this.updateParams, 'clothNo')
           this.$delete(this.updateParams, 'dangAnId')
           this.$delete(this.updateParams, 'doTime')
           this.$delete(this.updateParams, 'huiPiDate')
           this.$delete(this.updateParams, 'jiaoZhouDate')
           this.$delete(this.updateParams, 'jiaoZhouLength')
-          this.$delete(this.updateParams, 'xuYaoLiang')
           this.$delete(this.updateParams, 'applyTime')
           this.$delete(this.updateParams, 'shaZhi')
 
           this.$set(this.updateParams, 'personId', '10001')
           this.$set(this.updateParams, 'personName', '邓科')
-          this.$set(this.updateParams, 'personName', '邓科')
+          this.$set(this.updateParams, 'jingSha', this.jsData[i].jingShaZhongJian)
+          this.$set(this.updateParams, 'jingShaDangAn', this.jsData[i].jingShaDangAnZhongJian)
+          this.$set(this.updateParams, 'yarnId', this.jsData[i].yarnIdZhongJian)
+
           if (this.updateParams.state == 0) {
             this.$set(this.updateParams, 'id', null)
           }
@@ -412,8 +458,8 @@ export default {
 
           // window.console.log(this.updateParams)
           
-        }
-      }
+        
+      
     },
     handleCurrentChange(val) {
       this.pageSetting.pageNumber = val

@@ -219,6 +219,46 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/yshtfp1',
+    component: Layout,
+    children: [
+      {
+        path: '/原纱合同及发票管理/原纱订货单计划新增',
+        name: 'ysdhdPlan',
+        component: () => import('@/views/ysdhd/addPlanNew'),
+        meta: { title: '原纱订货单计划新增'},
+        hidden: true
+      }
+    ]
+  },
+  {
+    path: '/yshtfp1',
+    component: Layout,
+    children: [
+      {
+        path: '/原纱合同及发票管理/原纱订货单新增',
+        name: 'ysdhdNew',
+        component: () => import('@/views/ysdhd/addNewYs'),
+        meta: { title: '原纱订货单新增'},
+        hidden: true
+      }
+    ]
+  },
+  // {
+  //       path: '/原纱订货单计划新增',
+  //       name: 'ysdhdPlan',
+  //       component: () => import('@/views/ysdhd/addPlanNew'),
+  //       meta: { title: '原纱订货单计划新增'},
+  //       hidden: true
+  // },
+//   {
+//     path: '/原纱订货单新增',
+//     name: 'ysdhdNew',
+//     component: () => import('@/views/ysdhd/addNewYs'),
+//     meta: { title: '原纱订货单新增'},
+//     hidden: true
+// },
   // {
   //   path: '/nested',
   //   component: Layout,

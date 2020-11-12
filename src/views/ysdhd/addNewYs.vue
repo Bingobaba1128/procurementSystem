@@ -268,6 +268,9 @@
       <el-col :span="2">
         <el-button type="primary" @click="saveToServe">确定存入</el-button>
       </el-col>
+                  <el-col :span="2">
+        <el-button type="primary" @click="addMore">继续新增</el-button>
+      </el-col>
     </el-row>
   </el-card>
 </template>
@@ -458,7 +461,39 @@ flag = true
               this.$message.error(res.data.msg)
             } else {
               this.$message.success(res.data.msg)
-              this.$emit('closeDialog')
+                                  this.$router.push({ path: '/原纱合同及发票管理/原纱订货单新增', query: { guid: getGuid() }})
+            }
+          })        
+      }        
+      } else {
+                      this.$message.error('请添加供应商')
+
+      }
+
+
+    },
+        addMore() {
+      if(this.selectedSupplier.name !== ''){
+      window.console.log(this.selectedSupplier.listS)
+      var flag = true
+      for (var i = 0; i < this.selectedSupplier.listS.length; i++) {
+        if (this.selectedSupplier.listS[i].quanity == '' || this.selectedSupplier.listS[i].unitprice == '') {
+          this.$message.error('请添加产品数量和单价')
+          flag = false
+        } else {
+flag = true
+        }
+      }
+      if(flag){
+        this.$set(this.selectedSupplier, 'id',this.specialId)
+
+                addNewData(this.selectedSupplier).then(res => {
+            if (res.data.code !== 200) {
+
+              this.$message.error(res.data.msg)
+            } else {
+              this.$message.success(res.data.msg)
+this.$router.go(0)
             }
           })        
       }        

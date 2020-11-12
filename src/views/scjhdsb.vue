@@ -83,21 +83,24 @@
       <!-- </el-col> -->
 
       <!-- 生产安排单 -->
-      <!-- <el-col :lg="{span:6}" class="searchCombo">
-        <div class="searchHeader">{{ queryInfo.orderStandard }}</div>
-        <el-input v-model="queryInfo.bbNo" placeholder="" clearable />
-      </el-col> -->
+      <el-col :lg="{span:5}" class="searchCombo">
+        <div class="searchHeader">需用量</div>
+        <el-select v-model="queryInfo.xuYongName" placeholder="请选择">
+          <el-option
+            v-for="item in xuYongList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+            @click.native="bindvalue(item.value)"
+          />
+        </el-select>
+      </el-col>
       <!-- 检索按钮 -->
       <el-col :lg="{span:2}" class="searchCombo">
         <el-button type="primary" icon="el-icon-search" @click="searchData">检索</el-button>
       </el-col>
 
-      <el-col :lg="{span:4}" class="searchCombo" style="margin-left: 20px">
-        <div style="display:flex; flex-direction:column; width:100%">
-          <div class="searchHeader">需用量合计：{{ totalNeeded }}</div>
-          <div class="searchHeader">订购量合计：{{ totalOrderAmount }}</div>
-        </div>
-      </el-col>
+
     </el-row>
     <el-row style="margin-top: 20px">
       <el-col :lg="{span:2}" class="searchCombo">
@@ -106,57 +109,63 @@
       <el-col :lg="{span:2}" class="searchCombo">
         <el-button type="primary" plain @click="clickToShow">批量保存</el-button>
       </el-col>
+            <el-col :lg="{span:4}" class="searchCombo" style="margin-left: 20px">
+        <div style="display:flex; flex-direction:column; width:100%">
+          <div class="searchHeader">需用量合计：{{ totalNeeded }}</div>
+          <div class="searchHeader">订购量合计：{{ totalOrderAmount }}</div>
+        </div>
+      </el-col>
     </el-row>
     <!-- 列表区 -->
     <el-row>
-      <el-table ref="multipleTable" :data="getInitData" border stripe tooltip-effect="dark" :span-method="objectSpanMethod" @selection-change="handleSelectionChange">
+      <el-table ref="multipleTable" :data="getInitData" 
+      border 
+      stripe 
+      tooltip-effect="dark" 
+      :span-method="objectSpanMethod"
+              v-loading="listLoading"
+        element-loading-text="努力加载中..."
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(255,255, 255, 0.9)"
+        empty-text=" " 
+      @selection-change="handleSelectionChange">
 
         <el-table-column  label="序号" prop="clothId">
                   <template slot-scope="scope">
-            {{scope.row.no}}
+            {{scope.row.indexNo}}
           </template>
         </el-table-column>
 
-        <el-table-column label="下单日期" prop="doTime" />
-        <el-table-column label="布编" prop="clothId" />
-        <el-table-column label="浆纱单号" prop="productionNo" />
+        <el-table-column label="下单日期" prop="doTime" width="120"/>
+        <el-table-column label="布编" prop="clothId" width="120"/>
+        <el-table-column label="浆纱单号" prop="productionNo" width="120"/>
         <el-table-column label="浆长(米)" prop="jiaoZhouLength" />
         <el-table-column label="坯布长(米)" prop="huiPiLength" />
-        <el-table-column label="生产安排单" prop="produceRequestNo" />
+        <el-table-column label="生产安排单" prop="produceRequestNo" width="120"/>
         <el-table-column label="浆染厂" prop="jiangRanChang" />
         <el-table-column label="织造厂" prop="zhiZaoChang" />
-        <el-table-column label="交轴日期" prop="jiaoZhouDate" width="100">
-          <template slot-scope="scope">
-            <p v-for="(item) in scope.row.jiaoZhouDate" :key="item" style="margin:0px">
-              {{ item }}
-            </p>
-          </template>
-        </el-table-column>
-        <el-table-column label="坯布交期" prop="huiPiDate" width="100">
-          <template slot-scope="scope">
-            <p v-for="(item) in scope.row.huiPiDate" :key="item" style="margin:0px">
-              {{ item }}
-            </p>
-          </template>
-        </el-table-column>
-        <el-table-column label="成品交期" prop="chengPinDate" width="100">
-          <template slot-scope="scope">
-            <p v-for="(item) in scope.row.chengPinDate" :key="item" style="margin:0px">
-              {{ item }}
-            </p>
-          </template>
-        </el-table-column>
+        <el-table-column label="交轴日期" prop="jiaoZhouDate" width="100" show-overflow-tooltip/>
+
+        <el-table-column label="坯布交期" prop="huiPiDate" width="100" show-overflow-tooltip/>
+
+        <el-table-column label="成品交期" prop="chengPinDate" width="100" show-overflow-tooltip/>
+
 
         <!--二级表头 -->
         <el-table-column label="经纬纱信息" width="1900">
           <!-- <el-table ref="multipleTable" border stripe @selection-change="handleSelectionChange"> -->
+                      <el-table-column
+            type="selection"
+            width="55"
+            fixed="right"
+          />
           <el-table-column label="经/纬纱">
             <template slot-scope="scope">
               <span>{{ formatStatus(scope.row.jingOrWei) }}</span>
             </template>
 
           </el-table-column>
-          <el-table-column label="经纬纱名称" prop="jingSha" show-overflow-tooltip/>
+          <el-table-column label="经纬纱名称" prop="jingSha" width="120" show-overflow-tooltip/>
           <el-table-column label="型号" prop="xingHao" show-overflow-tooltip/>
 
           <el-table-column label="需用量(KG)" prop="xuYaoLiang" width="160">
@@ -188,17 +197,14 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="购纱计划状态" prop="queRenComplete" width="350">
+          <el-table-column label="购纱计划状态" prop="queRenComplete" width="150">
             <template slot-scope="scope">
               <span>{{ formatConfirmStatus(scope.row.queRenComplete) }}</span>
             </template>
           </el-table-column>
           <el-table-column label="经纬纱确认状态" prop="querenSymbol" width="120" />
 
-          <el-table-column
-            type="selection"
-            width="55"
-          />
+
         </el-table-column>
       </el-table>
       <el-row style="margin-top:20px">
@@ -266,6 +272,11 @@ import XLSX from 'xlsx'
 export default {
   data() {
     return {
+      xuYongList: [
+        {label: '隐藏无需用量', value: '' },
+        {label: '显示无需用量', value: '0' },
+        
+      ],
       multipleSelection: [],
       totalNeeded: '',
       totalOrderAmount: '',
@@ -276,10 +287,14 @@ export default {
         productionNo: '',
         orderDate: this.getInitDate(),
         jingOrWei: '2',
-        queRenComplete: '2',
+        queRenComplete: '0',
         pageNumber: 1,
-        pageSize: 10
+        pageSize: 10,
+        xuYongName: '',
+        xuYong: ''
       },
+            listLoading: true,
+
       orderList: [
         {
           value: '生产安排单',
@@ -347,7 +362,11 @@ export default {
             var searchInfo = combineObject(this.queryInfo, setting)
 
       var urlParam = toUrlParam(url, searchInfo)
+            this.listLoading = true
+
       loadSJDSBData(urlParam).then(res => {
+                this.listLoading = false
+
         if (res.data.code !== 200) {
           this.$message.error(res.data.msg)
         } else {
@@ -357,6 +376,27 @@ export default {
           this.totalNeeded = this.getInitOData[0].xyl
           this.totalOrderAmount = this.getInitOData[0].dgl
           // 合并的地方
+          var list = []
+          this.getInitOData.map(item => {
+            if(list.indexOf(item.produceRequestNo) === -1){
+              list.push(item.produceRequestNo)
+            }
+          })
+          list.map((no,index) => {
+            this.getInitOData.map((item,index1) =>{
+              if(item.produceRequestNo === no){
+                this.$set(this.getInitOData[index1], 'indexNo', index+1)
+              }
+            })
+          })
+
+          window.console.log(this.getInitOData)
+          this.getInitOData.map((item,index) =>{
+            this.$set(this.getInitOData[index], 'jiaoZhouDate', item.jiaoZhouDate.join(','))
+            this.$set(this.getInitOData[index], 'huiPiDate', item.huiPiDate.join(','))
+            this.$set(this.getInitOData[index], 'chengPinDate', item.chengPinDate.join(','))
+
+          })
           this.getInitData = this.mergeTableRow(this.getInitOData, ['doTime', 'clothId', 'productionNo', 'jiaoZhouLength', 'huiPiLength', 'produceRequestNo', 'jiangRanChang', 'zhiZaoChang', 'jiaoZhouDate', 'huiPiDate', 'chengPinDate'])
         }
       })
@@ -366,6 +406,9 @@ export default {
       list.push(this.getPreMonthTime())
       list.push(this.getNowTime())
       return list
+    },
+    bindvalue(value){
+      this.queryInfo.xuYong = value
     },
         getNowTime() {
       var now = new Date()
