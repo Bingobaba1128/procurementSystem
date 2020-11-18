@@ -5,7 +5,7 @@
 
       <!-- 生产安排单 -->
       <el-col :lg="{span:6}" class="searchCombo">
-        <div class="searchHeader">生产安排单</div>
+        <div class="searchHeader">生产单号</div>
         <el-input v-model="queryInfo.produceRequestNo" placeholder="请输入生产安排单" clearable />
       </el-col>
 
@@ -20,11 +20,22 @@
         <el-input v-model="queryInfo.jingSha" placeholder="请输入经纬纱名称" clearable />
       </el-col>
       <!-- 浆纱单号 -->
-      <el-col :lg="{span:6}" class="searchCombo">
+      <!-- <el-col :lg="{span:6}" class="searchCombo">
         <div class="searchHeader">浆纱单号</div>
         <el-input v-model="queryInfo.productionNo" placeholder="请输入浆纱单号" clearable />
+      </el-col> -->
+      <el-col :lg="{span:5}" class="searchCombo">
+        <div class="searchHeader">需用量</div>
+        <el-select v-model="queryInfo.xuYongName" placeholder="请选择">
+          <el-option
+            v-for="item in xuYongList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+            @click.native="bindvalue(item.value)"
+          />
+        </el-select>
       </el-col>
-
     </el-row>
 
     <el-row :gutter="15" style="margin-top:20px">
@@ -83,23 +94,17 @@
       <!-- </el-col> -->
 
       <!-- 生产安排单 -->
-      <el-col :lg="{span:5}" class="searchCombo">
-        <div class="searchHeader">需用量</div>
-        <el-select v-model="queryInfo.xuYongName" placeholder="请选择">
-          <el-option
-            v-for="item in xuYongList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-            @click.native="bindvalue(item.value)"
-          />
-        </el-select>
-      </el-col>
+
       <!-- 检索按钮 -->
       <el-col :lg="{span:2}" class="searchCombo">
         <el-button type="primary" icon="el-icon-search" @click="searchData">检索</el-button>
       </el-col>
-
+            <el-col :lg="{span:4}" class="searchCombo" style="margin-left: 20px">
+        <div style="display:flex; flex-direction:column; width:100%">
+          <div class="searchHeader">需用量合计：{{ totalNeeded }}</div>
+          <div class="searchHeader">订购量合计：{{ totalOrderAmount }}</div>
+        </div>
+      </el-col>
 
     </el-row>
     <el-row style="margin-top: 20px">
@@ -109,12 +114,7 @@
       <el-col :lg="{span:2}" class="searchCombo">
         <el-button type="primary" plain @click="clickToShow">批量保存</el-button>
       </el-col>
-            <el-col :lg="{span:4}" class="searchCombo" style="margin-left: 20px">
-        <div style="display:flex; flex-direction:column; width:100%">
-          <div class="searchHeader">需用量合计：{{ totalNeeded }}</div>
-          <div class="searchHeader">订购量合计：{{ totalOrderAmount }}</div>
-        </div>
-      </el-col>
+
     </el-row>
     <!-- 列表区 -->
     <el-row>
@@ -138,34 +138,30 @@
 
         <el-table-column label="下单日期" prop="doTime" width="120"/>
         <el-table-column label="布编" prop="clothId" width="120"/>
-        <el-table-column label="浆纱单号" prop="productionNo" width="120"/>
+        <el-table-column label="生产单号" prop="productionNo" width="120"/>
         <el-table-column label="浆长(米)" prop="jiaoZhouLength" />
         <el-table-column label="坯布长(米)" prop="huiPiLength" />
-        <el-table-column label="生产安排单" prop="produceRequestNo" width="120"/>
+        <!-- <el-table-column label="生产安排单" prop="produceRequestNo" width="120"/>
         <el-table-column label="浆染厂" prop="jiangRanChang" />
-        <el-table-column label="织造厂" prop="zhiZaoChang" />
-        <el-table-column label="交轴日期" prop="jiaoZhouDate" width="100" show-overflow-tooltip/>
+        <el-table-column label="织造厂" prop="zhiZaoChang" /> -->
+        <el-table-column label="交轴日期" prop="jiaoZhouDate1" width="100" show-overflow-tooltip/>
 
-        <el-table-column label="坯布交期" prop="huiPiDate" width="100" show-overflow-tooltip/>
+        <el-table-column label="坯布交期" prop="huiPiDate1" width="100" show-overflow-tooltip/>
 
-        <el-table-column label="成品交期" prop="chengPinDate" width="100" show-overflow-tooltip/>
+        <el-table-column label="成品交期" prop="chengPinDate1" width="100" show-overflow-tooltip/>
 
 
         <!--二级表头 -->
         <el-table-column label="经纬纱信息" width="1900">
           <!-- <el-table ref="multipleTable" border stripe @selection-change="handleSelectionChange"> -->
-                      <el-table-column
-            type="selection"
-            width="55"
-            fixed="right"
-          />
+
           <el-table-column label="经/纬纱">
             <template slot-scope="scope">
               <span>{{ formatStatus(scope.row.jingOrWei) }}</span>
             </template>
 
           </el-table-column>
-          <el-table-column label="经纬纱名称" prop="jingSha" width="120" show-overflow-tooltip/>
+          <el-table-column label="经纬纱名称" prop="jingSha" width="140" show-overflow-tooltip/>
           <el-table-column label="型号" prop="xingHao" show-overflow-tooltip/>
 
           <el-table-column label="需用量(KG)" prop="xuYaoLiang" width="160">
@@ -174,15 +170,19 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="库存(KG)" prop="kuCun" show-overflow-tooltip//>
-          <el-table-column label="最低周转量" prop="zhouZhuanLiang" show-overflow-tooltip//>
-          <el-table-column label="消化量(KG)" prop="xiaoHuaLiang" show-overflow-tooltip//>
-          <el-table-column label="总需量" prop="totalXuYaoLiang" show-overflow-tooltip//>
+          <el-table-column label="库存(KG)" prop="kuCun" show-overflow-tooltip/>
+          <el-table-column label="最低周转量" prop="zhouZhuanLiang" show-overflow-tooltip/>
+          <el-table-column label="消化量(KG)" prop="xiaoHuaLiang" show-overflow-tooltip/>
+          <el-table-column label="总需量" prop="totalXuYaoLiang" show-overflow-tooltip/>
           <el-table-column label="订购量(KG)" prop="dingGouLiang" width="160">
             <template slot-scope="scope">
               <input v-model="scope.row.dingGouLiang" placeholder="0" type="number">
             </template>
           </el-table-column>
+                                <el-table-column
+            type="selection"
+            width="55"
+          />
           <el-table-column label="备纱情况" prop="beiShaQingKuang" show-overflow-tooltip//>
           <el-table-column label="证书情况" prop="zhengShuQingKuang" />
           <el-table-column label="纱期" prop="shaQi" />
@@ -370,11 +370,27 @@ export default {
         if (res.data.code !== 200) {
           this.$message.error(res.data.msg)
         } else {
+          if(res.data.data.length === 0){
+            this.getInitData = []
+                                this.totalNeeded = 0
+          this.totalOrderAmount = 0
+          } else {
           this.getInitOData = res.data.data
           this.totalSize = this.getInitOData[0].pageQuanity
 
-          this.totalNeeded = this.getInitOData[0].xyl
-          this.totalOrderAmount = this.getInitOData[0].dgl
+          // this.totalNeeded = this.getInitOData[0].xyl
+          // this.totalOrderAmount = this.getInitOData[0].dgl
+                    this.totalNeeded = 0
+          this.totalOrderAmount = 0
+
+//进行计算
+this.getInitOData.map(item => {
+this.totalNeeded += parseInt(item.xuYaoLiang)
+this.totalOrderAmount += parseInt(item.dingGouLiang)
+})
+
+
+
           // 合并的地方
           var list = []
           this.getInitOData.map(item => {
@@ -392,12 +408,14 @@ export default {
 
           window.console.log(this.getInitOData)
           this.getInitOData.map((item,index) =>{
-            this.$set(this.getInitOData[index], 'jiaoZhouDate', item.jiaoZhouDate.join(','))
-            this.$set(this.getInitOData[index], 'huiPiDate', item.huiPiDate.join(','))
-            this.$set(this.getInitOData[index], 'chengPinDate', item.chengPinDate.join(','))
+            this.$set(this.getInitOData[index], 'jiaoZhouDate1', item.jiaoZhouDate.join(','))
+            this.$set(this.getInitOData[index], 'huiPiDate1', item.huiPiDate.join(','))
+            this.$set(this.getInitOData[index], 'chengPinDate1', item.chengPinDate.join(','))
 
           })
           this.getInitData = this.mergeTableRow(this.getInitOData, ['doTime', 'clothId', 'productionNo', 'jiaoZhouLength', 'huiPiLength', 'produceRequestNo', 'jiangRanChang', 'zhiZaoChang', 'jiaoZhouDate', 'huiPiDate', 'chengPinDate'])
+          }
+
         }
       })
     },
@@ -485,6 +503,7 @@ export default {
       return val == 0 ? '纬' : val == 1 ? '经' : ''
     },
     formatConfirmStatus(val) {
+      //这里反了
       return val == 0 ? '未确认' : val == 1 ? '已确认' : ''
     },
     // 勾选表单

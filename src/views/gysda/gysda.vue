@@ -2,7 +2,7 @@
   <el-card>
 
     <!-- 检索区 -->
-    <el-row :gutter="10">
+    <el-row :gutter="10" style="display:flex">
       <el-col :span="7" class="searchCombo">
         <div class="searchHeader">供应商名称</div>
         <el-input v-model="queryInfo.Name" placeholder="请填写供应商名称" clearable />
@@ -10,7 +10,7 @@
       <el-col :span="3">
         <el-button type="primary" icon="el-icon-search" @click="searchSupplier">检索</el-button>
       </el-col>
-      <el-col :span="3">
+      <el-col  style="width:4.5%;margin-left:auto">
         <el-button type="primary" plain @click="addNewRecord">新增</el-button>
       </el-col>
     </el-row>

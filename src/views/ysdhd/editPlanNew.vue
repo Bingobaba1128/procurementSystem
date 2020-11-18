@@ -61,6 +61,7 @@
               placeholder=""
               clearable
               type="number"
+              :disabled="scope.row.state"
             />
           </template>
         </el-table-column>
@@ -71,6 +72,7 @@
               placeholder=""
               clearable
               type="number"
+              :disabled="scope.row.state"
             />
           </template>
         </el-table-column>
@@ -82,6 +84,7 @@
               type="date"
               placeholder="选择日期"
               value-format="yyyy-MM-dd"
+              :disabled="scope.row.state"
             />
           </template>
         </el-table-column>
@@ -93,6 +96,7 @@
           type="date"
           placeholder="选择日期"
           value-format="yyyy-MM-dd"
+              :disabled="scope.row.state"
         />
           </template>
         </el-table-column>
@@ -104,6 +108,7 @@
           type="date"
           placeholder="选择日期"
           value-format="yyyy-MM-dd"
+              :disabled="scope.row.state"
         />
           </template>
         </el-table-column>
@@ -112,7 +117,18 @@
             <el-input
               v-model="scope.row.productionNo"
               placeholder=""
+              :disabled="scope.row.state"
               clearable
+            />
+          </template>
+        </el-table-column>
+                <el-table-column label="布编" prop="clothId" width="120">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.clothId"
+              placeholder=""
+              clearable
+              :disabled="scope.row.state"
             />
           </template>
         </el-table-column>
@@ -124,6 +140,7 @@
           type="date"
           placeholder="选择日期"
           value-format="yyyy-MM-dd"
+              :disabled="scope.row.state"
         />
           </template>
         </el-table-column>
@@ -134,6 +151,7 @@
           type="date"
           placeholder="选择日期"
           value-format="yyyy-MM-dd"
+              :disabled="scope.row.state"
         />
           </template>
         </el-table-column>
@@ -143,18 +161,20 @@
               v-model="scope.row.remarks"
               placeholder=""
               clearable
+              :disabled="scope.row.state"
             />
           </template>
         </el-table-column>
         <el-table-column label="属性" prop="nature" width="120">
           <template slot-scope="scope">
-            <el-select v-model="scope.row.nature" placeholder="请选择">
+            <el-select v-model="scope.row.nature" placeholder="请选择" :disabled="scope.row.state">
               <el-option
                 v-for="item in natureList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
                 @click.native="checkNature(item.value)"
+              
               />
             </el-select>
           </template>
@@ -163,6 +183,7 @@
             <el-input
               v-model="scope.row.explain"
               placeholder=""
+              :disabled="scope.row.state"
               clearable
             />
           </template>
@@ -174,6 +195,7 @@
               placeholder=""
               clearable
               type="number"
+              :disabled="scope.row.state"
             />
           </template>
         </el-table-column>
@@ -184,18 +206,11 @@
           type="date"
           placeholder="选择日期"
           value-format="yyyy-MM-dd"
+              :disabled="scope.row.state"
         />
           </template>
         </el-table-column>
-        <el-table-column label="布编" prop="clothId" width="120">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.clothId"
-              placeholder=""
-              clearable
-            />
-          </template>
-        </el-table-column>
+
         <el-table-column label="未定天数" prop="noDingDays" width="120" />
         <el-table-column label="订单证书要求" prop="zhengShuQingKuang" width="120">
           <template slot-scope="scope">
@@ -203,11 +218,14 @@
               v-model="scope.row.zhengShuQingKuang"
               placeholder=""
               clearable
+              :disabled="scope.row.state"
             />
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="120">
+        <el-table-column label="操作" width="180" fixed="right">
           <template slot-scope="scope">
+            <el-button type="text" v-if="scope.row.state" @click="changeState(scope.$index, scope.row)">启用编辑</el-button>
+            <el-button type="text" v-if="!scope.row.state" @click="disableState(scope.$index, scope.row)">禁用编辑</el-button>
             <el-button type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -302,7 +320,18 @@ export default {
         window.console.log('dscdecew')
         window.console.log(this.productFeatures)
       })
+      window.console.log(this.innerForm, 'hi innerForm')
+      this.innerForm.map((item,index) =>{
+        this.$set(this.innerForm[index], 'state', true)
+      })
     },
+    changeState(index,data){
+        this.$set(this.innerForm[index], 'state', false)
+    },
+    disableState(index,data){
+        this.$set(this.innerForm[index], 'state', true)
+    },
+    
     selectPinZhongTrigger(pinZhong) {
       for (var i = 1; i < this.productFeatures.length; i++) {
         if (this.productFeatures[i].pinZhong == pinZhong) {
@@ -331,26 +360,7 @@ export default {
       return defaultDate
       // this.$set(this.selectedSupplier, 'signDate', defaultDate)
     },
-    addRow() {
-      var insertItem = {
-        id: null,
-        jingSha: this.selectedSupplier.pinZhong + '' + this.selectedSupplier.chanDi,
-        quanity: '',
-        unitprice: '',
-        cangku: '越南原纱仓',
-        shaQi: '',
-        productionNo: '',
-        remarks: '',
-        outUnitprice: '',
-        nature: this.nature,
-        explain: '',
-        clothId: '',
-        noDingDays: '',
-        zhengShuQingKuang: ''
-      }
-      this.innerForm.push(insertItem)
-      this.$set(this.selectedSupplier, 'listS', this.innerForm)
-    },
+
     onChange(name) {
       this.$set(this.selectedSupplier, 'name', name)
     },
@@ -427,18 +437,18 @@ export default {
 }
 
 .searchCombo .expand{
-    height: 200px;
+    height: 60px;
 }
 
 .searchCombo .expand .el-input-group__prepend {
-    height: 200px !important;
+    height: 60px !important;
 }
 .expand input {
-    height: 200px!important
+    height: 60px!important
 }
 .searchCombo1{
     display: flex;
-    height: 200px;
+    height: 60px;
     align-items: flex-end;
 }
 </style>

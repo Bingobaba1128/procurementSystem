@@ -86,10 +86,10 @@
 
     </el-row>
     <el-row style="margin-top: 20px">
-      <el-table :data="innerForm" border stripe  max-height="750">
+      <el-table :data="innerForm" border stripe height="100%"  style="min-height:330px">
 
         <el-table-column type="index" label="序号" />
-        <el-table-column label="经纱产地及型号" prop="jingSha" width="120" />
+        <el-table-column label="经纱产地及型号" prop="jingSha" width="160" show-overflow-tooltip/>
         <el-table-column label="数量（KG）" width="120">
           <template slot-scope="scope">
             <el-input
@@ -197,16 +197,16 @@
             <el-button type="text" @click="addRow(scope.row.id)">确定</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="未定天数" prop="noDingDays" width="120" />
+        <el-table-column label="未定天数" prop="noDingDays" width="80" />
         <el-table-column label="生产安排单号" prop="productionNo" width="120" />
                 <el-table-column label="布编" prop="clothId" width="120" />
 
-        <el-table-column label="经纬" prop="jingOrWei" width="120">
+        <el-table-column label="经纬" prop="jingOrWei" width="80">
           <template slot-scope="scope">
             {{ formatjingOrWei(scope.row.jingOrWei) }}
           </template>
         </el-table-column>
-        <el-table-column label="纱产地及型号" prop="jingShaD" width="120" />
+        <el-table-column label="纱产地及型号" prop="jingShaD" width="280" show-overflow-tooltip/>
         <el-table-column label="需用量（KG）" prop="xuYaoLiang" width="120" />
         <el-table-column label="订购量（KG）" prop="dingGouLiang" width="120" />
         <el-table-column label="价格" prop="hsjg" width="120" />
@@ -566,18 +566,18 @@ this.$router.go(0)
 }
 
 .searchCombo .expand{
-    height: 200px;
+    height: 60px;
 }
 
 .searchCombo .expand .el-input-group__prepend {
-    height: 200px !important;
+    height: 60px !important;
 }
 .expand input {
-    height: 200px!important
+    height: 60px!important
 }
 .searchCombo1{
     display: flex;
-    height: 200px;
+    height: 60px;
     align-items: flex-end;
 }
 </style>

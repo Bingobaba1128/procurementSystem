@@ -1,6 +1,6 @@
 <template>
   <el-card>
-    <el-row :gutter="10">
+    <el-row :gutter="10" style="display:flex">
 
       <!-- 日期选择 -->
 
@@ -51,13 +51,13 @@
       </el-col>
 
       <!-- 按钮筛选 -->
-      <el-col :span="2">
+      <el-col style="margin-left:auto;width:5.5%">
         <el-button type="primary" icon="el-icon-search" @click="searchData">检索</el-button>
       </el-col>
     </el-row>
 
     <el-row :gutter="10" style="margin-top: 20px">
-      <el-col :span="3" style="margin-bottom: 20px">
+      <el-col  style="width: 6.5%;margin-bottom: 20px">
         <el-button type="primary" plain @click="editSelected">批量调整</el-button>
       </el-col>
       <el-col :span="3" style="margin-bottom: 20px">
@@ -81,6 +81,7 @@
         <el-table-column label="实际价格（元/吨）" prop="sjjg" show-overflow-tooltip/>
         <el-table-column label="核算价格（元/吨）" prop="hsjg" show-overflow-tooltip/>
         <el-table-column label="设置日期" prop="setDate" show-overflow-tooltip/>
+        <el-table-column label="结算方式" prop="payStyle" show-overflow-tooltip/>
         <el-table-column label="备注" prop="sjjgbz" show-overflow-tooltip/>
 
         <el-table-column label="历史价格" >
@@ -217,8 +218,8 @@ export default {
       this.downloadLoading = true
       require.ensure([], () => {
         const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['产地', '名称', '属性', '型号', '支数（折算支数）', '实际价格（元/吨）', '核算价格（元/吨）', '设置日期', '备注']
-        const filterVal = ['chanDi', 'name', 'shuXing', 'xingHao', 'shaZhi', 'sjjg', 'hsjg', 'setDate', 'sjjgbz']
+        const tHeader = ['产地', '名称', '属性', '型号', '支数（折算支数）', '实际价格（元/吨）', '核算价格（元/吨）', '设置日期','结算方式','备注']
+        const filterVal = ['chanDi', 'name', 'shuXing', 'xingHao', 'shaZhi', 'sjjg', 'hsjg', 'setDate','payStyle','sjjgbz']
         var list = ''
         if (this.multipleSelection.length == 0) {
           list = this.searchResult

@@ -4,17 +4,19 @@
     <el-row :gutter="10">
 
       <!-- 日期选择 -->
-      <el-col :span="5">
+      <el-col :span="4">
         <el-date-picker
           v-model="queryInfo.doTime"
-          type="date"
-          placeholder="选择日期"
-          value-format="yyyy-MM-dd"
+                type="daterange"
+                  range-separator="-"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                  value-format="yyyy-MM-dd"
         />
       </el-col>
 
       <!-- 布编选择 -->
-      <el-col :span="5">
+      <el-col :span="4">
         <el-input v-model="queryInfo.clothId" placeholder="请输入布编号" clearable>
           <template slot="prepend">布编</template>
         </el-input>
@@ -28,7 +30,7 @@
       </el-col>
 
       <!-- 确认订单状态 -->
-      <el-col :span="5">
+      <el-col :span="4">
         <el-select v-model="queryInfo.stateName" clearable placeholder="确认状态">
           <!-- <template slot="prefix">确认状态</template> -->
           <el-option
@@ -40,10 +42,14 @@
           />
         </el-select>
       </el-col>
-
-      <!-- 按钮筛选 -->
       <el-col :span="3">
         <el-button type="primary" icon="el-icon-search" @click="searchData">检索</el-button>
+        <!-- <el-button type="success" @click="getReplaceJs(jsData.jingsha,jsData.shaZhi)">筛选</el-button> -->
+
+      </el-col>
+      <!-- 按钮筛选 -->
+      <el-col :span="3">
+        <el-button type="primary" icon="el-icon-search" @click="postData">批量提交</el-button>
         <!-- <el-button type="success" @click="getReplaceJs(jsData.jingsha,jsData.shaZhi)">筛选</el-button> -->
 
       </el-col>
@@ -56,7 +62,14 @@
       element-loading-text="努力加载中..."
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(255,255, 255, 0.9)"
-        empty-text=" ">
+        empty-text=" "
+        @selection-change="handleSelectionChange">
+
+                <el-table-column
+          label="全选"
+          type="selection"
+          width="80"
+        />
         <el-table-column type="index" label="序号" />
         <el-table-column label="下单日期" prop="doTime" width="120" show-overflow-tooltip/>
         <el-table-column label="生产单号" prop="productionNo" width="120" show-overflow-tooltip/>
@@ -64,9 +77,9 @@
         <el-table-column label="浆长" prop="jiaoZhouLength" width="120" show-overflow-tooltip/>
         <!-- <el-table-column label="测试" prop="shaZhi" /> -->
 
-        <el-table-column label="经纱" class="jingSha" width="160">
+        <el-table-column label="经纱" class="jingSha" width="320">
           <template slot-scope="scope">
-            <el-button type="text" @click="showReplaceJS(scope.row.jingSha,scope.row.shaZhi,scope.row.id,scope.row)"> {{ scope.row.jingSha }} <i class="el-icon-arrow-down el-icon--right" /> </el-button>
+            <el-button type="text" @click="showReplaceJS(scope.row.jingSha,scope.row.shaZhi,scope.row.id,scope.row,scope.$index)"> {{ scope.row.jingSha }} <i class="el-icon-arrow-down el-icon--right" /> </el-button>
             <el-dialog title="选择替换的经纱" :visible.sync="dialogReplaceJSVisible" :close-on-click-modal="false">
               <el-form>
                 <el-form-item label="产地" prop="chanDi">
@@ -87,7 +100,7 @@
                       :key="item.id"
                       :label="item.name"
                       :value="item.name"
-                      @click.native="onChange(item, item.gongYingShang,item.yarnId)"
+                      @click.native="onChange(item)"
                     />
                   </el-select>
                 </el-form-item>
@@ -126,11 +139,11 @@
             </el-dialog>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="120">
+        <!-- <el-table-column label="操作" width="120">
           <template slot-scope="scope">
             <el-button type="text" @click="updateInfo(scope.row, scope.row.id,scope.$index)">{{ formateUpload(scope.row.state) }}</el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="工艺变更申请" width="120">
           <template slot-scope="scope">
             <el-button type="text" if-v="" :disabled="scope.row.state | statusFilter" @click="showPdf(scope.row.id)"> PDF </el-button>
@@ -190,6 +203,8 @@ export default {
       },
       chanDiList:'',
             listLoading: true,
+                  multipleSelection: [],
+
       JSvalue: '',
       dialogVisible: false,
       pageSetting: {
@@ -220,7 +235,7 @@ export default {
         }],
       passParam: {
         shaZhi: '',
-        jingSha: ''
+        jingSha: ''           
       },
       dialogReplaceJSVisible: false,
       dialogNoteVisible: false,
@@ -268,6 +283,18 @@ export default {
         }
       })
     },
+        toggleSelection(rows) {
+      if (rows) {
+        rows.forEach(row => {
+          this.$refs.multipleTable.toggleRowSelection(row)
+        })
+      } else {
+        this.$refs.multipleTable.clearSelection()
+      }
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+    },
     // 状态过滤
     formatStatus(val) {
       return val == 0 ? '未确认' : val == 1 ? '已确认' : ''
@@ -295,6 +322,7 @@ export default {
           this.$set(this.jsData[index], 'jingShaZhongJian', item.jingSha)
           this.$set(this.jsData[index], 'jingShaDangAnZhongJian', item.jingShaDangAn)
           this.$set(this.jsData[index], 'yarnIdZhongJian', item.yarnId)
+          this.$set(this.jsData[index], 'index', index)
         })
         window.console.log(this.jsData)
         this.passParam.jingSha = this.jsData.jingSha
@@ -318,7 +346,7 @@ export default {
     },
 
     // 替代经纱查询
-    showReplaceJS(jingsha, shaZhiNo, id,alldata) {
+    showReplaceJS(jingsha, shaZhiNo, id,alldata,index) {
 //加载产地
 var param = baseUrl + '/api/getAllYarnChanDi'
 loadJSData(param).then(res => {
@@ -327,11 +355,12 @@ loadJSData(param).then(res => {
 
 this.chanDi = ''
 this.JSvalue = ''
-this.jsData.map((item,index) => {
-  if(item.id === id){
-    this.allData = item
-  }
-})
+this.allData = this.jsData[index]
+// this.jsData.map((item,index) => {
+//   if(item.id === id){
+//     this.allData = item
+//   }
+// })
 window.console.log(this.allData,'allldata')
       
       this.dialogReplaceJSVisible = true
@@ -353,7 +382,7 @@ window.console.log(this.allData,'allldata')
     },
     switchJSType(JSvalue, id) {
       for (var i = 0; i < this.jsData.length; i++) {
-        if (this.jsData[i].id === this.allData.id) {
+        if (this.jsData[i].index === this.allData.index) {
                     this.$set(this.jsData[i], 'zhongJian', this.jsData[i].jingSha)
 
           // this.$set(this.jsData[i], 'jingSha', JSvalue)
@@ -366,10 +395,10 @@ this.JSvalue = ''
       this.dialogReplaceJSVisible = false
     },
     //
-    onChange(data, val, index) {
+    onChange(data) {
       window.console.log(this.allData,'onchange')
       for (var i = 0; i < this.jsData.length; i++) {
-        if (this.jsData[i].id === this.allData.id) {
+        if (this.jsData[i].index === this.allData.index) {
           this.$set(this.jsData[i], 'jingShaDangAnD', data.gongYingShang)
           this.$set(this.jsData[i], 'jingShaD',data.name )
           this.$set(this.jsData[i], 'xingHao',data.xingHao )
@@ -423,17 +452,11 @@ this.JSvalue = ''
     updateInfo(data,id,i) {
 
           if(this.jsData[i].state === '0'){
-            window.console.log(this.jsData[i],'00000')
-                    this.updateParams = JSON.parse(JSON.stringify(this.jsData[i]))
+            this.updateParams = JSON.parse(JSON.stringify(this.jsData[i]))
+            this.updateData(this.jsData[i])            
+          } else {    
 
-          this.updateData(this.jsData[i])            
-
-          } else {
-          // this.$set(this.jsData[i],'jingSha',this.jsData[i].zhongJian)
-                    // this.updateData(this.jsData[i])            
-
-                    this.updateParams = JSON.parse(JSON.stringify(this.jsData[i]))
-          window.console.log(this.jsData[i],'11111')
+          this.updateParams = JSON.parse(JSON.stringify(this.jsData[i]))
           this.$delete(this.updateParams, 'clothNo')
           this.$delete(this.updateParams, 'dangAnId')
           this.$delete(this.updateParams, 'doTime')
@@ -449,17 +472,26 @@ this.JSvalue = ''
           this.$set(this.updateParams, 'jingShaDangAn', this.jsData[i].jingShaDangAnZhongJian)
           this.$set(this.updateParams, 'yarnId', this.jsData[i].yarnIdZhongJian)
 
-          if (this.updateParams.state == 0) {
-            this.$set(this.updateParams, 'id', null)
-          }
+          // if (this.updateParams.state == 0) {
+          //   this.$set(this.updateParams, 'id', null)
+          // }
           this.updateData(this.updateParams)            
           }
           // this.updateData(this.jsData[i])
 
           // window.console.log(this.updateParams)
-          
-        
-      
+    },
+    postData(){
+      if(this.multipleSelection.length !== 0){
+      this.multipleSelection.map((item,index) => {
+                    this.$set(this.multipleSelection[index], 'jingSha', this.multipleSelection[index].jingShaZhongJian)
+          this.$set(this.multipleSelection[index], 'jingShaDangAn', this.multipleSelection[index].jingShaDangAnZhongJian)
+          this.$set(this.multipleSelection[index], 'yarnId', this.multipleSelection[index].yarnIdZhongJian)
+      })
+              // window.console.log(this.multipleSelection,'target')
+                        this.updateData(this.multipleSelection)     
+      }
+       
     },
     handleCurrentChange(val) {
       this.pageSetting.pageNumber = val
