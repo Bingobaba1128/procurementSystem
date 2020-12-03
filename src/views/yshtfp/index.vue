@@ -33,9 +33,9 @@
         <el-row>
           <el-table border stripe :data="dataList" tooltip-effect="dark">
             <el-table-column type="index" label="序号" />
-            <el-table-column label="采购单号" prop="yuanShaPurchaseNo" show-overflow-tooltip/>
-            <el-table-column label="原纱品种" prop="jingSha" show-overflow-tooltip/>
-            <el-table-column label="采购数量(Kg)" prop="quanity" show-overflow-tooltip/>
+            <el-table-column label="采购单号" prop="yuanShaPurchaseNo" show-overflow-tooltip />
+            <el-table-column label="原纱品种" prop="jingSha" show-overflow-tooltip />
+            <el-table-column label="采购数量(Kg)" prop="quanity" show-overflow-tooltip />
 
             <el-table-column label="操作">
               <template slot-scope="scope">
@@ -177,7 +177,7 @@
       </el-col> -->
     </el-row>
     <el-dialog v-if="dialogAddNewTableVisible" title="原纱合同及发票管理详情页" :visible.sync="dialogAddNewTableVisible" fullscreen>
-      <showDetails :param="addOriginData" :no="passNo" :id="passId" @closeDialog="closeDialog" />
+      <showDetails :id="passId" :param="addOriginData" :no="passNo" @closeDialog="closeDialog" />
     </el-dialog>
   </el-card>
 </template>
@@ -192,7 +192,6 @@ export default {
     showDetails
   },
   data() {
-    
     return {
       pageSetting: {
         pageSize: 10,
@@ -204,7 +203,7 @@ export default {
       dialogAddNewTableVisible: false,
       addOriginData: [],
       passNo: '',
-      passId:'',
+      passId: '',
       stateList: [{
         label: '完成',
         value: '完成'

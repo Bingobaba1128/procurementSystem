@@ -57,7 +57,7 @@
     </el-row>
 
     <el-row :gutter="10" style="margin-top: 20px">
-      <el-col  style="width: 6.5%;margin-bottom: 20px">
+      <el-col style="width: 6.5%;margin-bottom: 20px">
         <el-button type="primary" plain @click="editSelected">批量调整</el-button>
       </el-col>
       <el-col :span="3" style="margin-bottom: 20px">
@@ -71,20 +71,20 @@
           type="selection"
           width="55"
         />
-        <el-table-column type="index" label="序号" show-overflow-tooltip/>
-        <el-table-column label="产地" prop="chanDi" show-overflow-tooltip/>
-        <el-table-column label="名称" prop="name" show-overflow-tooltip/>
-        <el-table-column label="属性" prop="shuXing" show-overflow-tooltip/>
-        <el-table-column label="型号" prop="xingHao" show-overflow-tooltip/>
-        <el-table-column label="支数（折算支数）" prop="shaZhi" show-overflow-tooltip/>
+        <el-table-column type="index" label="序号" show-overflow-tooltip />
+        <el-table-column label="产地" prop="chanDi" show-overflow-tooltip />
+        <el-table-column label="名称" prop="name" show-overflow-tooltip />
+        <el-table-column label="属性" prop="shuXing" show-overflow-tooltip />
+        <el-table-column label="型号" prop="xingHao" show-overflow-tooltip />
+        <el-table-column label="支数（折算支数）" prop="shaZhi" show-overflow-tooltip />
 
-        <el-table-column label="实际价格（元/吨）" prop="sjjg" show-overflow-tooltip/>
-        <el-table-column label="核算价格（元/吨）" prop="hsjg" show-overflow-tooltip/>
-        <el-table-column label="设置日期" prop="setDate" show-overflow-tooltip/>
-        <el-table-column label="结算方式" prop="payStyle" show-overflow-tooltip/>
-        <el-table-column label="备注" prop="sjjgbz" show-overflow-tooltip/>
+        <el-table-column label="实际价格（元/吨）" prop="sjjg" show-overflow-tooltip />
+        <el-table-column label="核算价格（元/吨）" prop="hsjg" show-overflow-tooltip />
+        <el-table-column label="设置日期" prop="setDate" show-overflow-tooltip />
+        <el-table-column label="结算方式" prop="payStyle" show-overflow-tooltip />
+        <el-table-column label="备注" prop="sjjgbz" show-overflow-tooltip />
 
-        <el-table-column label="历史价格" >
+        <el-table-column label="历史价格">
           <template slot-scope="scope">
             <el-button type="text" @click="searchHistory(scope.row.id)">查阅</el-button>
           </template>
@@ -218,8 +218,8 @@ export default {
       this.downloadLoading = true
       require.ensure([], () => {
         const { export_json_to_excel } = require('@/vendor/Export2Excel')
-        const tHeader = ['产地', '名称', '属性', '型号', '支数（折算支数）', '实际价格（元/吨）', '核算价格（元/吨）', '设置日期','结算方式','备注']
-        const filterVal = ['chanDi', 'name', 'shuXing', 'xingHao', 'shaZhi', 'sjjg', 'hsjg', 'setDate','payStyle','sjjgbz']
+        const tHeader = ['产地', '名称', '属性', '型号', '支数（折算支数）', '实际价格（元/吨）', '核算价格（元/吨）', '设置日期', '结算方式', '备注']
+        const filterVal = ['chanDi', 'name', 'shuXing', 'xingHao', 'shaZhi', 'sjjg', 'hsjg', 'setDate', 'payStyle', 'sjjgbz']
         var list = ''
         if (this.multipleSelection.length == 0) {
           list = this.searchResult

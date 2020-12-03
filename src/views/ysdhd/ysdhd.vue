@@ -57,7 +57,7 @@
       </el-dialog>
 
       <el-dialog v-if="dialogAddPlanNewTableVisible" title="原纱订货单（计划申请）" :visible.sync="dialogAddPlanNewTableVisible" fullscreen>
-        <addPlanNew @closeDialog1="closeDialog1"  @closeDialog="closeDialog"/>
+        <addPlanNew @closeDialog1="closeDialog1" @closeDialog="closeDialog" />
       </el-dialog>
       <el-dialog v-if="dialogEditPlanTableVisible" title="计划原纱订货单（修改）" :visible.sync="dialogEditPlanTableVisible" fullscreen>
         <editPlanTable :param="editOriginData" @closeDialog="closeDialog" />
@@ -79,10 +79,10 @@
       <el-table :data="initOriginData" border stripe max-height="750">
 
         <el-table-column type="index" label="序号" />
-                <el-table-column label="供应商" prop="name" show-overflow-tooltip/>
+        <el-table-column label="供应商" prop="name" show-overflow-tooltip />
 
-        <el-table-column label="单号" prop="yuanShaPurchaseNo" show-overflow-tooltip/>
-        <el-table-column label="签订日期" prop="signDate" show-overflow-tooltip/>
+        <el-table-column label="单号" prop="yuanShaPurchaseNo" show-overflow-tooltip />
+        <el-table-column label="签订日期" prop="signDate" show-overflow-tooltip />
         <el-table-column label="审核情况" prop="approveState">
           <template slot-scope="scope">
             {{ formatStatus(scope.row.approveState) }}
@@ -207,9 +207,9 @@ export default {
       })
     },
     addNewYS() {
-//             let { href } = this.$router.resolve({ path: '/原纱订货单新增' })
-// window.open(href, '_blank')
-                                  this.$router.push({ path: '/原纱合同及发票管理/原纱订货单新增', query: { guid: getGuid() }})
+      //             let { href } = this.$router.resolve({ path: '/原纱订货单新增' })
+      // window.open(href, '_blank')
+      this.$router.push({ path: '/原纱订货单/原纱订货单新增', query: { guid: getGuid() }})
 
       // this.dialogAddNewTableVisible = true
       // var url = baseUrl + '/api/supplier/getAllSupplier?supplierType=1'
@@ -267,11 +267,11 @@ export default {
       })
     },
     addPlanNewForm() {
-                                  this.$router.push({ path: '/原纱合同及发票管理/原纱订货单计划新增', query: { guid: getGuid() }})
+      this.$router.push({ path: '/原纱订货单/原纱订货单计划新增', query: { guid: getGuid() }})
 
       // this.$router.push('/原纱订货单计划新增')
-//       let { href } = this.$router.resolve({ path: '/原纱订货单计划新增' })
-// window.open(href, '_blank')
+      //       let { href } = this.$router.resolve({ path: '/原纱订货单计划新增' })
+      // window.open(href, '_blank')
       // this.dialogAddPlanNewTableVisible = true
     },
     closeDialog() {
@@ -284,12 +284,11 @@ export default {
     //     closeDialog1() {
     //   this.dialogAddPlanNewTableVisible = false
 
-    //   setTimeout(function(){ 
-    //     this.dialogAddPlanNewTableVisible = true 
+    //   setTimeout(function(){
+    //     this.dialogAddPlanNewTableVisible = true
     //     alert('is meeee')
 
     //   }, 20020);
-
 
     // },
     handleCurrentChange(val) {

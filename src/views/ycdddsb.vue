@@ -84,7 +84,7 @@
               <span>{{ formatStatus(scope.row.jingOrWei) }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="经纬纱名称" prop="name" width="120" show-overflow-tooltip/>
+          <el-table-column label="经纬纱名称" prop="name" width="120" show-overflow-tooltip />
           <el-table-column label="长度" width="120">
             <template slot-scope="scope">
               <el-input

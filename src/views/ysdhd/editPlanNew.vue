@@ -91,25 +91,25 @@
         <el-table-column label="计划交期" prop="shaQi" width="160">
           <template slot-scope="scope">
 
-                                            <el-date-picker
-          v-model="selectedSupplier.shaQi"
-          type="date"
-          placeholder="选择日期"
-          value-format="yyyy-MM-dd"
+            <el-date-picker
+              v-model="scope.row.shaQi"
+              type="date"
+              placeholder="选择日期"
+              value-format="yyyy-MM-dd"
               :disabled="scope.row.state"
-        />
+            />
           </template>
         </el-table-column>
         <el-table-column label="确认交期" prop="chengPinDate" width="160">
           <template slot-scope="scope">
 
-                                <el-date-picker
-          v-model="selectedSupplier.chengPinDate"
-          type="date"
-          placeholder="选择日期"
-          value-format="yyyy-MM-dd"
+            <el-date-picker
+              v-model="scope.row.chengPinDate"
+              type="date"
+              placeholder="选择日期"
+              value-format="yyyy-MM-dd"
               :disabled="scope.row.state"
-        />
+            />
           </template>
         </el-table-column>
         <el-table-column label="生产安排编号" prop="productionNo" width="120">
@@ -122,7 +122,7 @@
             />
           </template>
         </el-table-column>
-                <el-table-column label="布编" prop="clothId" width="120">
+        <el-table-column label="布编" prop="clothId" width="120">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.clothId"
@@ -135,24 +135,24 @@
         <el-table-column label="交轴日期" prop="jiaoZhouDate" width="160">
           <template slot-scope="scope">
 
-                    <el-date-picker
-          v-model="selectedSupplier.jiaoZhouDate"
-          type="date"
-          placeholder="选择日期"
-          value-format="yyyy-MM-dd"
+            <el-date-picker
+              v-model="scope.row.jiaoZhouDate"
+              type="date"
+              placeholder="选择日期"
+              value-format="yyyy-MM-dd"
               :disabled="scope.row.state"
-        />
+            />
           </template>
         </el-table-column>
         <el-table-column label="坯布交期" prop="huiPiDate" width="160">
           <template slot-scope="scope">
-                                <el-date-picker
-          v-model="selectedSupplier.huiPiDate"
-          type="date"
-          placeholder="选择日期"
-          value-format="yyyy-MM-dd"
+            <el-date-picker
+              v-model="scope.row.huiPiDate"
+              type="date"
+              placeholder="选择日期"
+              value-format="yyyy-MM-dd"
               :disabled="scope.row.state"
-        />
+            />
           </template>
         </el-table-column>
         <el-table-column label="备注" prop="remarks" width="120">
@@ -174,7 +174,6 @@
                 :label="item.label"
                 :value="item.value"
                 @click.native="checkNature(item.value)"
-              
               />
             </el-select>
           </template>
@@ -201,13 +200,13 @@
         </el-table-column>
         <el-table-column label="完成日期" prop="completeDate" width="160">
           <template slot-scope="scope">
-                                            <el-date-picker
-          v-model="selectedSupplier.completeDate"
-          type="date"
-          placeholder="选择日期"
-          value-format="yyyy-MM-dd"
+            <el-date-picker
+              v-model="selectedSupplier.completeDate"
+              type="date"
+              placeholder="选择日期"
+              value-format="yyyy-MM-dd"
               :disabled="scope.row.state"
-        />
+            />
           </template>
         </el-table-column>
 
@@ -224,9 +223,10 @@
         </el-table-column>
         <el-table-column label="操作" width="180" fixed="right">
           <template slot-scope="scope">
-            <el-button type="text" v-if="scope.row.state" @click="changeState(scope.$index, scope.row)">启用编辑</el-button>
-            <el-button type="text" v-if="!scope.row.state" @click="disableState(scope.$index, scope.row)">禁用编辑</el-button>
-            <el-button type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button v-if="scope.row.state" type="text" :disabled="!scope.row.able" @click="changeState(scope.$index, scope.row)">启用编辑</el-button>
+            <el-button v-if="!scope.row.state" type="text" :disabled="!scope.row.able" @click="disableState(scope.$index, scope.row)">禁用编辑</el-button>
+            <el-button v-if="!scope.row.able" type="text" @click="cancelDelete(scope.$index, scope.row)">取消删除</el-button>
+            <el-button v-if="scope.row.able" type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -236,12 +236,13 @@
         <el-button type="primary" @click="saveToServe">确定存入</el-button>
       </el-col>
     </el-row>
+
   </el-card>
 </template>
 
 <script>
 import { baseUrl } from '@/api/apiUrl'
-import { loadPinZhongByCloth, loadFeature, addNewData } from '@/api/ysdhd'
+import { loadPinZhongByCloth, loadFeature, addNewData, addNewYuanSha } from '@/api/ysdhd'
 
 export default {
   props: ['param', 'dialogEditTableVisible'],
@@ -289,6 +290,8 @@ export default {
         clothId: '',
         yuanShaPurchaseNo: this.param[0].yuanShaPurchaseNo
       },
+      planData: '',
+
       supplierList: '',
       innerForm: this.param[0].listS,
       productFeatures: '',
@@ -321,17 +324,25 @@ export default {
         window.console.log(this.productFeatures)
       })
       window.console.log(this.innerForm, 'hi innerForm')
-      this.innerForm.map((item,index) =>{
+      this.innerForm.map((item, index) => {
         this.$set(this.innerForm[index], 'state', true)
+        this.$set(this.innerForm[index], 'able', true)
       })
+      //             var param = baseUrl + '/api/getPlanList'
+      // addNewYuanSha(param).then(res => {
+      //   this.planData = res.data.data
+      //   this.planData.map((item,index) => {
+      //     this.$set(this.planData[index], 'able', false)
+      //   })
+      // })
     },
-    changeState(index,data){
-        this.$set(this.innerForm[index], 'state', false)
+    changeState(index, data) {
+      this.$set(this.innerForm[index], 'state', false)
     },
-    disableState(index,data){
-        this.$set(this.innerForm[index], 'state', true)
+    disableState(index, data) {
+      this.$set(this.innerForm[index], 'state', true)
     },
-    
+
     selectPinZhongTrigger(pinZhong) {
       for (var i = 1; i < this.productFeatures.length; i++) {
         if (this.productFeatures[i].pinZhong == pinZhong) {
@@ -360,7 +371,9 @@ export default {
       return defaultDate
       // this.$set(this.selectedSupplier, 'signDate', defaultDate)
     },
-
+    formatjingOrWei(val) {
+      return val == 0 ? '纬' : '经'
+    },
     onChange(name) {
       this.$set(this.selectedSupplier, 'name', name)
     },
@@ -371,8 +384,15 @@ export default {
         this.$message.error('请选择供应商')
       } else {
         window.console.log(this.selectedSupplier.listS)
-        if (this.selectedSupplier.listS[0].unitprice == '' || this.selectedSupplier.listS[0].quanity == '') {
-          this.$message.error('请添加产品数量和单价')
+        var list = []
+        this.innerForm.map(item => {
+          if (item.able == true) {
+            list.push(item)
+          }
+        })
+        this.$set(this.selectedSupplier, 'listS', list)
+        if (this.selectedSupplier.listS.length === 0) {
+          this.$message.error('请保留至少一条数据')
         } else {
           addNewData(this.selectedSupplier).then(res => {
             if (res.data.code !== 200) {
@@ -386,7 +406,12 @@ export default {
       }
     },
     handleDelete(index, row) {
-      this.innerForm.splice(index, 1)
+      // this.innerForm.splice(index, 1)
+      this.$set(this.innerForm[index], 'able', false)
+      this.$set(this.innerForm[index], 'state', true)
+    },
+    cancelDelete(index, row) {
+      this.$set(this.innerForm[index], 'able', true)
     },
     checkNature(value) {
       if (value == 1) {

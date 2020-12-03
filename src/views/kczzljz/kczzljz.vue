@@ -66,21 +66,21 @@
           width="55"
         />
         <el-table-column type="index" label="序号" />
-        <el-table-column label="产地" prop="chanDi" show-overflow-tooltip/>
-        <el-table-column label="支数（折算支数）" prop="shaZhi" show-overflow-tooltip/>
-        <el-table-column label="名称" prop="name" show-overflow-tooltip/>
-        <el-table-column label="属性" prop="shuXing" show-overflow-tooltip/>
-        <el-table-column label="型号" prop="xingHao" show-overflow-tooltip/>
+        <el-table-column label="产地" prop="chanDi" show-overflow-tooltip />
+        <el-table-column label="支数（折算支数）" prop="shaZhi" show-overflow-tooltip />
+        <el-table-column label="名称" prop="name" show-overflow-tooltip />
+        <el-table-column label="属性" prop="shuXing" show-overflow-tooltip />
+        <el-table-column label="型号" prop="xingHao" show-overflow-tooltip />
 
-        <el-table-column label="购纱周转量（T）" prop="gouShaL" show-overflow-tooltip/>
-        <el-table-column label="库存周转量（T）" prop="kuCunL" show-overflow-tooltip/>
-        <el-table-column label="最低周转量（T）" prop="zuiDiL" show-overflow-tooltip/>
+        <el-table-column label="购纱周转量（T）" prop="gouShaL" show-overflow-tooltip />
+        <el-table-column label="库存周转量（T）" prop="kuCunL" show-overflow-tooltip />
+        <el-table-column label="最低周转量（T）" prop="zuiDiL" show-overflow-tooltip />
         <el-table-column label="仓库">
 
           {{ cangKu }}
         </el-table-column>
 
-        <el-table-column label="备注" prop="liangRemarks" show-overflow-tooltip/>
+        <el-table-column label="备注" prop="liangRemarks" show-overflow-tooltip />
         <el-table-column label="操作" fixed="right" width="160">
           <template slot-scope="scope">
             <el-button type="text" @click="deleteData(scope.row.id)">删除</el-button>

@@ -101,7 +101,7 @@
         </el-select>
       </el-col>
 
-<!-- {{productFeatures}} -->
+      <!-- {{productFeatures}} -->
       <el-col :span="7" :offset="1" class="searchCombo">
         <div class="searchHeader">品种</div>
         <el-select
@@ -268,7 +268,7 @@
       <el-col :span="2">
         <el-button type="primary" @click="saveToServe">确定存入</el-button>
       </el-col>
-                  <el-col :span="2">
+      <el-col :span="2">
         <el-button type="primary" @click="addMore">继续新增</el-button>
       </el-col>
     </el-row>
@@ -342,7 +342,7 @@ export default {
     },
     // 供应商初始化
     initOData() {
-            var param1 = baseUrl + '/api/getAllYarnChanDi'
+      var param1 = baseUrl + '/api/getAllYarnChanDi'
       addNewYuanSha(param1).then(res => {
         this.chanDiList = res.data.data
       })
@@ -350,8 +350,6 @@ export default {
       addNewYuanSha(url).then(res => {
         this.supplierList = res.data.data
       })
-      
-
     },
     selectTrigger(id) {
       // 加载指定供应商联系人
@@ -359,7 +357,7 @@ export default {
       loadContactPerson(url).then(res => {
         this.asaselectedSupplier.contactName = res.data.data
         this.$set(this.selectedSupplier, 'id', id)
-        
+
         window.console.log(this.selectedSupplier)
       })
       this.specialId = id
@@ -371,7 +369,6 @@ export default {
       // })
     },
     selectPinZhongTrigger(pinZhong) {
-
       for (var i = 1; i < this.productFeatures.length; i++) {
         if (this.productFeatures[i].pinZhong == pinZhong) {
           this.$set(this.selectedSupplier, 'chanDi', this.productFeatures[i].chanDi)
@@ -402,7 +399,7 @@ export default {
     },
     addRow() {
       // 预验证供应商品种不为空
-      if ( this.selectedSupplier.pinZhong == '') {
+      if (this.selectedSupplier.pinZhong == '') {
         this.$message.error('请选择及品种')
       } else {
         var insertItem = {
@@ -425,14 +422,14 @@ export default {
         this.$set(this.selectedSupplier, 'listS', this.innerForm)
       }
     },
-    click(id){
-            var param = '/api/getOneYarnArchives/' + id
+    click(id) {
+      var param = '/api/getOneYarnArchives/' + id
       loadData(param).then(res => {
         this.price = res.data.data.hsjg
       })
     },
-        getPin(name){
-            var param = '/api/getAllYarnArchives?chanDi=' + name
+    getPin(name) {
+      var param = '/api/getAllYarnArchives?chanDi=' + name
       loadData(param).then(res => {
         this.productFeatures = res.data.data
       })
@@ -441,68 +438,60 @@ export default {
       this.$set(this.selectedSupplier, 'name', name)
     },
     saveToServe() {
-      if(this.selectedSupplier.name !== ''){
-      window.console.log(this.selectedSupplier.listS)
-      var flag = true
-      for (var i = 0; i < this.selectedSupplier.listS.length; i++) {
-        if (this.selectedSupplier.listS[i].quanity == '' || this.selectedSupplier.listS[i].unitprice == '') {
-          this.$message.error('请添加产品数量和单价')
-          flag = false
-        } else {
-flag = true
+      if (this.selectedSupplier.name !== '') {
+        window.console.log(this.selectedSupplier.listS)
+        var flag = true
+        for (var i = 0; i < this.selectedSupplier.listS.length; i++) {
+          if (this.selectedSupplier.listS[i].quanity == '' || this.selectedSupplier.listS[i].unitprice == '') {
+            this.$message.error('请添加产品数量和单价')
+            flag = false
+          } else {
+            flag = true
+          }
         }
-      }
-      if(flag){
-        this.$set(this.selectedSupplier, 'id',this.specialId)
+        if (flag) {
+          this.$set(this.selectedSupplier, 'id', this.specialId)
 
-                addNewData(this.selectedSupplier).then(res => {
+          addNewData(this.selectedSupplier).then(res => {
             if (res.data.code !== 200) {
-
               this.$message.error(res.data.msg)
             } else {
               this.$message.success(res.data.msg)
-                                  this.$router.push({ path: '/原纱合同及发票管理/原纱订货单新增', query: { guid: getGuid() }})
+              this.$router.push({ path: '/原纱合同及发票管理/原纱订货单新增', query: { guid: getGuid() }})
             }
-          })        
-      }        
+          })
+        }
       } else {
-                      this.$message.error('请添加供应商')
-
+        this.$message.error('请添加供应商')
       }
-
-
     },
-        addMore() {
-      if(this.selectedSupplier.name !== ''){
-      window.console.log(this.selectedSupplier.listS)
-      var flag = true
-      for (var i = 0; i < this.selectedSupplier.listS.length; i++) {
-        if (this.selectedSupplier.listS[i].quanity == '' || this.selectedSupplier.listS[i].unitprice == '') {
-          this.$message.error('请添加产品数量和单价')
-          flag = false
-        } else {
-flag = true
+    addMore() {
+      if (this.selectedSupplier.name !== '') {
+        window.console.log(this.selectedSupplier.listS)
+        var flag = true
+        for (var i = 0; i < this.selectedSupplier.listS.length; i++) {
+          if (this.selectedSupplier.listS[i].quanity == '' || this.selectedSupplier.listS[i].unitprice == '') {
+            this.$message.error('请添加产品数量和单价')
+            flag = false
+          } else {
+            flag = true
+          }
         }
-      }
-      if(flag){
-        this.$set(this.selectedSupplier, 'id',this.specialId)
+        if (flag) {
+          this.$set(this.selectedSupplier, 'id', this.specialId)
 
-                addNewData(this.selectedSupplier).then(res => {
+          addNewData(this.selectedSupplier).then(res => {
             if (res.data.code !== 200) {
-
               this.$message.error(res.data.msg)
             } else {
               this.$message.success(res.data.msg)
-this.$router.go(0)
+              this.$router.go(0)
             }
-          })        
-      }        
+          })
+        }
       } else {
-                      this.$message.error('请添加供应商')
-
+        this.$message.error('请添加供应商')
       }
-
-
     },
     handleDelete(index, row) {
       this.innerForm.splice(index, 1)

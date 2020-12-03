@@ -440,7 +440,7 @@ export default {
         otherName: [
           { required: true, message: '请输入编码', trigger: 'blur' }
         ],
-                gysName: [
+        gysName: [
           { required: true, message: '请输入编码', trigger: 'blur' }
         ]
       }
@@ -473,7 +473,7 @@ export default {
         window.console.log(this.chengFenList)
       })
 
-            var param1 = '/api/supplier/getTotalSupplier?pageSize=10&pageNumber=1&supplierType=1'
+      var param1 = '/api/supplier/getTotalSupplier?pageSize=10&pageNumber=1&supplierType=1'
       loadData(param1).then(res => {
         this.gongYingList = res.data.data
       })

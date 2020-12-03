@@ -14,6 +14,16 @@
       <el-form-item label="实际价格" prop="sjjg">
         <el-input v-model="setting.sjjg" type="number" />
       </el-form-item>
+      <el-form-item label="结算方式" prop="jsfs">
+        <el-select v-model="setting.payStyle" clearable placeholder="请选择">
+          <el-option
+            v-for="item in payList"
+            :key="item.name"
+            :label="item.name"
+            :value="item.name"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="实际价格备注">
         <el-input v-model="setting.sjjgbz" />
       </el-form-item>
@@ -44,8 +54,15 @@ export default {
         setDate: '',
         sjjg: '',
         sjjgbz: '',
+        payStyle: '',
         recordMan: '邓科'
       },
+      payList: [
+        { name: '人民币' },
+        { name: '美金' },
+        { name: '欧元' },
+        { name: '越南盾' }
+      ],
       rules: {
         setDate: [
           { required: true, message: '请设置日期', trigger: 'blur' }
@@ -66,6 +83,7 @@ export default {
         this.$set(this.param[i], 'sjjg', this.setting.sjjg)
         this.$set(this.param[i], 'sjjgbz', this.setting.sjjgbz)
         this.$set(this.param[i], 'recordMan', this.setting.recordMan)
+        this.$set(this.param[i], 'payStyle', this.setting.payStyle)
       }
     },
     saveToServe() {

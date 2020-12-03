@@ -10,13 +10,13 @@
       <el-col :span="3">
         <el-button type="primary" icon="el-icon-search" @click="searchSupplier">检索</el-button>
       </el-col>
-      <el-col  style="width:4.5%;margin-left:auto">
+      <el-col style="width:4.5%;margin-left:auto">
         <el-button type="primary" plain @click="addNewRecord">新增</el-button>
       </el-col>
     </el-row>
 
     <!-- 列表区 -->
-    <el-dialog v-if="dialogAddTableVisible" v-dialogDrag title="供应商档案（新增111）" :visible.sync="dialogAddTableVisible" :close-on-click-modal="false">
+    <el-dialog v-if="dialogAddTableVisible" v-dialogDrag title="供应商档案（新增）" :visible.sync="dialogAddTableVisible" :close-on-click-modal="false">
       <addNewForm @closeDialog="closeDialog" />
     </el-dialog>
 
@@ -26,12 +26,12 @@
     <el-row>
       <el-table :data="initAllData" height="500" border stripe>
         <el-table-column type="index" label="序号" />
-        <el-table-column label="供应商名称" prop="name" show-overflow-tooltip/>
-        <el-table-column label="简称" prop="shortName" show-overflow-tooltip/>
-        <el-table-column label="代码" prop="code" show-overflow-tooltip/>
-        <el-table-column label="地址" prop="address" show-overflow-tooltip/>
-        <el-table-column label="负责人" prop="contactName" show-overflow-tooltip/>
-        <el-table-column label="联系电话" prop="contactPhone" show-overflow-tooltip/>
+        <el-table-column label="供应商名称" prop="name" show-overflow-tooltip />
+        <el-table-column label="简称" prop="shortName" show-overflow-tooltip />
+        <el-table-column label="代码" prop="code" show-overflow-tooltip />
+        <el-table-column label="地址" prop="address" show-overflow-tooltip />
+        <el-table-column label="负责人" prop="contactName" show-overflow-tooltip />
+        <el-table-column label="联系电话" prop="contactPhone" show-overflow-tooltip />
 
         <el-table-column label="停用" prop="enable">
           <template slot-scope="scope">

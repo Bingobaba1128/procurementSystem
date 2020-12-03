@@ -69,3 +69,9 @@
 .el-table td, .el-table th {
   padding: 4px 0 !important;
 }
+.el-input.is-disabled .el-input__inner {
+  color: black;
+}
+.el-table td, .el-table th {
+  padding: 0px 0 !important;
+}
