@@ -115,6 +115,7 @@
         <el-table-column label="布编" prop="clothId" width="120" show-overflow-tooltip />
         <el-table-column label="浆长" prop="jiaoZhouLength" width="120" show-overflow-tooltip />
         <!-- <el-table-column label="测试" prop="shaZhi" /> -->
+                <el-table-column label="成品数量" prop="dingDanShuLiang" width="120" show-overflow-tooltip />
 
         <el-table-column label="经纱" class="jingSha" width="320">
           <template slot-scope="scope">

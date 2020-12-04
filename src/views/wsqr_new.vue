@@ -117,7 +117,7 @@
             {{ scope.row.zhiBuZhiChengLv }}%
           </template>
         </el-table-column>
-                <el-table-column label="成品数量" prop="" width="120" show-overflow-tooltip />
+                <el-table-column label="成品数量" prop="dingDanShuLiang" width="120" show-overflow-tooltip />
 
         <el-table-column label="纬纱" width="320">
           <template slot-scope="scope">
@@ -143,7 +143,7 @@
           </template>
         </el-table-column> -->
         <el-table-column label="参考百米用纬" prop="weiShaBmysl" width="120" show-overflow-tooltip />
-        <el-table-column label="证书" prop="" width="120" show-overflow-tooltip />
+        <el-table-column label="证书" prop="zhengShu" width="120" show-overflow-tooltip />
 
         <!-- <el-table-column label="客户" prop="clientName" width="120" show-overflow-tooltip />
         <el-table-column label="业务员" prop="saleManName" width="120" show-overflow-tooltip /> -->

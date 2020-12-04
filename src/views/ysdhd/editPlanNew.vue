@@ -225,6 +225,7 @@
           <template slot-scope="scope">
             <el-button v-if="scope.row.state" type="text" :disabled="!scope.row.able" @click="changeState(scope.$index, scope.row)">启用编辑</el-button>
             <el-button v-if="!scope.row.state" type="text" :disabled="!scope.row.able" @click="disableState(scope.$index, scope.row)">禁用编辑</el-button>
+            <el-button v-if="!scope.row.state" type="text" :disabled="!scope.row.able" @click="updateState(scope.$index, scope.row)">更新</el-button>
             <el-button v-if="!scope.row.able" type="text" @click="cancelDelete(scope.$index, scope.row)">取消删除</el-button>
             <el-button v-if="scope.row.able" type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
@@ -291,7 +292,7 @@ export default {
         yuanShaPurchaseNo: this.param[0].yuanShaPurchaseNo
       },
       planData: '',
-
+      newData: '',
       supplierList: '',
       innerForm: this.param[0].listS,
       productFeatures: '',
@@ -349,6 +350,19 @@ export default {
           this.$set(this.selectedSupplier, 'chanDi', this.productFeatures[i].chanDi)
         }
       }
+    },
+    updateState(index,data){
+      var url = baseUrl + '/updateRemark?id=' + data.planNo
+      loadFeature(url).then(res => {
+        this.newData = res.data.data[0]
+          
+            alert('eea')
+            this.$set(this.innerForm[index],'quanity',this.newData.dingGouLiang)
+            this.$set(this.innerForm[index],'remarks',this.newData.remarks)
+          
+          
+        window.console.log(this.innerForm[index])
+      })
     },
     selectClothTrigger(clothId) {
       window.console.log(clothId)

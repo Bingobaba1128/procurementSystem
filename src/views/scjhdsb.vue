@@ -41,7 +41,7 @@
     <el-row :gutter="15" style="margin-top:20px">
 
       <!-- 下单日期 -->
-      <el-col :lg="{span:7}" class="searchCombo">
+      <el-col :lg="{span:5}" class="searchCombo">
         <div class="searchHeader">下单日期</div>
         <el-date-picker
           v-model="queryInfo.orderDate"
@@ -76,28 +76,28 @@
           />
         </el-select>
       </el-col>
-      <!-- 排序 -->
-      <!-- <el-col :lg="{span:6}" class="searchCombo">
-        <div class="searchHeader">排序</div>
-        <el-select v-model="queryInfo.orderStandard" placeholder="请选择">
-          <el-option
-            v-for="item in orderList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select> -->
-      <!-- <el-dropdown split-button class="dropdownBox" @click="handleClick">
-          生产单排序
-          <el-dropdown-menu slot="dropdown" />
-        </el-dropdown> -->
-      <!-- </el-col> -->
-
-      <!-- 生产安排单 -->
-
+      <el-col :lg="{span:5}" class="searchCombo">
+        <div class="searchHeader">证书</div>
+        <el-input v-model="queryInfo.zhengshu" placeholder="请输入证书" clearable />
+      </el-col>
+            <el-col :lg="{span:5}" class="searchCombo">
+        <div class="searchHeader">备注</div>
+        <el-input v-model="queryInfo.remark" placeholder="请输入备注" clearable />
+      </el-col>
       <!-- 检索按钮 -->
-      <el-col :lg="{span:2}" class="searchCombo">
+
+
+
+    </el-row>
+    <el-row style="margin-top: 20px">
+            <el-col :lg="{span:2}" class="searchCombo">
         <el-button type="primary" icon="el-icon-search" @click="searchData">检索</el-button>
+      </el-col>
+      <el-col :lg="{span:2}" class="searchCombo">
+        <el-button type="primary" :loading="downloadLoading" icon="el-icon-download" plain @click="exportExcel">导出</el-button>
+      </el-col>
+      <el-col :lg="{span:2}" class="searchCombo">
+        <el-button type="primary" plain @click="clickToShow">批量保存</el-button>
       </el-col>
       <el-col :lg="{span:4}" class="searchCombo" style="margin-left: 20px">
         <div style="display:flex; flex-direction:column; width:100%">
@@ -105,16 +105,6 @@
           <div class="searchHeader">订购量合计：{{ totalOrderAmount }}</div>
         </div>
       </el-col>
-
-    </el-row>
-    <el-row style="margin-top: 20px">
-      <el-col :lg="{span:2}" class="searchCombo">
-        <el-button type="primary" :loading="downloadLoading" icon="el-icon-download" plain @click="exportExcel">导出</el-button>
-      </el-col>
-      <el-col :lg="{span:2}" class="searchCombo">
-        <el-button type="primary" plain @click="clickToShow">批量保存</el-button>
-      </el-col>
-
     </el-row>
     <!-- 列表区 -->
     <el-row>
@@ -198,6 +188,9 @@
               />
             </template>
           </el-table-column>
+          <el-table-column label="业务组" prop="departmentName" width="120" show-overflow-tooltip/>
+          <el-table-column label="客户" prop="clientHu" width="120" show-overflow-tooltip/>
+                <el-table-column label="成品数量" prop="dingDanShuLiang" width="120" show-overflow-tooltip />
 
           <el-table-column label="购纱计划状态" prop="queRenComplete" width="150">
             <template slot-scope="scope">
@@ -212,7 +205,7 @@
         <el-pagination
           background
           layout="prev, pager, next"
-          :total="totalSize*10"
+          :total="totalSize*5"
           :current-page="pageSetting.pageNumber"
           @current-change="handleCurrentChange"
         />
@@ -290,9 +283,11 @@ export default {
         jingOrWei: '2',
         queRenComplete: '0',
         pageNumber: 1,
-        pageSize: 10,
+        pageSize: 20,
         xuYongName: '',
-        xuYong: ''
+        xuYong: '',
+        zhengshu: '',
+        remark:''
       },
       listLoading: true,
 
@@ -342,7 +337,7 @@ export default {
       pageSetting: {
         // orderDate: this.systemDate + ',' + this.systemDate,
         pageNumber: 1,
-        pageSize: 10
+        pageSize: 20
       },
       getInitOData: '',
       getInitData: '',
